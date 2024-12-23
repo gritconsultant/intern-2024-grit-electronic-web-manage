@@ -1,14 +1,11 @@
 <template>
-  <div class="flex gap-5 py-[60px] ps-[30px]">
+  <div class="flex gap-5 py-[40px] ps-[20px]">
     <Sidebar />
     <slot />
   </div>
 </template>
 
 <script lang="ts" setup>
-import Sidebar from '~/components/Sidebar.vue';
-import Sildesbar from '~/components/Sidebar.vue';
-
 
 </script>
 
