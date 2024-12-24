@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig:{
     public: {
-      BASE_URL: '',
+      BASE_URL: process.env.NUXT_PUBLIC_BASE_URL,
     }
   },
   app: {

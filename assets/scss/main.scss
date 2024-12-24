@@ -7,6 +7,10 @@
     @apply  bg-white border-2 border-[#765798]  text-[#424242]  p-[10px] rounded-[10px] text-center text-xl 
 }
 
+.buttonproducts {
+    @apply bg-white  text-[#424242]  p-[10px] rounded-[20px] text-center text-xl drop-shadow-lg  
+}
+
 .icons {
     @apply w-[20px] h-[20px]
 }
@@ -25,4 +29,8 @@
 
 .details {
     @apply text-xs
+}
+
+.photo {
+    @apply border-black border-[1px] rounded-[25px] drop-shadow-lg w-[150px]
 }
