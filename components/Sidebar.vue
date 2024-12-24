@@ -14,12 +14,12 @@
       <div class="grid gap-[100px]">
         <!-- menu -->
         <div class="grid grid-cols-1 gap-5">
-          <button class="buttons w-full">
+          <NuxtLink class="buttons w-full" to="/product">
             <div class="flex gap-2 ml-10">
               <i class="fa-solid fa-box-open mt-[6px]"></i>
               <p>สินค้า</p>
             </div>
-          </button>
+          </NuxtLink>
           <button class="buttons w-full">
             <div class="flex gap-2 ml-10">
               <i class="fa-solid fa-cart-shopping mt-[3px]"></i>
