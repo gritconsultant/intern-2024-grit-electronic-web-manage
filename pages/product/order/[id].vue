@@ -1,11 +1,15 @@
 <template>
-  <div class="flex gap-5 py-[30px] ps-[20px] ">
-    <Sidebar />
-    <slot />
+  <div class="w-full px-5">
+    <div class="pages2">
+
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+
+
+
 
 </script>
 

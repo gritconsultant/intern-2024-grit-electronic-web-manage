@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Option } from "~/model/client.model";
+import type { Option } from "~/models/client.model";
 
 
 export const client = (ops : Option) => {

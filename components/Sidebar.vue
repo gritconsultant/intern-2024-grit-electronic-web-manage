@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="bg-[#F7F1FD] p-[20px] w-[300px] rounded-[20px]">
+    <div class="bg-[#F7F1FD] p-[20px] w-[300px] h-full rounded-[20px]">
       <div>
         <NuxtLink to="/">
           <img
@@ -11,21 +11,22 @@
         </NuxtLink>
       </div>
       <hr class="hr" />
-      <div class="grid gap-[100px]">
+      <div class="flex flex-col justify-between h-[700px]">
         <!-- menu -->
-        <div class="grid grid-cols-1 gap-5">
+        <div class="grid grid-cols-1 gap-5 max-sm:hidden">
           <NuxtLink class="buttons w-full" to="/product">
             <div class="flex gap-2 ml-10">
               <i class="fa-solid fa-box-open mt-[6px]"></i>
               <p>สินค้า</p>
             </div>
           </NuxtLink>
-          <button class="buttons w-full">
+
+          <NuxtLink class="buttons w-full" to="/product/order">
             <div class="flex gap-2 ml-10">
               <i class="fa-solid fa-cart-shopping mt-[3px]"></i>
               <p>คำสั่งซื้อ</p>
             </div>
-          </button>
+          </NuxtLink>
           <button class="buttons w-full">
             <div class="flex gap-2 ml-10">
               <i class="fa-solid fa-circle-xmark mt-[3px]"></i>
@@ -51,19 +52,23 @@
             </div>
           </button>
         </div>
+        <!-- mobile -->
+        <!-- <div class="hidden max-sm:block">
+          mobile
+        </div> -->
         <!-- profile -->
-        <div class="flex gap-2 bg-[#765798] rounded-[50px] h-[60px] p-1">
+        <div class="flex   gap-2 bg-[#765798] rounded-[50px] h-[60px] p-1">
           <div
             class="flex justify-center items-center bg-white p-[20px] rounded-[50px]"
           >
             <i class="fa-solid fa-user-large text-[#765798]"></i>
           </div>
-          <div class="flex flex-col gap w-2/3  px-2  text-white">
-            <div class="header   w-[140px] truncate  ">jhon edasdasd wweDo</div>
-            <div class=" flex justify-end  ">ตำแหน่ง</div>
+          <div class="flex flex-col gap w-2/3 px-2 text-white">
+            <div class="header w-[140px] truncate">jhon edasdasd wweDo</div>
+            <div class="flex justify-end">ตำแหน่ง</div>
           </div>
-          <div class=" flex  items-center justify-end pr-[20px]   text-[#452E5E]  ">
-            <i class="fa-solid fa-ellipsis-vertical "></i>
+          <div class="flex items-center justify-end pr-[20px] text-[#452E5E]">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
           </div>
         </div>
       </div>

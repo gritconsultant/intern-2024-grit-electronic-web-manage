@@ -1,7 +1,7 @@
 //สำคัญ
 
 import { client } from "./httpClient"
-import type { Params } from "~/model/client.model"
+import type { Params } from "~/models/client.model"
 
 export const getProductList = (param :Params) => {
     return client({

@@ -1,6 +1,5 @@
 <template>
-  <div class="flex gap-5 py-[30px] ps-[20px] ">
-    <Sidebar />
+  <div>
     <slot />
   </div>
 </template>

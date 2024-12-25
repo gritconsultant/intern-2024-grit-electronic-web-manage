@@ -34,3 +34,7 @@
 .photo {
     @apply border-black border-[1px] rounded-[25px] drop-shadow-lg w-[150px]
 }
+
+.pages {
+    @apply bg-[#765798]/60 w-full p-5 rounded-[20px] h-full flex flex-col gap-5
+}
