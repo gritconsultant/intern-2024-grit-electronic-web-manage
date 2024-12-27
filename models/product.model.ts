@@ -1,4 +1,4 @@
-import Order from "~/pages/product/order/index.vue";
+
 
 export interface Listproduct {
   status: Status;
@@ -34,6 +34,8 @@ export interface Status {
   message: string;
 }
 
+
+// make test
 export interface Product {
   id: number;
   name: string;
@@ -41,5 +43,13 @@ export interface Product {
   price: number;
   amount: number;
   img: string;
+}
+
+export interface InputPhoto {
+  id: number;
+  img1: string;
+  img2: string;
+  img3: string;
+  img4: string;
 }
 

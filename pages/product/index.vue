@@ -1,41 +1,21 @@
 <template>
   <div class="flex gap-5 w-full text-black/70">
     <div
-      class="bg-[#765798]/60 px-5 py-3 w-3/4 rounded-[20px] flex flex-col gap-5"
+      class="pages"
     >
-      <!-- search -->
-      <div class="flex justify-between gap-5">
-        <div class="bg-white w-full rounded-[50px] flex items-center">
-          <div
-            class="flex items-center justify-center rounded-[50px] text-white bg-[#765798] h-full w-[60px] bg"
-          >
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </div>
-          <input
-            class="w-full pl-5 rounded-[50px] h-full"
-            type="search"
-            key="name"
-            placeholder="ค้นหารายการสินค้าที่ต้องการ"
-          />
-        </div>
-        <!-- selector -->
-        <div class="bg-[#765798] rounded-[50px] flex gap-[2px] p-2 text-white">
+      <div class="p-2 flex justify-start gap-5 pr-[10px]">
+         <!-- selector -->
+         <div class="bg-[#765798] rounded-[50px] flex gap-[2px] p-2 text-white">
           <i class="fa-solid fa-filter mt-[15px]"></i>
           <select name="" id="" class="bg-[#765798]">
             <option value="\">ทั้งหมด</option>
           </select>
         </div>
-        <!-- warn -->
-        <div class="flex items-center">
-          <i class="fa-solid fa-bell text-yellow-400"></i>
-        </div>
-      </div>
-      <div class="p-2 flex justify-end pr-[10px]">
-        <NuxtLink to="" class="buttonproducts"> เพิ่มสินค้า </NuxtLink>
+        <NuxtLink to="/product/create" class=" buttonpages bg-white hover:bg-slate-200 "> เพิ่มสินค้า </NuxtLink>
       </div>
       <!-- product -->
-      <div class="w-full p-2 flex justify-center">
-        <NuxtLink to="/product/[id]" class="grid grid-cols-4 gap-2">
+      <div class="w-full p-2 flex justify-center bg-black">
+        <NuxtLink to="/product/[id]" class="grid grid-cols-5 gap-2">
           <div
             v-for="(item, i) in products"
             :key="i"
@@ -46,7 +26,6 @@
         </NuxtLink>
       </div>
     </div>
-    <div class="bg-">-</div>
   </div>
 </template>
 

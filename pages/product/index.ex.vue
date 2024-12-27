@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="p-2 flex justify-end pr-[10px]">
-        <NuxtLink to="" class="buttonproducts"> เพิ่มสินค้า </NuxtLink>
+        <NuxtLink to="/product/create" class="buttonproducts"> เพิ่มสินค้า </NuxtLink>
       </div>
       <!-- product -->
       <div v-if="!loading">

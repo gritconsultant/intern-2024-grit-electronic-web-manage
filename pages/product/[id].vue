@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-5 w-screen text-black/70">
+  <div >
     <div class="pages" v-for="(data, i) in products" :key="i">
       <!-- ข้อมูลทั่วไปและปุ่ม -->
       <div class="flex gap-5">
@@ -26,7 +26,7 @@
             >
               สินค้าคงเหลือ
               <div class="h-full w-full flex items-center justify-center">
-                <i class="font-bold text-2xl text-[#765798]">number</i>
+                <i class="font-bold text-9xl text-[#765798]">{{ data.amount }}</i>
               </div>
             </div>
           </div>
@@ -240,6 +240,7 @@ const products = ref<Product[]>([
     img: "https://mercular.s3.ap-southeast-1.amazonaws.com/images/products/2024/06/Computer/24GS50F-1(1).jpg",
   },
 ]);
+
 </script>
 
 <style></style>
