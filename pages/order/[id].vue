@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full px-5">
-    <div class="pages2">
-
+  <div class="w-screen" >
+    <div class="pages">
+      รายละเอียดorder
     </div>
   </div>
 </template>

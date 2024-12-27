@@ -34,14 +34,19 @@
         <NuxtLink to="" class="buttonproducts"> เพิ่มสินค้า </NuxtLink>
       </div>
       <!-- product -->
-      <div class="bg-white w-full p-2 flex justify-center">
-        <NuxtLink to="" class="grid grid-cols-4 gap-2">
-          <div v-for="(item, i) in products" :key="i">
+      <div class="w-full p-2 flex justify-center">
+        <NuxtLink to="/product/[id]" class="grid grid-cols-4 gap-2">
+          <div
+            v-for="(item, i) in products"
+            :key="i"
+            class="transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-102 hover:bg-black/10 rounded-[10px] p-2"
+          >
             <CardProduct :product="item" />
           </div>
         </NuxtLink>
       </div>
     </div>
+    <div class="bg-">-</div>
   </div>
 </template>
 

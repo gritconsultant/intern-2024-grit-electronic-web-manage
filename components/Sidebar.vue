@@ -1,6 +1,5 @@
 <template>
-  <div class="">
-    <div class="bg-[#F7F1FD] p-[20px] w-[300px] h-full rounded-[20px]">
+    <div class="bg-[#F7F1FD] p-[20px] w-[300px] h-full  rounded-[20px]">
       <div>
         <NuxtLink to="/">
           <img
@@ -11,7 +10,7 @@
         </NuxtLink>
       </div>
       <hr class="hr" />
-      <div class="flex flex-col justify-between h-[700px]">
+      <div class="flex flex-col justify-between gap-36    ">
         <!-- menu -->
         <div class="grid grid-cols-1 gap-5 max-sm:hidden">
           <NuxtLink class="buttons w-full" to="/product">
@@ -21,7 +20,7 @@
             </div>
           </NuxtLink>
 
-          <NuxtLink class="buttons w-full" to="/product/order">
+          <NuxtLink class="buttons w-full" to="/order">
             <div class="flex gap-2 ml-10">
               <i class="fa-solid fa-cart-shopping mt-[3px]"></i>
               <p>คำสั่งซื้อ</p>
@@ -73,7 +72,7 @@
         </div>
       </div>
     </div>
-  </div>
+
 </template>
 
 <script lang="ts" setup></script>

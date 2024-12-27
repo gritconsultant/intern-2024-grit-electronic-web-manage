@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full px-5">
+  <div class="w-screen bg-black  ">
     <div
       class="bg-[#765798]/60 w-full p-5 rounded-[20px] h-full flex flex-col gap-5"
     >
@@ -72,7 +72,7 @@
             <div class="w-[130px] text-center bg-slate-300"></div>
             <div class="w-[240px] px-2 flex justify-between bg-slate-400">
               <span class="w-full truncate">หมายเเหตุ</span>
-              <NuxtLink to="">
+              <NuxtLink to="/order/[id]">
                 <i class="fa-solid fa-ellipsis mt-[5px]"></i>
               </NuxtLink>
             </div>
