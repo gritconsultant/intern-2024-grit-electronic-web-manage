@@ -1,7 +1,5 @@
 <template>
-  <div class="p-2 w-screen h-screen">
-    <div class="pages">
-      <div class="flex justify-between gap-2">
+ <div class="flex justify-between gap-2">
         <!-- Search -->
         <div>
           <div
@@ -31,8 +29,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">

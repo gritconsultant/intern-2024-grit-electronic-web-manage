@@ -1,6 +1,10 @@
 // main.scss */
+.textmain {
+    @apply text-[#2B1E28]
+}
+
 .hr{
-    @apply mt-[15px] mb-[30px] border-[#B1737E]
+    @apply  border-[#B1737E] rounded-full 
 }
 
 .buttons {
@@ -44,5 +48,5 @@
 }
 
 .pages {
-    @apply bg-[#593D53] w-full h-full p-5 rounded-[20px]  flex flex-col gap-5
+    @apply bg-[#593D53] w-full h-full p-5 rounded-[20px] object-cover
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Desktop -->
-    <div class="bg-[#2B1E28] p-[20px] w-[300px] h-screen rounded-tr-[30px] max-lg:hidden">
+    <div class="bg-[#2B1E28] p-[20px] w-[250px] h-screen rounded-tr-[30px] max-lg:hidden">
       <div>
         <NuxtLink to="/">
           <img
@@ -11,11 +11,11 @@
           />
         </NuxtLink>
       </div>
-      <hr class="hr" />
+      <hr class="hr mt-[15px]" />
       <div class="flex flex-col">
         <!-- menu -->
-        <div v-for="(data, i) in page" :key="i" class="mt-5">
-          <NuxtLink :to="data.path">
+        <div v-for="(data, i) in page" :key="i" class="mt-10">
+          <NuxtLink :to="data.path" class="">
             <div
               class="flex gap-2 justify-start pl-[30px] p-2 rounded-[100px] text-xl text-[#EAA04B] hover:bg-[#FFEAEA] hover:text-[#240E1F] delay-75"
             >
