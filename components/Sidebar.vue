@@ -1,5 +1,7 @@
 <template>
-    <div class="bg-[#F7F1FD] p-[20px] w-[300px] h-full  rounded-[20px]">
+  <div>
+    <!-- Desktop -->
+    <div class="bg-[#2B1E28] p-[20px] w-[300px] h-screen rounded-tr-[30px] max-lg:hidden">
       <div>
         <NuxtLink to="/">
           <img
@@ -10,71 +12,98 @@
         </NuxtLink>
       </div>
       <hr class="hr" />
-      <div class="flex flex-col justify-between gap-36    ">
+      <div class="flex flex-col">
         <!-- menu -->
-        <div class="grid grid-cols-1 gap-5 max-sm:hidden">
-          <NuxtLink class="buttons w-full" to="/product">
-            <div class="flex gap-2 ml-10">
-              <i class="fa-solid fa-box-open mt-[6px]"></i>
-              <p>สินค้า</p>
+        <div v-for="(data, i) in page" :key="i" class="mt-5">
+          <NuxtLink :to="data.path">
+            <div
+              class="flex gap-2 justify-start pl-[30px] p-2 rounded-[100px] text-xl text-[#EAA04B] hover:bg-[#FFEAEA] hover:text-[#240E1F] delay-75"
+            >
+              <i :class="data.icon" class="text-[30px]"> </i>
+              <div class="mt-[5px]">
+                {{ data.name }}
+              </div>
             </div>
           </NuxtLink>
-
-          <NuxtLink class="buttons w-full" to="/order">
-            <div class="flex gap-2 ml-10">
-              <i class="fa-solid fa-cart-shopping mt-[3px]"></i>
-              <p>คำสั่งซื้อ</p>
-            </div>
-          </NuxtLink>
-          <button class="buttons w-full">
-            <div class="flex gap-2 ml-10">
-              <i class="fa-solid fa-circle-xmark mt-[3px]"></i>
-              <p>คืนสินค้า</p>
-            </div>
-          </button>
-          <button class="buttons w-full">
-            <div class="flex gap-2 ml-10">
-              <i class="fa-regular fa-comment-dots mt-[6px]"></i>
-              <p>รีวิว</p>
-            </div>
-          </button>
-          <button class="buttons w-full">
-            <div class="flex gap-2 ml-10">
-              <i class="fa-solid fa-square-poll-horizontal mt-[4px]"></i>
-              <p>รายงานการขาย</p>
-            </div>
-          </button>
-          <button class="buttons w-full">
-            <div class="flex gap-2 ml-10">
-              <i class="fa-solid fa-users mt-[5px]"></i>
-              <p>รายละเอียด</p>
-            </div>
-          </button>
-        </div>
-        <!-- mobile -->
-        <!-- <div class="hidden max-sm:block">
-          mobile
-        </div> -->
-        <!-- profile -->
-        <div class="flex   gap-2 bg-[#765798] rounded-[50px] h-[60px] p-1">
-          <div
-            class="flex justify-center items-center bg-white p-[20px] rounded-[50px]"
-          >
-            <i class="fa-solid fa-user-large text-[#765798]"></i>
-          </div>
-          <div class="flex flex-col gap w-2/3 px-2 text-white">
-            <div class="header w-[140px] truncate">jhon edasdasd wweDo</div>
-            <div class="flex justify-end">ตำแหน่ง</div>
-          </div>
-          <div class="flex items-center justify-end pr-[20px] text-[#452E5E]">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-          </div>
         </div>
       </div>
     </div>
-
+     <!-- Ipad -->
+     <div class="bg-[#2B1E28] p-[20px] w-[85px] h-screen rounded-tr-[30px] max-sm:hidden">
+      <div>
+        <NuxtLink to="/">
+          <img
+            class="object-cover "
+            src="https://sv1.img.in.th/iRCpEw.png"
+            alt=""
+          />
+        </NuxtLink>
+      </div>
+      <hr class="hr" />
+      <div class="flex flex-col">
+        <!-- menu -->
+        <div v-for="(data, i) in page" :key="i" class="mt-2">
+          <NuxtLink :to="data.path">
+            <div
+              class="flex gap-2 justify-center items-center   p-2 rounded-[100px] h-[45px] text-xl text-[#EAA04B] hover:bg-[#FFEAEA] hover:text-[#240E1F] delay-75"
+            >
+              <i :class="data.icon" class="text-[25px]"> </i>
+            </div>
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile -->
+    <div class="bg-[#1C67AA] p-1 w-[60px] m-2  rounded-full  ">
+      <div>
+        <NuxtLink to="/">
+          <img
+            class="object-cover bg-[#2B1E28] rounded-full p-1 flex justify-center items-center pr-[6px] "
+            src="https://sv1.img.in.th/iRCpEw.png"
+            alt=""
+          />
+        </NuxtLink>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { data } from "autoprefixer";
+import type { Pages } from "~/models/page.model";
+
+const page = ref<Pages[]>([
+  {
+    path: "product",
+    name: "สินค้า",
+    active: true,
+    icon: "fa-solid fa-cart-shopping",
+  },
+  {
+    path: "/",
+    name: "รายงานการขาย",
+    active: true,
+    icon: "fa-solid fa-cart-shopping",
+  },
+  {
+    path: "product",
+    name: "คืนสินค้า",
+    active: true,
+    icon: "fa-solid fa-cart-shopping",
+  },
+  {
+    path: "product",
+    name: "รายละเอียด",
+    active: true,
+    icon: "fa-solid fa-cart-shopping",
+  },
+  {
+    path: "product",
+    name: "ช่วยเหลือ",
+    active: true,
+    icon: "fa-solid fa-cart-shopping",
+  },
+]);
+</script>
 
 <style></style>
