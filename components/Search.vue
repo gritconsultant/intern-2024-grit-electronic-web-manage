@@ -1,23 +1,36 @@
 <template>
-  <div class="w-2/4">
-    <div class="flex justify-between gap-5 h-[60px]">
-      <div class="bg-white w-full rounded-[50px] relative pl-[1px]">
-        <div
-          class="flex items-center justify-center rounded-[100px] border-2 bg-[#765798]/20 hover:bg-[#765798]/50 h-full w-[60px] absolute cursor-pointer"
-        >
-          <i class="fa-solid fa-magnifying-glass"></i>
+  <div class="p-2 w-screen h-screen">
+    <div class="pages">
+      <div class="flex justify-between gap-2">
+        <!-- Search -->
+        <div>
+          <div
+            class="flex justify-center items-center rounded-[100px] h-[40px] bg-white hover:bg-[#765798]/50 w-[60px] absolute cursor-pointer"
+          >
+            <i class="fa-solid fa-magnifying-glass text-[20px]"></i>
+          </div>
+          <input
+            type="text"
+            class="w-[900px] h-[40px] rounded-full pl-[70px] pr-[20px] border-none outline-none bg-white/50 text-white placeholder-white"
+            placeholder="พิมชื่อสินค้าที่ต้องการค้นหา"
+          />
         </div>
-        <input
-          class="w-full pl-[70PX] pr-[10px] rounded-[50px] h-full border-none outline-none"
-          type="search"
-          key="name"
-          placeholder="ค้นหารายการสินค้าที่ต้องการ"
-        />
+        <div class="flex gap-2">
+          <i
+            class="fa-solid fa-bell cursor-pointer text-4xl text-[#EAA04B]"
+          ></i>
+          <div class="w-[150px] h-[40px] rounded-full  bg-[#B1737E]">
+            <div class="flex gap-2">
+              <i class="fa-solid fa-user m-1 text-l rounded-full p-2 bg-white"></i>
+              <div class="flex flex-col  ">
+                <h1 class="font-bold w-[80px] ">john        do</h1>
+                <p class="text-[10px] flex justify-end">ตำแหน่ง</p>
+              </div>
+              <i class="fa-solid fa-ellipsis-vertical flex justify-center items-center cursor-pointer "></i>
+            </div>
+          </div>
+        </div>
       </div>
-       <!-- warn -->
-       <div class="flex items-center pt-[2px]">
-          <i class="fa-solid fa-bell text-yellow-400 text-3xl"></i>
-        </div>
     </div>
   </div>
 </template>

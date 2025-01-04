@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-5">
+  <div class="flex gap-2">
     <Sidebar />
     <slot />
   </div>
