@@ -29,7 +29,7 @@
       </div>
     </div>
      <!-- Ipad -->
-     <div class="bg-[#2B1E28] p-[20px] w-[85px] h-screen rounded-tr-[30px] max-sm:hidden">
+     <div class="bg-[#2B1E28] p-[20px] w-[85px] h-screen rounded-tr-[30px] lg:hidden max-sm:hidden">
       <div>
         <NuxtLink to="/">
           <img
@@ -54,7 +54,7 @@
       </div>
     </div>
     <!-- Mobile -->
-    <div class="bg-[#1C67AA] p-1 w-[60px] m-2  rounded-full  ">
+    <div class="bg-[#1C67AA] p-1 w-[60px] m-2  rounded-full  sm:hidden">
       <div>
         <NuxtLink to="/">
           <img
