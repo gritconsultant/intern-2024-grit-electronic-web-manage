@@ -138,13 +138,74 @@
           <div
             class="w-full h-[230px] p-2 rounded-[20px] drop-shadow-md bg-white"
           >
-            2
+            <div class="flex flex-col gap-2 h-full p-1">
+              <div class="flex justify-between">
+                <h1
+                  class="flex justify-center rounded-full text-white font-bold p-1 w-[200px] bg-[#593D53] drop-shadow-md"
+                >
+                  สรุปการขายประจำปี
+                </h1>
+                <div class="flex gap-5">
+                  <h2 class="textmain text-xl font-bold">ยอดขายรวม</h2>
+                  ------
+                  <p class="textmain font-bold mt-[3px]">บาท</p>
+                </div>
+                <div
+                  class="flex justify-center p-2 gap-2 rounded-full w-[120px] bg-[#878787]"
+                >
+                  <i class="fa-solid fa-calendar-days"></i>
+                  <select name="" id="">
+                    <option value="">2023</option>
+                    <option value="">2022</option>
+                    <option value="">2021</option>
+                  </select>
+                </div>
+              </div>
+              <div class="h-full bg-slate-400">garph</div>
+            </div>
           </div>
           <!-- คำสั่งซื้อ -->
           <div
             class="w-full h-[350px] p-2 rounded-[20px] drop-shadow-md bg-white"
           >
-            1
+            <div class="flex flex-col gap-2">
+              <div class="flex justify-between">
+                <h1
+                  class="flex justify-center rounded-full text-white font-bold p-1 w-[140px] bg-[#593D53] drop-shadow-md"
+                >
+                  คำสั่งซื้อล่าสุด
+                </h1>
+                <h2 class="textmain font-bold pr-2 mt-[6px]">ทั้งหมด</h2>
+              </div>
+              <div class="flex flex-col gap-2 px-2" >
+                <!-- Header -->
+                <div class="flex flex-col gap-2">
+                  <div class="flex gap-2">
+
+                    <h6 class="bg-slate-200 w-[130px]">หมายเลขคำสั่งซื้อ</h6>
+                    <h6 class="bg-slate-200 text-center w-[100px]">วันที่</h6>
+                    <h6 class="bg-slate-200 text-center w-[100px]">ชื่อสินค้า</h6>
+                    <h6 class="bg-slate-200 text-center w-[100px]">ประเภท</h6>
+                    <h6 class="bg-slate-200 text-center w-[100px]">จำนวนรวม</h6>
+                    <h6 class="bg-slate-200 text-center w-[100px]">ราคารวม</h6>
+                  </div>
+                  <hr>
+                </div>
+                <!-- Body -->
+                <div class="flex flex-col">
+                  <div class="flex gap-2">
+                    <h6 class=" w-[130px]">#หมายเลขคำสั่งซื้อ</h6>
+                    <h6 class=" text-center w-[100px]">วันที่</h6>
+                    <h6 class=" text-center w-[100px]">ชื่อสินค้า</h6>
+                    <h6 class=" text-center w-[100px]">ประเภท</h6>
+                    <h6 class=" text-center w-[100px]">จำนวนรวม</h6>
+                    <h6 class=" text-center w-[100px]">ราคารวม</h6>
+                    <i class="fa-solid fa-ellipsis-vertical cursor-pointer mt-1"></i>
+                  </div>
+                  <hr>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

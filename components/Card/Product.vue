@@ -1,34 +1,59 @@
 <template>
-  <div>
+  <!-- Caedproduct -->
+  <div class="flex justify-center gap-3 mt-[20px] px-[20px] drop-shadow-lg">
     <div
-      class="w-[200px] h-[300px] border-2 border-[#A6A6A6] p-3 flex flex-col gap-2 rounded-[5px] bg-[#FFFFFF] drop-shadow-lg"
+      class="flex flex-col justify-between w-[200px] h-[270px] rounded-[20px] bg-white"
     >
-      <div class="flex justify-between">
-        <div
-          class="flex justify-center rounded-[30px] gap-2 w-[60px] font-semibold text-[#D78D33] bg-[#FFF1E0]"
-        >
-          <div>
-            <i class="fa-solid fa-star"></i>
+      <div class="p-1">
+        <!-- HeaderCard -->
+        <div class="flex justify-between">
+          <div class="flex gap-2 px-2">
+            <h1 class="textmain text-[12px] font-bold">ประเภท</h1>
+            <h1 class="textmain text-[12px] font-bold">|</h1>
+            <div
+              class="flex justify-center items-center gap-1 w-[45px] rounded-[10px] text-[#D78D33] bg-[#FFE7CA]"
+            >
+              <i class="fa-solid fa-star text-[12px]"></i>
+              <p
+                class="flex items-center mt-[2px] text-[13px] font-bold h-[10px]"
+              >
+                0
+              </p>
+            </div>
           </div>
-          <p>4</p>
+          <i
+            class="fa-solid fa-trash-can text-[#EC5B3D] flex items-center text-[12px] mt-[2px] pr-[5px]"
+          ></i>
         </div>
-        <i class="fa-solid fa-trash-can  text-base cursor-pointer  hover:text-[#E70609]"></i>
-      </div>
-
-      <div class="object-cover place-content-center border-2 h-[350px]">
-        <img
-          src="https://blog.bnn.in.th/wp-content/uploads/2024/03/Acer-Aspire-3-A315-59-32GC.jpg"
-          alt=""
-        />
-      </div>
-      <div class="flex justify-between mt-1">
-        <div>
-          <span class="fontsubheader">{{ product.name }} </span>
+        <hr class="my-[3px] mx-[4px] border-[#2B1E28] rounded-full" />
+        <!-- Photo -->
+        <div class="flex items-center place-content-center h-full">
+          <img
+            class="border-black border-[1px] drop-shadow-lg w-[130px] object-cover"
+            src="https://media-cdn.bnn.in.th/425404/asus-tuf-gaming-a16-fa608wv-qt069wf-jaeger-gray-1-square_medium.jpg"
+            alt=""
+          />
         </div>
-        <div class="text-indigo-400">฿ {{ product.price }}</div>
       </div>
-      <div>
-        <span>ยอดขาย {{ product.amount }}</span>
+      <div
+        class="flex flex-col items-center gap-[3px] h-[80px] rounded-[20px] p-1 px-2 bg-[#EAA04B]"
+      >
+        <h1
+          class="text-center h-[20px] textmain font-bold text-[7px] text-wrap truncate"
+        >
+          โน๊ตบุ๊ค Asus TUF Gaming A16 FA608WV-QT069WF Jaeger Gray
+        </h1>
+        <div
+          class="text-center rounded-[50px] text-[10px] font-bold w-[80px] text-[#EAA04B] bg-[#2B1E28]"
+        >
+          ยอดคงเหลือ
+        </div>
+        <div class="pl-3">
+          <span class="textmain font-bold text-[22px]">150</span>
+          <span class="textmain font-bold text-center text-[7px] text-gray-400">
+            ชิ้น
+          </span>
+        </div>
       </div>
     </div>
   </div>
