@@ -40,6 +40,7 @@ export interface Product {
   id: number;
   name: string;
   detail: string;
+  Specs: string;
   price: number;
   amount: number;
   img: string;

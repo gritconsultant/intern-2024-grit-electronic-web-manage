@@ -13,7 +13,9 @@
             placeholder="พิมชื่อสินค้าที่ต้องการค้นหา"
           />
         </div>
+        <!-- Proflie -->
         <div class="flex gap-2">
+          <!-- bell -->
           <i
             class="fa-solid fa-bell cursor-pointer text-4xl text-[#EAA04B]"
           ></i>

@@ -39,7 +39,7 @@
           />
         </NuxtLink>
       </div>
-      <hr class="hr" />
+      <hr class="hr mt-2" />
       <div class="flex flex-col">
         <!-- menu -->
         <div v-for="(data, i) in page" :key="i" class="mt-2">
