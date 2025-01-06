@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 w-full">
+  <div class="p-2 w-ful ">
     <div
       class="pages flex flex-col gap-2"
       v-for="(data, item) in products"
