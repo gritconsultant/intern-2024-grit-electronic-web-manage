@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Desktop -->
-    <div class="bg-[#2B1E28] p-[20px] w-[250px] h-screen rounded-tr-[30px] max-xl:hidden delay-150 ">
+    <div class="bg-[#2B1E28] p-[20px] w-[250px] h-screen rounded-tr-[30px] max-xl:hidden duration-700   ">
       <div>
         <NuxtLink to="/">
           <img
@@ -17,7 +17,7 @@
         <div v-for="(data, i) in page" :key="i" class="mt-10">
           <NuxtLink :to="data.path" class="">
             <div
-              class="flex gap-2 justify-start pl-[30px] p-2 rounded-[100px] text-xl text-[#EAA04B] hover:bg-[#FFEAEA] hover:text-[#240E1F] delay-75"
+              class="flex gap-2 justify-start pl-[30px] p-2 rounded-[100px] text-xl text-[#EAA04B] hover:bg-[#FFEAEA] hover:text-[#240E1F]   duration-700 "
             >
               <i :class="data.icon" class="text-[30px]"> </i>
               <div class="mt-[5px]">
@@ -29,7 +29,7 @@
       </div>
     </div>
      <!-- Ipad -->
-     <div class="bg-[#2B1E28] p-[20px] w-[85px] h-screen rounded-tr-[30px] xl:hidden max-sm:hidden  delay-150 ">
+     <div class="bg-[#2B1E28] p-[20px] w-[85px] h-screen rounded-tr-[30px] xl:hidden duration-700  max-sm:hidden  ">
       <div>
         <NuxtLink to="/">
           <img
@@ -45,7 +45,7 @@
         <div v-for="(data, i) in page" :key="i" class="mt-2">
           <NuxtLink :to="data.path">
             <div
-              class="flex gap-2 justify-center items-center   p-2 rounded-[100px] h-[45px] text-xl text-[#EAA04B] hover:bg-[#FFEAEA] hover:text-[#240E1F] delay-75"
+              class="flex gap-2 justify-center items-center   p-2 rounded-[100px] h-[45px] text-xl text-[#EAA04B] hover:bg-[#FFEAEA] hover:text-[#240E1F] "
             >
               <i :class="data.icon" class="text-[25px]"> </i>
             </div>
@@ -54,7 +54,7 @@
       </div>
     </div>
     <!-- Mobile -->
-    <div class="bg-[#1C67AA] p-1 w-[60px]  ml-[20px] mt-[10px] rounded-full  sm:hidden  delay-150 absolute ">
+    <div class="bg-[#1C67AA] p-1 w-[60px]  ml-[20px] mt-[10px] rounded-full  sm:hidden  duration-700  absolute   ">
       <div>
         <NuxtLink to="/">
           <img
@@ -80,7 +80,7 @@ const page = ref<Pages[]>([
     icon: "fa-solid fa-cart-shopping",
   },
   {
-    path: "/",
+    path: "order",
     name: "รายงานการขาย",
     active: true,
     icon: "fa-solid fa-cart-shopping",

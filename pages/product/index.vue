@@ -24,11 +24,9 @@
           </div>
         </div>
         <!-- Caedproduct -->
-        <div class="mt-[3px] grid grid-cols-5 max-lg:grid-cols-3 max-md:gri max-sm:grid-col-1  ">
-          <div v-for="(item, i) in products" :key="i">
-            <NuxtLink to="/product/[id].vue">
-              <CardProduct :product="item" />
-            </NuxtLink>
+        <div class="mt-[3px] grid   grid-cols-5 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 ">
+          <div v-for="(item, i) in products" :key="i" class=" flex justify-center items-center my-2">
+            <CardProduct :product="item" />
           </div>
         </div>
       </div>

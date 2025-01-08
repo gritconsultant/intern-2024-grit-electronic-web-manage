@@ -1,65 +1,55 @@
 <template>
-  <div class="w-screen">
-    <div
-      class="bg-[#765798]/60 w-full p-5 rounded-[20px] h-full flex flex-col gap-5"
-    >
-      <!-- selector -->
-      <div class=" w-[150px] rounded-[50px] flex gap-[2px] p-2 pl-[30px] text-white bg-[#765798]">
-        <i class="fa-solid fa-filter mt-[10px]"></i>
-        <select name="" id="" class="bg-[#765798]">
-          <option value="\">ทั้งหมด</option>
-        </select>
-      </div>
-      <!-- Order -->
-      <div
-        class="p-5 bg-white rounded-[20px] text-black/70 flex flex-col gap-1 h-full"
-      >
-        <div class="flex justify-between">
-          <h1 class="subheader">คำสั่งซื้อล่าสุด</h1>
-          <p class="mt-[5px]">ทั้งหมด</p>
+  <div class="defaultpages">
+    <div class="pages">
+      <!-- Header -->
+
+      <hr class="hrpages" />
+      <Search />
+
+      <div class="flex gap-2 p-1 h-[90%] w-full bg-slate-600">
+        <!-- รายการคำสั่งซื้อ -->
+        <div class="p-2 h-full w-[80%] roundedmain bg-white">
+          <div class="flex justify-between">
+            <haeder class="textmain font-bold text-[20px]"
+              >รายงานคำสั่งซื้อ</haeder
+            >
+            <div
+              class="flex justify-center p-2 gap-2 rounded-full w-[120px] bg-[#878787]"
+            >
+              <i class="fa-solid fa-calendar-days"></i>
+              <select name="" id="">
+                <option value="">2023</option>
+                <option value="">2022</option>
+                <option value="">2021</option>
+              </select>
+            </div>
+          </div>
+          <hr class="hrpages" />
+          <div class="bg-slate-600 h-[90%]">
+            <!-- Head -->
+            <div class="w-full">
+              <div class="flex gap-2 bg-slate-500">
+                <h1 class="w-[15%] bg-slate-400">หมายเลขคำสั่งซื้อ</h1>
+                <h1 class="w-[15%] text-center bg-slate-400">วันที่</h1>
+                <h1 class="w-[15%] text-center bg-slate-400">
+                  ชื่อผู้สั่งซื้อ
+                </h1>
+                <h1 class="w-[15%] text-center bg-slate-400">ชื่อสินค้า</h1>
+                <h1 class="w-[15%] text-center bg-slate-400">จำนวนรวม</h1>
+                <h1 class="w-[15%] text-center bg-slate-400">ราคารวม</h1>
+                <h1 class="w-[15%] text-center bg-slate-400">หมายเหตุ</h1>
+              </div>
+              <hr class="border-[#2B1E28] border-[2px] rounded-full my-1" />
+            </div>
+          </div>
+          <!-- paginages -->
+          <div></div>
         </div>
-        <div class="flex flex-col gap-2 h-full">
-          <!-- Header Order -->
-          <div
-            class="flex gap-3 py-[2px] border-2 border-white border-b-black text-xs"
-          >
-            <div class="w-[100px]">หมายเลขคำสั่งซื้อ</div>
-            <div class="w-[135px] text-center">วันที่</div>
-            <div class="w-[135px] text-center">ชำระเงิน</div>
-            <div class="w-[135px] text-center">สถานะ</div>
-            <div class="w-[130px] text-center">ราคารวม</div>
-            <div class="w-[135px] text-center">สินค้า</div>
-            <div class="w-[240px] px-2">
-              <span>หมายเเหตุ</span>
-            </div>
-          </div>
-          <!-- Detail -->
-          <div
-            v-for="(data, order) in order"
-            :key="order"
-            class="flex gap-3 py-[2px] border-[1px] border-white border-b-black/40 text-xs"
-          >
-            <div class="w-[100px] bg-slate-400">#{{ data.order_id }}</div>
-            <div class="w-[135px] text-center bg-slate-400">
-              {{ data.created_at }}
-            </div>
-            <div class="w-[135px] text-center bg-slate-300">
-              {{ data.created_at }}
-            </div>
-            <div class="w-[135px] text-center bg-slate-200">
-              {{ data.status }}
-            </div>
-            <div class="w-[135px] text-center bg-slate-400">
-              {{ data.payment_status }}
-            </div>
-            <div class="w-[135px] text-center bg-slate-300"></div>
-            <div class="w-[240px] px-2 flex justify-between bg-slate-400">
-              <span class="w-full truncate">หมายเเหตุ</span>
-              <NuxtLink to="/order/[id]">
-                <i class="fa-solid fa-ellipsis mt-[5px]"></i>
-              </NuxtLink>
-            </div>
-          </div>
+        <div class="flex flex-col gap-2 h-full w-[20%]">
+          <!-- ยอดรวมคำสั่งซื้อ -->
+          <div class="bg-white w-full h-[40%] roundedmain">1</div>
+          <!-- ยอดรวมแต่ละประเภท -->
+          <div class="bg-white w-full h-[60%] roundedmain">2</div>
         </div>
       </div>
     </div>

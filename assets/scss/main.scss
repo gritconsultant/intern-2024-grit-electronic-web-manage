@@ -1,4 +1,11 @@
 // main.scss */
+.defaultpages{
+    @apply pl-1 w-screen h-screen
+}
+
+.pages {
+    @apply bg-[#593D53] w-full h-full p-2 rounded-tl-[30px]    
+}
 .textmain {
     @apply text-[#2B1E28] 
 }
@@ -12,7 +19,7 @@
 }
 
 .hrpages {
-    @apply mt-[20px] mb-[15px] border-[#2B1E28] border-[2px] rounded-full
+    @apply mt-[15px] mb-[15px] border-[#2B1E28] border-[2px] rounded-full
 }
 
 
@@ -36,13 +43,6 @@
 
 }
 
-.defaultpages{
-    @apply p-1 w-screen h-screen
-}
-
-.pages {
-    @apply bg-[#593D53] w-full h-full p-2 rounded-[20px]  
-}
 
 .buttondelete {
     @apply bg-[#EC5B3D] text-[15px] text-white font-semibold  rounded-[50px] dropshadowwhite

@@ -1,11 +1,11 @@
 <template>
   <div class="defaultpages">
-    <div class="pages h-full">
-      <Search />
+    <div class="pages ">
+      <Profile/>
       <hr class="hrpages" />
       <!-- Body -->
       <div
-        class="w-[100%] h-[90%] flex gap-2 p-2 max-xl:flex-col max-sm:h-[85%]"
+        class="w-[100%] h-[91%] flex gap-2 p-2 max-xl:flex-col max-sm:h-[85%]"
       >
         <!-- 1 -->
         <div class="w-[40%] max-xl:w-[100%] max-xl:h-[30%] flex flex-col gap-2">
