@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 w-ful ">
+  <div class="p-1 w-ful">
     <div
       class="pages flex flex-col gap-2"
       v-for="(data, item) in products"
@@ -113,7 +113,9 @@
           </div>
           <div class="flex flex-col mt-[10px] gap-5 text-white">
             <button class="buttondelete h-[30px] w-[100px]">ซ่อน</button>
-            <button class="buttonedit h-[30px] w-[100px]">แก้ไขสินค้า</button>
+            <NuxtLink to="/product/edit/[id]">
+              <button class="buttonedit h-[30px] w-[100px]">แก้ไขสินค้า</button>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -140,16 +142,18 @@
       <!-- cardcomment -->
       <div class="flex justify-center items-center gap-5">
         <div class="flex justify-center items-center gap-2">
-          <div class="h-[250px] w-[350px] rounded-[7px] rounded-t-[11px] bg-white">
+          <div
+            class="h-[250px] w-[350px] rounded-[7px] rounded-t-[11px] bg-white"
+          >
             <header
-              class="flex justify-between rounded-[10px]  px-2 text-white h-[50px] bg-[#1D89EA]"
+              class="flex justify-between rounded-[10px] px-2 text-white h-[50px] bg-[#1D89EA]"
             >
               <i
                 class="fa-solid fa-comment-dots bg-[#3B414F] p-[3px] rounded-full text-white text-[8px] ml-[326px] mt-[2px] absolute cursor-pointer"
               ></i>
 
               <i
-                class="fa-solid fa-trash-can bg-white text-center  p-[3px] rounded-full w-[14px] text-[#EC5B3D] text-[8px] ml-[326px] mt-[34px] absolute cursor-pointer"
+                class="fa-solid fa-trash-can bg-white text-center p-[3px] rounded-full w-[14px] text-[#EC5B3D] text-[8px] ml-[326px] mt-[34px] absolute cursor-pointer"
               ></i>
               <div class="flex flex-col gap-2 w-full">
                 <b class="text-[12px]">John Do</b>
@@ -200,16 +204,18 @@
           </div>
         </div>
         <div class="flex justify-center items-center gap-2">
-          <div class="h-[250px] w-[350px] rounded-[7px] rounded-t-[11px] bg-white">
+          <div
+            class="h-[250px] w-[350px] rounded-[7px] rounded-t-[11px] bg-white"
+          >
             <header
-              class="flex justify-between rounded-[10px]  px-2 text-white h-[50px] bg-[#1D89EA]"
+              class="flex justify-between rounded-[10px] px-2 text-white h-[50px] bg-[#1D89EA]"
             >
               <i
                 class="fa-solid fa-comment-dots bg-[#3B414F] p-[3px] rounded-full text-white text-[8px] ml-[326px] mt-[2px] absolute cursor-pointer"
               ></i>
 
               <i
-                class="fa-solid fa-trash-can bg-white text-center  p-[3px] rounded-full w-[14px] text-[#EC5B3D] text-[8px] ml-[326px] mt-[34px] absolute cursor-pointer"
+                class="fa-solid fa-trash-can bg-white text-center p-[3px] rounded-full w-[14px] text-[#EC5B3D] text-[8px] ml-[326px] mt-[34px] absolute cursor-pointer"
               ></i>
               <div class="flex flex-col gap-2 w-full">
                 <b class="text-[12px]">John Do</b>
@@ -259,7 +265,6 @@
             </div>
           </div>
         </div>
-        
       </div>
     </div>
   </div>

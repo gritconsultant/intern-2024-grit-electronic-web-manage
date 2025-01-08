@@ -1,14 +1,18 @@
 // main.scss */
 .textmain {
-    @apply text-[#2B1E28]
+    @apply text-[#2B1E28] 
 }
 
 .roundedmain {
-    @apply rounded-[10px]
+    @apply rounded-[10px] 
 }
 
 .hr{
     @apply  border-[#B1737E] rounded-full 
+}
+
+.hrpages {
+    @apply mt-[20px] mb-[15px] border-[#2B1E28] border-[2px] rounded-full
 }
 
 
@@ -18,18 +22,6 @@
 
 .header {
     @apply font-bold text-xl
-}
-
-.subheader {
-    @apply font-bold text-lg 
-}
-
-.h1 {
-    @apply text-center bg-white drop-shadow-xl rounded-[50px] p-2 w-[130px]
-}
-
-.details {
-    @apply text-xs
 }
 
 .photo {
@@ -44,8 +36,12 @@
 
 }
 
+.defaultpages{
+    @apply p-1 w-screen h-screen
+}
+
 .pages {
-    @apply bg-[#593D53] w-full h-full p-5 rounded-[20px] object-cover
+    @apply bg-[#593D53] w-full h-full p-2 rounded-[20px]  
 }
 
 .buttondelete {
@@ -55,7 +51,17 @@
     @apply bg-[#DD8D60] text-[15px] text-white font-semibold  rounded-[50px] dropshadowwhite 
 }
 
+
+// 
 .dropshadowwhite {
-    filter: drop-shadow(1px 3px 2px rgba(255, 255, 255, 0.8));
+    filter: drop-shadow(1px 3px 2px rgba(250, 255, 255, 0.8));
 }
 
+.dropshadowbottom {
+    filter: drop-shadow(1px 3px 2px rgb(0, 0, 0));
+}
+
+.dropshadowbottomsub {
+    filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
+}
+// 

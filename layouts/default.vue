@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-2 bg-[#593D53]/90">
+  <div class="flex gap-1 ">
     <Sidebar />
     <slot />
   </div>
