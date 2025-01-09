@@ -86,7 +86,7 @@ const page = ref<Pages[]>([
     icon: "fa-solid fa-cart-shopping",
   },
   {
-    path: "product",
+    path: "product_return",
     name: "คืนสินค้า",
     active: true,
     icon: "fa-solid fa-cart-shopping",

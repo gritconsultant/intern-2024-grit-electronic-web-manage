@@ -1,16 +1,15 @@
 <template>
   <div class="defaultpages">
     <div class="pages ">
-      <Profile/>
       <hr class="hrpages" />
       <!-- Body -->
       <div
-        class="w-[100%] h-[91%] flex gap-2 p-2 max-xl:flex-col max-sm:h-[85%]"
+        class="w-[100%] h-[98%] flex gap-2 p-2 max-xl:flex-col max-sm:h-[85%]"
       >
         <!-- 1 -->
         <div class="w-[40%] max-xl:w-[100%] max-xl:h-[30%] flex flex-col gap-2">
           <!-- รายงาน -->
-          <div class="bg-white w-full h-[65%] p-5 max-xl:h-[100%] roundedmain">
+          <div class="bg-[#EAA04B]/50 w-full h-[65%] p-5 max-xl:h-[100%] roundedmain">
             <h1
               class="textmain xl:text-[20px] md:text-[18px] sm:text-[12px] max-sm:text-[10px] font-bold pl-2 truncate"
             >
@@ -132,7 +131,7 @@
         <!-- 2 -->
         <div class="w-[60%] flex flex-col gap-2 max-xl:hidden">
           <!-- กราฟ -->
-          <div class="bg-white w-full h-[45%] roundedmain">
+          <div class="bg-[#B1737E] w-full h-[45%] roundedmain">
             <div class="flex flex-col gap-2 h-full p-1">
               <div class="flex justify-between">
                 <h1
@@ -160,7 +159,7 @@
             </div>
           </div>
           <!-- คำสั่งซื้อล่าสุด -->
-          <div class="bg-white w-full p-2 h-[55%] roundedmain">
+          <div class="bg-[#593D53]/50 w-full p-2 h-[55%] roundedmain">
             <div class="flex flex-col gap-2">
               <div class="flex justify-between">
                 <h1

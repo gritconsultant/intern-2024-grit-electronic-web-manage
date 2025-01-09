@@ -72,7 +72,6 @@
 </template>
 
 <script lang="ts" setup>
-import { data } from "autoprefixer";
 import type { Order } from "~/models/order.model";
 import type { Product } from "~/models/product.model";
 
@@ -110,6 +109,7 @@ const products = ref<Product[]>([
   {
     id: 1,
     name: "AULA",
+    Specs: '',
     detail:
       "Wried Mechanical KEYBOARDbgfnfdgdfsbsdfhsdfhfsdhhdsfhdfdfsfhdfdcxzcxzcf ",
     price: 1000,

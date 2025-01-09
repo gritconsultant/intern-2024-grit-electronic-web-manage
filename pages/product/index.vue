@@ -1,12 +1,10 @@
 <template>
-  <div class="defaultpages ">
+  <div class="defaultpages">
     <div class="pages">
       <!-- Header -->
-    <Search />
-      <hr
-        class="hrpages"
-      />
-      <!-- Body -->
+      <hr class="hrpages" />
+      <Search />  
+       <!-- Body -->
       <div>
         <div class="flex gap-2">
           <!-- selector -->
@@ -24,8 +22,14 @@
           </div>
         </div>
         <!-- Caedproduct -->
-        <div class="mt-[3px] grid   grid-cols-5 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 ">
-          <div v-for="(item, i) in products" :key="i" class=" flex justify-center items-center my-2">
+        <div
+          class="mt-[3px] grid grid-cols-5 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1"
+        >
+          <div
+            v-for="(item, i) in products"
+            :key="i"
+            class="flex justify-center items-center my-2"
+          >
             <CardProduct :product="item" />
           </div>
         </div>

@@ -1,10 +1,10 @@
 // main.scss */
 .defaultpages{
-    @apply pl-1 w-screen h-screen
+    @apply pl-1 w-full h-screen
 }
 
 .pages {
-    @apply bg-[#593D53] w-full h-full p-2 rounded-tl-[30px]    
+    @apply w-full h-full p-2    
 }
 .textmain {
     @apply text-[#2B1E28] 
@@ -19,7 +19,7 @@
 }
 
 .hrpages {
-    @apply mt-[15px] mb-[15px] border-[#2B1E28] border-[2px] rounded-full
+    @apply mt-[2px] mb-[5px] border-[#2B1E28] border-[2px] rounded-full
 }
 
 

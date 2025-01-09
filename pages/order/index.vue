@@ -6,7 +6,7 @@
       <hr class="hrpages" />
       <Search />
 
-      <div class="flex gap-2 p-1 h-[90%] w-full bg-slate-600">
+      <div class="flex gap-2 p-1 h-[92%] w-full bg-slate-600">
         <!-- รายการคำสั่งซื้อ -->
         <div class="p-2 h-full w-[80%] roundedmain bg-white">
           <div class="flex justify-between">
@@ -24,32 +24,87 @@
               </select>
             </div>
           </div>
-          <hr class="hrpages" />
-          <div class="bg-slate-600 h-[90%]">
+          <div class="h-[90%] mt-2">
             <!-- Head -->
             <div class="w-full">
-              <div class="flex gap-2 bg-slate-500">
-                <h1 class="w-[15%] bg-slate-400">หมายเลขคำสั่งซื้อ</h1>
-                <h1 class="w-[15%] text-center bg-slate-400">วันที่</h1>
-                <h1 class="w-[15%] text-center bg-slate-400">
-                  ชื่อผู้สั่งซื้อ
-                </h1>
-                <h1 class="w-[15%] text-center bg-slate-400">ชื่อสินค้า</h1>
-                <h1 class="w-[15%] text-center bg-slate-400">จำนวนรวม</h1>
-                <h1 class="w-[15%] text-center bg-slate-400">ราคารวม</h1>
-                <h1 class="w-[15%] text-center bg-slate-400">หมายเหตุ</h1>
+              <div class="flex gap-2">
+                <h1 class="w-[15%]">หมายเลขคำสั่งซื้อ</h1>
+                <h1 class="w-[15%] text-center">วัน/เวลา</h1>
+                <h1 class="w-[15%] text-center">ชื่อผู้สั่งซื้อ</h1>
+                <h1 class="w-[15%] text-center">สินค้า</h1>
+                <h1 class="w-[15%] text-center">จำนวนรวม</h1>
+                <h1 class="w-[15%] text-center">ราคารวม</h1>
+                <h1 class="w-[15%] text-center">หมายเหตุ</h1>
               </div>
-              <hr class="border-[#2B1E28] border-[2px] rounded-full my-1" />
+              <hr class="border-[#2B1E28] border-[2px] rounded-full" />
             </div>
+            <NuxtLink to="/order/[id]">
+              <div
+                class="w-full py-[4px] hover:bg-[#1C67AA]/20 border-b-[2px] border-[#2B1E28]"
+                v-for="(order, data) in order"
+                :key="data"
+              >
+                <div class="flex gap-2">
+                  <h1 class="w-[15%] border-r-[2px] border-[#2B1E28]/50">
+                    #{{ order.order_id }}
+                  </h1>
+                  <h1
+                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
+                  >
+                    {{ order.created_at }}
+                  </h1>
+                  <h1
+                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
+                  >
+                    {{ order.customer.username }}
+                  </h1>
+                  <h1
+                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
+                  >
+                    {{}}
+                  </h1>
+                  <h1
+                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
+                  >
+                    {{ order.total_amount }}
+                  </h1>
+                  <h1
+                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
+                  >
+                    {{}}
+                  </h1>
+                  <div class="w-[15%] flex justify-between text-cente">
+                    <h1 class="w-[85%] text-start truncate l-[10px]">
+                      หมายเหตุ
+                    </h1>
+                    <NuxtLink to="/order/[id]">
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
+            </NuxtLink>
           </div>
-          <!-- paginages -->
-          <div></div>
+          <!-- paginate -->
+          <div class="bg-slate-500 mt-2">paginate</div>
         </div>
         <div class="flex flex-col gap-2 h-full w-[20%]">
           <!-- ยอดรวมคำสั่งซื้อ -->
-          <div class="bg-white w-full h-[40%] roundedmain">1</div>
+          <div class="bg-white w-full h-[40%] p-2 roundedmain">
+            <h1 class="text-[20px] text-center font-bold">ยอดคำสั่งซื้อ</h1>
+            <hr class="hrpages ">
+            <div class="bg-slate-500 flex items-center place-content-center h-[85%] ">
+              graph
+            </div>
+          </div>
           <!-- ยอดรวมแต่ละประเภท -->
-          <div class="bg-white w-full h-[60%] roundedmain">2</div>
+          <div class="bg-white w-full h-[60%] p-2 roundedmain">
+            <h1 class="text-[20px] text-center font-bold">ยอดคำสั่งซื้อแต่ละประเภท</h1>
+            <hr class="hrpages ">
+            <div class="bg-slate-500 flex items-center place-content-center h-[85%] ">
+              graph
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -83,6 +138,385 @@ const order = ref<Order[]>([
         product_id: 202,
         product_name: "Wireless Headphones",
         quantity: 1,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
         price: 250,
       },
     ],
