@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-end p-1 pr-[17px] rounded-[30px]">
+  <div class="flex justify-end pt-1 pr-[17px] rounded-[30px] bg-black">
     <!-- Proflie -->
     <div class="flex justify gap-2 pr-[5px] mt-[5px]">
       <!-- bell -->
@@ -9,7 +9,7 @@
         ></i>
         <i class="fa-solid fa-bell cursor-pointer text-3xl text-[#EAA04B]"></i>
       </div>
-      <div class="w-[150px] h-[40px] rounded-full bg-[#B1737E]">
+      <div class="w-[150px] h-[40px] rounded-full bg-[#F68D44]">
         <div class="flex gap-2">
           <i class="fa-solid fa-user m-1 text-l rounded-full p-2 bg-white"></i>
           <div class="flex flex-col">

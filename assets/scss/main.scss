@@ -7,7 +7,7 @@
     @apply w-full h-full p-2    
 }
 .textmain {
-    @apply text-[#2B1E28] 
+    @apply text-[#523312] font-bold 
 }
 
 .roundedmain {
@@ -19,7 +19,7 @@
 }
 
 .hrpages {
-    @apply mt-[2px] mb-[5px] border-[#2B1E28] border-[2px] rounded-full
+    @apply  mb-[2px] border-[#7A4711] border-[2px] rounded-full
 }
 
 
@@ -35,7 +35,7 @@
     @apply border-black border-[1px] rounded-[25px] drop-shadow-lg w-[150px]
 }
 .photodetail {
-    @apply border-black border-[1px] rounded-[10px] drop-shadow-lg w-[80px]
+    @apply border-black border-[1px] rounded-[10px] drop-shadow-lg w-[120px]
 }
 
 .photoreview{

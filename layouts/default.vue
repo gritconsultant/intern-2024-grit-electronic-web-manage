@@ -1,7 +1,7 @@
 <template>
-  <div class="flex gap-1 bg-[#ffffff]">
+  <div class="flex gap-1 bg-[#F5F5F5]">
       <Sidebar />
-    <div class="flex flex-col gap-1 w-screen h-screen  bg">
+    <div class="flex flex-col  w-screen h-screen ">
       <profile/>
       <slot />
     </div>

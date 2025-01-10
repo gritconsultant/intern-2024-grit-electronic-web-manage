@@ -1,22 +1,24 @@
 <template>
-  <div class="p-1 w-ful">
+  <div class="p-1 w-ful bg-slate-600 h-full w-full">
     <div
       class="pages flex flex-col gap-2"
       v-for="(data, item) in products"
       :key="item"
     >
-      <div class="flex gap-5">
+      <div class="flex ju gap-8  h-[30%] bg-black">
         <!-- photo -->
-        <div
-          class="grid grid-cols-2 gap-2 rounded-[20px] place-content-center w-[180px] h-[180px] p-2 bg-[#412D3D]/50"
-        >
-          <img :src="data.img" alt="" class="photodetail" />
-          <img :src="data.img" alt="" class="photodetail" />
-          <img :src="data.img" alt="" class="photodetail" />
-          <img :src="data.img" alt="" class="photodetail" />
+        <div class=" flex justify-center  rounded-[20px] place-content-center w-[18%] h-[100%] p-2 bg-[#412D3D]/50">
+          <div
+            class="grid grid-cols-2 gap-2  bg-slate-400 "
+          >
+            <img :src="data.img" alt="" class="photodetail" />
+            <img :src="data.img" alt="" class="photodetail" />
+            <img :src="data.img" alt="" class="photodetail" />
+            <img :src="data.img" alt="" class="photodetail" />
+          </div>
         </div>
         <!-- detail -->
-        <div class="flex flex-col gap-2 text-white font-blod">
+        <div class="flex flex-col gap-2 textmain pt-5">
           <h1 class="flex gap-[42px] text-[20px]">
             ชื่อ
             <div
@@ -47,7 +49,7 @@
         </div>
         <!-- amount -->
         <div
-          class="flex flex-col justify-between gap-2 rounded-[20px] w-[180px] h-[180px] p-2 bg-[#412D3D]"
+          class="flex flex-col justify-between gap-2 rounded-[20px] w-[12%] h-full p-2 bg-[#412D3D]"
         >
           <h1 class="text-white font-bol text-center">สินค้าคงเหลือ</h1>
           <span
@@ -91,26 +93,6 @@
         </div>
         <!-- profile -->
         <div class="flex flex-col gap-5">
-          <div class="flex">
-            <!-- bell -->
-            <div class="ml-2">
-              <i
-                class="fa-solid fa-circle ml-[15px] mt-[4px] absolute p-[2px] text-center text-[6px] text-[#EC5B3D] bg-[#EC5B3D]/50 rounded-full"
-              ></i>
-              <i
-                class="fa-solid fa-bell cursor-pointer text-3xl text-[#EAA04B]"
-              ></i>
-            </div>
-            <div class="pl-[25px]">
-              <div
-                class="flex justify-center gap-2 h-[40px] w-[40px] rounded-full bg-[#B1737E]"
-              >
-                <i
-                  class="fa-solid fa-user m-1 text-l rounded-full p-2 bg-white"
-                ></i>
-              </div>
-            </div>
-          </div>
           <div class="flex flex-col mt-[10px] gap-5 text-white">
             <button class="buttondelete h-[30px] w-[100px]">ซ่อน</button>
             <NuxtLink to="/product/edit/[id]">
