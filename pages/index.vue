@@ -1,6 +1,6 @@
 <template>
   <div class="defaultpages">
-    <div class="pages ">
+    <div class="pages">
       <hr class="hrpages" />
       <!-- Body -->
       <div
@@ -9,7 +9,9 @@
         <!-- 1 -->
         <div class="w-[40%] max-xl:w-[100%] max-xl:h-[30%] flex flex-col gap-2">
           <!-- รายงาน -->
-          <div class="bg-[#EAA04B]/50 w-full h-[65%] p-5 max-xl:h-[100%] roundedmain">
+          <div
+            class="bg-[#FFFAE9] w-full h-[65%] p-5 max-xl:h-[100%] roundedmain dropshadowbottomsub"
+          >
             <h1
               class="textmain xl:text-[20px] md:text-[18px] sm:text-[12px] max-sm:text-[10px] font-bold pl-2 truncate"
             >
@@ -26,7 +28,7 @@
               >
                 <div class="h-full flex flex-col">
                   <div class="flex gap-2 bg">
-                    <i 
+                    <i
                       class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px] rounded-full bg-[#593D53]"
                     ></i>
                     <h1
@@ -115,7 +117,7 @@
             </div>
           </div>
           <!-- ยอดการขาย -->
-          <div class="bg-white w-full h-[40%] p-2 max-xl:hidden roundedmain">
+          <div class="w-full h-[40%] p-2 max-xl:hidden roundedmain">
             <h1
               class="flex justify-center rounded-full xl:text-[15px] md:text-[12px] sm:text-[8px] max-sm:text-[6px] text-white font-bold p-1 w-[140px] bg-[#593D53] drop-shadow-md"
             >
@@ -131,7 +133,9 @@
         <!-- 2 -->
         <div class="w-[60%] flex flex-col gap-2 max-xl:hidden">
           <!-- กราฟ -->
-          <div class="bg-[#B1737E] w-full h-[45%] roundedmain">
+          <div
+            class="bg-[#FFFAE9] dropshadowbottomsub w-full h-[45%] roundedmain"
+          >
             <div class="flex flex-col gap-2 h-full p-1">
               <div class="flex justify-between">
                 <h1
@@ -159,7 +163,9 @@
             </div>
           </div>
           <!-- คำสั่งซื้อล่าสุด -->
-          <div class="bg-[#593D53]/50 w-full p-2 h-[55%] roundedmain">
+          <div
+            class="w-full p-2 h-[55%] roundedmain bg-[#FFFAE9] dropshadowbottomsub"
+          >
             <div class="flex flex-col gap-2">
               <div class="flex justify-between">
                 <h1
@@ -167,50 +173,49 @@
                 >
                   คำสั่งซื้อล่าสุด
                 </h1>
-                <h2 class="textmain font-bold pr-2 mt-[6px]">ทั้งหมด</h2>
+                <NuxtLink to="/order" class="textmain font-bold pr-2 mt-[6px]"
+                  >ทั้งหมด</NuxtLink
+                >
               </div>
-              <div class="flex flex-col gap-2 px-2">
-                <!-- Header -->
-                <div class="flex flex-col gap-2">
-                  <div class="flex gap-2 w-full">
-                    <h6 class="bg-slate-200 w-[20%]">หมายเลขคำสั่งซื้อ</h6>
-                    <h6 class="bg-slate-200 text-center w-[20%]">วันที่</h6>
-                    <h6 class="bg-slate-200 text-center w-[20%]">ชื่อสินค้า</h6>
-                    <h6 class="bg-slate-200 text-center w-[20%]">ประเภท</h6>
-                    <h6 class="bg-slate-200 text-center w-[20%]">จำนวนรวม</h6>
-                    <h6 class="bg-slate-200 text-center w-[20%]">ราคารวม</h6>
-                  </div>
-                  <hr />
-                </div>
-                <!-- Body -->
-                <div class="flex flex-col">
-                  <div class="flex gap-2">
-                    <h6 class="w-[20%] truncate">#หมายเลขคำสั่งซื้อ</h6>
-                    <h6 class="text-center w-[20%]">--/--/--</h6>
-                    <h6 class="text-center w-[20%] truncate">
-                      --------------------------------
-                    </h6>
-                    <h6 class="text-center w-[20%] truncate">ประเภท</h6>
-                    <h6 class="text-center w-[20%] truncate">จำนวนรวม</h6>
-                    <div class="flex justify-center w-[20%]">
-                      <div class="text-center w-[80%] ml-[25px] truncate">
-                        00000000
-                      </div>
-                      <i
-                        class="fa-solid fa-ellipsis-vertical ml-[20px] cursor-pointer bg-slate-600 mt-1"
-                      ></i>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </div>
+              <table class="w-full text-[#2B1E28] font-semibold">
+                <thead class="border-b-2 border-[#7A4711]">
+                  <tr class="flex gap-2 w-full">
+                    <th class="flex justify-start w-[20%]">หมายเลขสินค้า</th>
+                    <th class="w-[20%]">วันที่สร้าง</th>
+                    <th class="w-[20%]">ชื่อสินค้า</th>
+                    <th class="w-[20%]">ประเภท</th>
+                    <th class="w-[20%]">ราคา</th>
+                    <th class="w-[20%]">จำนวนคงเหลือ</th>
+                  </tr>
+                </thead>
+                <tbody v-for="(orders, data) in order" :key="data">
+                  <NuxtLink to="/order/[id]">
+                    <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
+                      <td class="w-[20%] truncate">{{ orders.order_id }}</td>
+                      <td class="w-[20%] text-center truncate">
+                        {{ orders.created_at }}
+                      </td>
+                      <td class="w-[20%] text-center truncate">{{}}</td>
+                      <td class="w-[20%] text-center truncate">
+                        {{ orders.total_amount }}
+                      </td>
+                      <td class="w-[20%] text-center truncate">
+                        {{ orders.total_amount }}
+                      </td>
+                      <td class="w-[20%] text-center truncate">
+                        {{ orders.status }}
+                      </td>
+                    </tr>
+                  </NuxtLink>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
         <!-- Ipad -->
         <div
           class="bg-slate-700 flex flex-col gap-2 w-[100%] h-[70%] xl:hidden max-sm:hidden"
-        >
+        >รืกำ
           <div class="flex justify-between w-full gap-2 h-[60%]">
             <!-- ยอดขาย -->
             <div class="bg-white w-full p-2 h-[100%] roundedmain">
@@ -285,16 +290,7 @@
                     ------
                     <p class="textmain font-bold mt-[3px]">บาท</p>
                   </div>
-                  <div
-                    class="flex justify-center p-2 gap-2 rounded-full w-[120px] xl:text-[15px] md:text-[12px] sm:text-[11px] max-sm:text-[6px] bg-[#878787]"
-                  >
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <select name="" id="">
-                      <option value="">2023</option>
-                      <option value="">2022</option>
-                      <option value="">2021</option>
-                    </select>
-                  </div>
+                  ฒ
                 </div>
                 <div class="h-full bg-slate-400">garph</div>
               </div>
@@ -306,6 +302,227 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import type { Order } from "~/models/order.model";
+
+const order = ref<Order[]>([
+  {
+    order_id: 12345,
+    customer: {
+      user_id: 101,
+      username: "john_doe",
+      email: "john_doe@example.com",
+    },
+    total_amount: 1250,
+    currency: "USD",
+    status: "delivered",
+    created_at: "2024-12-15T08:30:00Z",
+    payment_status: "paid",
+    items: [
+      {
+        product_id: 201,
+        product_name: "Smartphone X Pro",
+        quantity: 1,
+        price: 1000,
+      },
+      {
+        product_id: 202,
+        product_name: "Wireless Headphones",
+        quantity: 1,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "pending",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+]);
+</script>
 
 <style></style>

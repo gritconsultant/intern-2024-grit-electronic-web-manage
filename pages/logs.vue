@@ -3,61 +3,54 @@
     <div class="pages">
       <!-- Header -->
       <hr class="hrpages" />
-      <Search />
-      <!-- Body -->
-      <div class="h-[92%]">
-        <!-- รายละเอียดการทำงาน -->
-        <div class="p-2 h-[100%] w-[100%] roundedmain bg-white dropshadowbottom">
-          <div class="flex justify-between">
-            <h1 class="textmain text-[20px]">รายละเอียดการทำงาน</h1>
-            <Selectordate />
+      <div class="flex gap-2 p-1 h-[100%] w-full bg-slate-600">
+        <!-- รายการคำสั่งซื้อ -->
+        <div class="p-2 h-full w-[100%] roundedmain bg-[#FFFAE9]">
+          <div class="flex justify-between gap-2">
+            <h1 class="flex items-center textmain font-bold text-[25px]">
+              รายงานการทำงาน
+            </h1>
+            <SelectorDate />
           </div>
-          <div class="h-[90%] mt-1">
-            <!-- Head -->
-            <div class="w-full">
-              <div class="flex gap-2">
-                <h1 class="w-[10%]">หมายเลขการทำงาน</h1>
-                <h1 class="w-[15%] text-center">วันเวลา</h1>
-                <h1 class="w-[10%] text-center">ชื่อผู้ใช้งาน</h1>
-                <h1 class="w-[15%]">รายละเอียด</h1>
-              </div>
-              <hr class="border-[#2B1E28] border-[2px] rounded-full" />
-            </div>
-            <NuxtLink to="/product_return/[id]">
-              <div
-                class="w-full py-[4px] hover:bg-[#1C67AA]/20 border-b-[2px] border-[#2B1E28]"
-                v-for="(order, data) in order"
-                :key="data"
-              >
-                <div class="flex gap-2">
-                  <h1 class="w-[10%] border-r-[2px] border-[#2B1E28]/50">
-                    #{{ order.order_id }}
-                  </h1>
-                  <h1
-                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
-                  >
-                    {{ order.created_at }}
-                  </h1>
-                  <h1
-                    class="w-[10%] text-center border-r-[2px] border-[#2B1E28]/50"
-                  >
-                    {{ order.customer.username }}
-                  </h1>
-                  <div class="w-[63%] flex justify-between text-cente bg-slate-200">
-                    <h1 class="w-[100%] text-start truncate text-wrap pr-[10px]">
-                      {{ order.items }} 
-                    </h1>
-                    <NuxtLink to="/order/[id]"
-                    class="flex items-center">
-                      <i class="fa-solid fa-ellipsis-vertical text-[20px]"></i>
-                    </NuxtLink>
-                  </div>
-                </div>
-              </div>
-            </NuxtLink>
+          <div class="h-[90%] mt-2">
+            <table class="w-full text-[#2B1E28] font-semibold">
+              <thead class="border-b-2 border-[#7A4711]">
+                <tr class="flex gap-2 w-full">
+                  <th class="flex justify-start w-[20%]">หมายเลขการทำงาน</th>
+                  <th class="w-[20%]">วันที่</th>
+                  <th class="w-[20%]">ชื่อ</th>
+                  <th class="w-[50%]">รายละเอียด</th>
+                </tr>
+              </thead>
+              <tbody v-for="(orders, data) in order" :key="data">
+                <NuxtLink to="/order/[id]">
+                  <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
+                    <td class="w-[20%] truncate">{{ orders.order_id }}</td>
+                    <td class="w-[20%] text-center truncate">
+                      {{ orders.created_at }}
+                    </td>
+                    <td class="w-[20%] text-center truncate">
+                      {{ orders.customer.username }}
+                    </td>
+                    <td class="w-[50%] text-center flex justify-between gap-2">
+                      <div class="truncate w-[95%">
+                        {{ orders.total_amount }}
+                      </div>
+                      <div>
+                        <i
+                          class="fa-solid fa-delete-left text-red-600 hover:text-red-950 hover:translate-x-1 duration-300"
+                        ></i>
+                      </div>
+                    </td>
+                  </tr>
+                </NuxtLink>
+              </tbody>
+            </table>
           </div>
           <!-- paginate -->
-          <div class="bg-slate-500 mt-2">paginate</div>
+          <div class=" mt-[15px] ">
+            <Paginate />
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 <template>
-  <div class="flex gap-1 bg-[#F5F5F5]">
+  <div class="flex gap-1">
       <Sidebar />
     <div class="flex flex-col  w-screen h-screen ">
-      <profile/>
+      <Header />
       <slot />
     </div>
   </div>

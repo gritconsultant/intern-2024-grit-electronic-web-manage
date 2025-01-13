@@ -1,6 +1,7 @@
 <template>
+  <div class="mt-[5px]">
     <!-- Proflie -->
-    <div class="flex justify gap-2 pr-[5px] mt-[5px]">
+    <div class="flex justify-end gap-2 pr-[5px] mt-[5px]">
       <!-- bell -->
       <div class="ml-2">
         <i
@@ -10,9 +11,6 @@
           class="fa-solid fa-bell cursor-pointer text-3xl text-[#EAA04B]"
           @click="store.notification = !store.notification"
         ></i>
-        <div v-if="store.notification" >
-          <PopupNotification />
-        </div>
       </div>
       <div class="w-[150px] h-[40px] rounded-full bg-[#F68D44]">
         <div class="flex gap-2">
@@ -27,6 +25,10 @@
         </div>
       </div>
     </div>
+    <div v-if="store.notification" class="flex justify-end mr-[100px]">
+      <PopupNotification />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>

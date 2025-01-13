@@ -2,106 +2,85 @@
   <div class="defaultpages">
     <div class="pages">
       <!-- Header -->
-
       <hr class="hrpages" />
-      <Search />
-
-      <div class="flex gap-2 p-1 h-[92%] w-full bg-slate-600">
+      <div class="flex gap-2 p-1 h-[100%] w-full">
         <!-- รายการคำสั่งซื้อ -->
-        <div class="p-2 h-full w-[80%] roundedmain bg-white">
-          <div class="flex justify-between">
-            <haeder class="textmain font-bold text-[20px]"
-              >รายงานคำสั่งซื้อ</haeder
-            >
-            <div
-              class="flex justify-center p-2 gap-2 rounded-full w-[120px] bg-[#878787]"
-            >
-              <i class="fa-solid fa-calendar-days"></i>
-              <select name="" id="">
-                <option value="">2023</option>
-                <option value="">2022</option>
-                <option value="">2021</option>
-              </select>
+        <div class="p-2 h-full w-[80%] roundedmain bg-[#FFFAE9] dropshadowbottomsub">
+          <div class="flex justify-between gap-2">
+            <h1 class="flex items-center textmain font-bold text-[25px]">
+              รายงานคำสั่งซื้อ
+            </h1>
+            <div class="w-[50%]">
+              <Search />
+            </div>
+            <div class="flex gap-2">
+              <SelectorCatagory />
+              <SelectorDate />
             </div>
           </div>
           <div class="h-[90%] mt-2">
-            <!-- Head -->
-            <div class="w-full">
-              <div class="flex gap-2">
-                <h1 class="w-[15%]">หมายเลขคำสั่งซื้อ</h1>
-                <h1 class="w-[15%] text-center">วัน/เวลา</h1>
-                <h1 class="w-[15%] text-center">ชื่อผู้สั่งซื้อ</h1>
-                <h1 class="w-[15%] text-center">สินค้า</h1>
-                <h1 class="w-[15%] text-center">จำนวนรวม</h1>
-                <h1 class="w-[15%] text-center">ราคารวม</h1>
-                <h1 class="w-[15%] text-center">หมายเหตุ</h1>
-              </div>
-              <hr class="border-[#2B1E28] border-[2px] rounded-full" />
-            </div>
-            <NuxtLink to="/order/[id]">
-              <div
-                class="w-full py-[4px] hover:bg-[#1C67AA]/20 border-b-[2px] border-[#2B1E28]"
-                v-for="(order, data) in order"
-                :key="data"
-              >
-                <div class="flex gap-2">
-                  <h1 class="w-[15%] border-r-[2px] border-[#2B1E28]/50">
-                    #{{ order.order_id }}
-                  </h1>
-                  <h1
-                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
-                  >
-                    {{ order.created_at }}
-                  </h1>
-                  <h1
-                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
-                  >
-                    {{ order.customer.username }}
-                  </h1>
-                  <h1
-                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
-                  >
-                    {{}}
-                  </h1>
-                  <h1
-                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
-                  >
-                    {{ order.total_amount }}
-                  </h1>
-                  <h1
-                    class="w-[15%] text-center border-r-[2px] border-[#2B1E28]/50"
-                  >
-                    {{}}
-                  </h1>
-                  <div class="w-[15%] flex justify-between text-cente">
-                    <h1 class="w-[85%] text-start truncate l-[10px]">
-                      หมายเหตุ
-                    </h1>
-                    <NuxtLink to="/order/[id]">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </NuxtLink>
-                  </div>
-                </div>
-              </div>
-            </NuxtLink>
+            <table class="w-full text-[#2B1E28] font-semibold">
+              <thead class="border-b-2 border-[#7A4711]">
+                <tr class="flex gap-2 w-full">
+                  <th class="flex justify-start w-[20%]">หมายเลขคำสั่งซื้อ</th>
+                  <th class="w-[20%]">วันที่</th>
+                  <th class="w-[20%]">ชื่อสินค้า</th>
+                  <th class="w-[20%]">จำนวนรวม</th>
+                  <th class="w-[20%]">ราคารวม</th>
+                  <th class="w-[20%]">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody v-for="(orders, data) in order" :key="data">
+                <NuxtLink to="/order/[id]">
+                  <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
+                    <td class="w-[20%] truncate">{{ orders.order_id }}</td>
+                    <td class="w-[20%] text-center truncate">
+                      {{ orders.created_at }}
+                    </td>
+                    <td class="w-[20%] text-center truncate">{{}}</td>
+                    <td class="w-[20%] text-center truncate">
+                      {{ orders.total_amount }}
+                    </td>
+                    <td class="w-[20%] text-center truncate">
+                      {{ orders.total_amount }}
+                    </td>
+                    <td class="w-[20%] text-center truncate">
+                      {{ orders.status }}
+                    </td>
+                  </tr>
+                </NuxtLink>
+              </tbody>
+            </table>
           </div>
           <!-- paginate -->
-          <div class="bg-slate-500 mt-2">paginate</div>
+          <div class="mt-[15px]">
+            <Paginate />
+          </div>
         </div>
         <div class="flex flex-col gap-2 h-full w-[20%]">
           <!-- ยอดรวมคำสั่งซื้อ -->
-          <div class="bg-white w-full h-[40%] p-2 roundedmain">
+          <div
+            class="w-full h-[40%] p-2 roundedmain bg-[#FFFAE9] dropshadowbottomsub"
+          >
             <h1 class="text-[20px] text-center font-bold">ยอดคำสั่งซื้อ</h1>
-            <hr class="hrpages ">
-            <div class="bg-slate-500 flex items-center place-content-center h-[85%] ">
+            <hr class="hrpages" />
+            <div
+              class="bg-slate-500 flex items-center place-content-center h-[85%]"
+            >
               graph
             </div>
           </div>
           <!-- ยอดรวมแต่ละประเภท -->
-          <div class="bg-white w-full h-[60%] p-2 roundedmain">
-            <h1 class="text-[20px] text-center font-bold">ยอดคำสั่งซื้อแต่ละประเภท</h1>
-            <hr class="hrpages ">
-            <div class="bg-slate-500 flex items-center place-content-center h-[85%] ">
+          <div
+            class="w-full h-[60%] p-2 roundedmain bg-[#FFFAE9] dropshadowbottomsub"
+          >
+            <h1 class="text-[20px] text-center font-bold">
+              ยอดคำสั่งซื้อแต่ละประเภท
+            </h1>
+            <hr class="hrpages" />
+            <div
+              class="bg-slate-500 flex items-center place-content-center h-[85%]"
+            >
               graph
             </div>
           </div>
