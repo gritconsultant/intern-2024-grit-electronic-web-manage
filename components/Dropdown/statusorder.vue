@@ -1,11 +1,10 @@
 <template>
   <div>
-  <PopupDate />
+    
   </div>
 </template>
 
 <script lang="ts" setup>
-import Paginate from '~/components/Paginate.vue';
 
 </script>
 

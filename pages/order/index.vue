@@ -14,7 +14,7 @@
               <Search />
             </div>
             <div class="flex gap-2">
-              <SelectorCatagory />
+              <DropdownCategory />
               <SelectorDate />
             </div>
           </div>

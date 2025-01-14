@@ -10,7 +10,9 @@
             <h1 class="flex items-center textmain font-bold text-[25px]">
               รายงานการทำงาน
             </h1>
-            <SelectorDate />
+            <div class="bg-blue ">
+              <PopupDate />
+            </div>
           </div>
           <div class="h-[90%] mt-2">
             <table class="w-full text-[#2B1E28] font-semibold">
@@ -20,7 +22,7 @@
                   <th class="w-[20%]">วันที่</th>
                   <th class="w-[20%]">ชื่อ</th>
                   <th class="w-[50%]">รายละเอียด</th>
-                </tr>
+                </tr>up
               </thead>
               <tbody v-for="(orders, data) in order" :key="data">
                 <NuxtLink to="/order/[id]">
@@ -48,7 +50,7 @@
             </table>
           </div>
           <!-- paginate -->
-          <div class=" mt-[15px] ">
+          <div class="mt-[15px]">
             <Paginate />
           </div>
         </div>
