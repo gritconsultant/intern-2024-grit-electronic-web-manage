@@ -16,7 +16,7 @@
       </div>
       <!-- Dropdown manu -->
       <div
-        class="absolute bg-white rounded-lg border shadow w-44 hidden group-hover:block"
+        class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
       >
         <ul class="py-2 text-sm text-gray-700">
           <li class="block px-4 py-2 hover:bg-gray-100"
@@ -69,9 +69,9 @@ const categories = ref<Category[]>([
 ]);
 
 // ฟังก์ชันเพื่อเลือกหมวดหมู่
-function selectCategory(category: Category) {
+const selectCategory = (category: Category) => {
   selectedCategory.value = category;
-}
+};
 </script>
 
 

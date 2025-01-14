@@ -1,7 +1,7 @@
 <template>
   <div class="mt-[5px]">
     <!-- Proflie -->
-    <div class="flex justify-end gap-2 pr-[5px] mt-[5px]">
+    <div class="flex  gap-2 pr-[5px] mt-[5px]">
       <!-- bell -->
       <div class="ml-2">
         <i

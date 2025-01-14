@@ -3,56 +3,53 @@
     <div class="pages">
       <!-- Header -->
       <hr class="hrpages" />
-      <div class="flex gap-2 p-1 h-[100%] w-full bg-slate-600">
-        <!-- รายการคำสั่งซื้อ -->
-        <div class="p-2 h-full w-[100%] roundedmain bg-[#FFFAE9]">
-          <div class="flex justify-between gap-2">
-            <h1 class="flex items-center textmain font-bold text-[25px]">
-              รายงานการทำงาน
-            </h1>
-            <div class="bg-blue ">
-              <PopupDate />
-            </div>
-          </div>
-          <div class="h-[90%] mt-2">
-            <table class="w-full text-[#2B1E28] font-semibold">
-              <thead class="border-b-2 border-[#7A4711]">
-                <tr class="flex gap-2 w-full">
-                  <th class="flex justify-start w-[20%]">หมายเลขการทำงาน</th>
-                  <th class="w-[20%]">วันที่</th>
-                  <th class="w-[20%]">ชื่อ</th>
-                  <th class="w-[50%]">รายละเอียด</th>
-                </tr>up
-              </thead>
-              <tbody v-for="(orders, data) in order" :key="data">
-                <NuxtLink to="/order/[id]">
-                  <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
-                    <td class="w-[20%] truncate">{{ orders.order_id }}</td>
-                    <td class="w-[20%] text-center truncate">
-                      {{ orders.created_at }}
-                    </td>
-                    <td class="w-[20%] text-center truncate">
-                      {{ orders.customer.username }}
-                    </td>
-                    <td class="w-[50%] text-center flex justify-between gap-2">
-                      <div class="truncate w-[95%">
-                        {{ orders.total_amount }}
-                      </div>
-                      <div>
-                        <i
-                          class="fa-solid fa-delete-left text-red-600 hover:text-red-950 hover:translate-x-1 duration-300"
-                        ></i>
-                      </div>
-                    </td>
-                  </tr>
-                </NuxtLink>
-              </tbody>
-            </table>
-          </div>
-          <!-- paginate -->
-          <div class="mt-[15px]">
-            <Paginate />
-          </div>
+
+      <!-- รายการคำสั่งซื้อ -->
+      <div
+        class="p-2 h-full w-[100%] roundedmain bg-[#FFFAE9] dropshadowbottomsub"
+      >
+        <div class="flex justify-between gap-2">
+          <h1 class="flex items-center textmain font-bold text-[25px]">
+            รายงานการทำงาน
+          </h1>
+          <PopupDate />
+        </div>
+        <div class="h-[90%] mt-2">
+          <table class="w-full text-[#2B1E28] font-semibold">
+            <thead class="border-b-2 border-[#7A4711]">
+              <tr class="flex gap-2 w-full">
+                <th class="flex justify-start w-[20%]">หมายเลขการทำงาน</th>
+                <th class="w-[20%]">วันที่</th>
+                <th class="w-[20%]">ชื่อ</th>
+                <th class="w-[50%]">รายละเอียด</th>
+              </tr>
+            </thead>
+            <tbody v-for="(orders, data) in order" :key="data">
+              <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
+                <td class="w-[20%] truncate">{{ orders.order_id }}</td>
+                <td class="w-[20%] text-center truncate">
+                  {{ orders.created_at }}
+                </td>
+                <td class="w-[20%] text-center truncate">
+                  {{ orders.customer.username }}
+                </td>
+                <td class="w-[50%] text-center flex justify-between gap-2">
+                  <div class="truncate w-[95%">
+                    {{ orders.total_amount }}
+                  </div>
+                  <div>
+                    <i
+                      class="fa-solid fa-trash-can text-red-600 hover:text-red-950 hover:translate-x-1 duration-300"
+                    ></i>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- paginate -->
+        <div class="mt-[5px]">
+          <Paginate />
         </div>
       </div>
     </div>

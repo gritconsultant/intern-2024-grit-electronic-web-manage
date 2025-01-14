@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[400px] h-[50px]">
+  <div class="w-[400px] h-[45px]">
     <label for="date-input" class="absolute text-[10px] font-bold ml-[10px]"
       >เลือกช่วงเวลา</label
     >
