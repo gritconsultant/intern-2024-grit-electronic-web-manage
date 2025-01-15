@@ -18,10 +18,7 @@ export interface Datum {
   updated_at: number;
 }
 
-export interface Category {
-  id: number;
-  name: string;
-}
+
 
 export interface Paginate {
   Page: number;
@@ -40,17 +37,14 @@ export interface Product {
   id: number;
   name: string;
   detail: string;
-  Specs: string;
   price: number;
   amount: number;
   img: string;
+  categoryId: string;
 }
 
-export interface InputPhoto {
+export interface Category {
   id: number;
-  img1: string;
-  img2: string;
-  img3: string;
-  img4: string;
+  name: string;
+  img: string;
 }
-

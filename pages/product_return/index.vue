@@ -23,13 +23,12 @@
               <thead class="border-b-2 border-[#7A4711]">
                 <tr class="flex gap-2 w-full">
                   <th class="flex justify-start w-[20%]">
-                    หมายเลขคำสั่งซื้อ
+                    หมายเลข
                   </th>
                   <th class="w-[20%]">วันที่</th>
                   <th class="w-[20%]">ชื่อสินค้า</th>
                   <th class="w-[20%]">จำนวนรวม</th>
                   <th class="w-[20%]">ราคารวม</th>
-                  <th class="w-[20%]">สถานะ</th>
                 </tr>
               </thead>
               <tbody v-for="(orders, data) in order" :key="data">
@@ -46,9 +45,6 @@
                     <td class="w-[20%] text-center truncate">
                       {{ orders.total_amount }}
                     </td>
-                    <td class="w-[20%] text-center truncate">
-                      {{ orders.status }}
-                    </td>
                   </tr>
                 </NuxtLink>
               </tbody>
@@ -60,30 +56,17 @@
           </div>
         </div>
         <div class="flex flex-col gap-2 h-full w-[20%]">
-          <!-- ยอดรวมคำสั่งซื้อ -->
-          <div
-            class="w-full h-[40%] p-2 roundedmain bg-[#FFFAE9] dropshadowbottomsub"
-          >
-            <h1 class="text-[20px] text-center font-bold">ยอดคำสั่งซื้อ</h1>
-            <hr class="hrpages" />
-            <div
-              class="bg-slate-500 flex items-center place-content-center h-[85%]"
-            >
-              graph
-            </div>
-          </div>
           <!-- ยอดรวมแต่ละประเภท -->
           <div
-            class="w-full h-[60%] p-2 roundedmain bg-[#FFFAE9] dropshadowbottomsub"
+            class="w-full h-[100%] p-2 roundedmain bg-[#FFFAE9] dropshadowbottomsub"
           >
             <h1 class="text-[20px] text-center font-bold">
-              ยอดคำสั่งซื้อแต่ละประเภท
+              ยอดคำร้องขอแต่ละประเภท
             </h1>
             <hr class="hrpages" />
             <div
-              class="bg-slate-500 flex items-center place-content-center h-[85%]"
+              class=" flex items-center place-content-center h-[85%]"
             >
-              graph
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 <template>
-  <div class="w-[300px] h-[500px] bg-white rounded-[20px] mr-10 absolute z-10 p-2 dropshadowbottomsub ">
-    1fdasfdsafasdf
+  <div class="w-[300px] h-[500px] bg-white rounded-[20px]  absolute z-10 p-2 dropshadowbottomsub  ">
+    <h1 class="text-center text-[15px] textmain">แจ้งเตือน</h1>
   </div>
 </template>
 

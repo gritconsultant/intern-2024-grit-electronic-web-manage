@@ -1,8 +1,13 @@
 <template>
   <div>
+    
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 
 </script>
+
+<style>
+
+</style>

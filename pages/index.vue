@@ -24,12 +24,12 @@
             <div class="grid grid-cols-2 max-xl:grid-cols-4 h-[90%] gap-2">
               <!-- 1 -->
               <div
-                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-[#EEEEEE]"
+                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-gradient-to-br from-green-600 to-green-100  "
               >
                 <div class="h-full flex flex-col">
                   <div class="flex gap-2 bg">
                     <i
-                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px] rounded-full bg-[#593D53]"
+                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px]  textmain"
                     ></i>
                     <h1
                       class="textmain xl:text-[20px] md:text-[14px] sm:text-[10px] max-sm:text-[8px] font-bold flex items-center"
@@ -47,12 +47,12 @@
               </div>
               <!-- 2 -->
               <div
-                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-[#EEEEEE]"
+                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-gradient-to-bl from-yellow-600  to-yellow-100"
               >
                 <div class="h-full flex flex-col">
                   <div class="flex gap-2 bg">
                     <i
-                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px] rounded-full bg-[#593D53]"
+                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px]  textmain"
                     ></i>
                     <h1
                       class="textmain xl:text-[20px] md:text-[14px] sm:text-[10px] max-sm:text-[8px] font-bold flex items-center"
@@ -70,15 +70,15 @@
               </div>
               <!-- 3 -->
               <div
-                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-[#EEEEEE]"
+                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-gradient-to-tr from-red-600  to-red-100"
               >
                 <div class="h-full flex flex-col">
                   <div class="flex gap-2 bg">
                     <i
-                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px] rounded-full bg-[#593D53]"
+                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px]  textmain"
                     ></i>
                     <h1
-                      class="textmain xl:text-[20px] md:text-[14px] sm:text-[10px] max-sm:text-[8px] font-bold flex items-center truncate"
+                      class="textmain xl:text-[16px] md:text-[14px] sm:text-[10px] max-sm:text-[8px] font-bold flex items-center truncate"
                     >
                       จำนวนการคืนและยกเลิกสินค้า
                     </h1>
@@ -93,12 +93,12 @@
               </div>
               <!-- 4 -->
               <div
-                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-[#EEEEEE]"
+                class="xl:h-[100%] md:h-[80%] sm:h-[90%] max-sm:h-[90%] w-[100%] p-1 rounded-[20px] dropshadowbottom bg-gradient-to-tl from-orange-600  to-orange-100"
               >
                 <div class="h-full flex flex-col">
                   <div class="flex gap-2 bg">
                     <i
-                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px] rounded-full bg-[#593D53]"
+                      class="fa-solid fa-dollar-sign flex justify-center p-2 text-white text-sm sm:text-base md:text-lg w-[30px] sm:w-[40px] md:w-[50px]  textmain"
                     ></i>
                     <h1
                       class="textmain xl:text-[20px] md:text-[14px] sm:text-[10px] max-sm:text-[8px] font-bold flex items-center truncate"
@@ -117,15 +117,15 @@
             </div>
           </div>
           <!-- ยอดการขาย -->
-          <div class="w-full h-[40%] p-2 max-xl:hidden roundedmain">
+          <div class="w-full h-[40%] p-2 max-xl:hidden roundedmain bg-[#FFFAE9] dropshadowbottomsub">
             <h1
-              class="flex justify-center rounded-full xl:text-[15px] md:text-[12px] sm:text-[8px] max-sm:text-[6px] text-white font-bold p-1 w-[140px] bg-[#593D53] drop-shadow-md"
+              class="flex justify-center rounded-full xl:text-[15px] md:text-[12px] sm:text-[8px] max-sm:text-[6px] text-white font-bold p-1 w-[140px] textmain drop-shadow-md"
             >
               สรุปยอดการขาย
             </h1>
             <div class="flex justify-between gap-2 h-[90%] p-1">
-              <div class="bg-slate-500 w-full h-full">1</div>
-              <div class="bg-slate-600 w-full h-full">2</div>
+              <div class=" w-full h-full">1</div>
+              <div class=" w-full h-full">2</div>
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@
             <div class="flex flex-col gap-2 h-full p-1">
               <div class="flex justify-between">
                 <h1
-                  class="flex justify-center items-center rounded-full xl:text-[15px] md:text-[12px] sm:text-[8px] max-sm:text-[6px] text-white font-bold p-1 w-[180px] bg-[#593D53] drop-shadow-md"
+                  class="flex justify-center items-center rounded-full xl:text-[15px] md:text-[12px] sm:text-[8px] max-sm:text-[6px] text-white font-bold p-1 w-[180px] textmain drop-shadow-md"
                 >
                   สรุปการขายประจำปี
                 </h1>
@@ -151,15 +151,10 @@
                 <div
                   class="flex justify-center p-2 gap-2 rounded-full w-[120px] bg-[#878787]"
                 >
-                  <i class="fa-solid fa-calendar-days"></i>
-                  <select name="" id="">
-                    <option value="">2023</option>
-                    <option value="">2022</option>
-                    <option value="">2021</option>
-                  </select>
+                 
                 </div>
               </div>
-              <div class="h-full bg-slate-400">garph</div>
+              <div class="h-full"></div>
             </div>
           </div>
           <!-- คำสั่งซื้อล่าสุด -->
@@ -169,9 +164,9 @@
             <div class="flex flex-col gap-2">
               <div class="flex justify-between">
                 <h1
-                  class="flex justify-center rounded-full text-white font-bold p-1 w-[140px] bg-[#593D53] drop-shadow-md"
+                  class="flex justify-start  rounded-full text-white font-bold  w-[200px] textmain drop-shadow-md  "
                 >
-                  คำสั่งซื้อล่าสุด
+                  รายการคำสั่งซื้อล่าสุด
                 </h1>
                 <NuxtLink to="/order" class="textmain font-bold pr-2 mt-[6px]"
                   >ทั้งหมด</NuxtLink
@@ -185,28 +180,39 @@
                     <th class="w-[20%]">ชื่อสินค้า</th>
                     <th class="w-[20%]">ประเภท</th>
                     <th class="w-[20%]">ราคา</th>
-                    <th class="w-[20%]">จำนวนคงเหลือ</th>
+                    <th class="w-[20%]">สถานะ</th>
                   </tr>
                 </thead>
                 <tbody v-for="(orders, data) in order" :key="data">
-                  <NuxtLink to="/order/[id]">
-                    <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
+                    <tr class="flex gap-2 hover:bg-[#F68D44]/20 mt-[11px]">
                       <td class="w-[20%] truncate">{{ orders.order_id }}</td>
                       <td class="w-[20%] text-center truncate">
                         {{ orders.created_at }}
                       </td>
                       <td class="w-[20%] text-center truncate">{{}}</td>
                       <td class="w-[20%] text-center truncate">
-                        {{ orders.total_amount }}
+                        {{  }}
                       </td>
                       <td class="w-[20%] text-center truncate">
                         {{ orders.total_amount }}
                       </td>
                       <td class="w-[20%] text-center truncate">
-                        {{ orders.status }}
+                        <span v-if="orders.status == 'delivered'">
+                        <div
+                          class="flex justify-center items-center text-[15px]  p-2 text-[#2B1E28] w-[150px] h-[35px] rounded-full dropshadowbottomsub bg-gradient-to-t from-red-600 to-red-100"
+                        >
+                        delivered
+                        </div>
+                      </span>
+                      <span v-else>
+                        <div
+                          class="flex justify-center items-center text-[15px]  p-2 text-[#2B1E28] w-[150px] h-[35px] rounded-full dropshadowbottomsub bg-gradient-to-t from-green-600 to-green-100"
+                        >
+                        pending
+                        </div>
+                      </span>
                       </td>
                     </tr>
-                  </NuxtLink>
                 </tbody>
               </table>
             </div>
@@ -220,7 +226,7 @@
             <!-- ยอดขาย -->
             <div class="bg-white w-full p-2 h-[100%] roundedmain">
               <h1
-                class="flex justify-center rounded-full xl:text-[15px] md:text-[12px] sm:text-[11px] max-sm:text-[6px] text-white font-bold p-1 w-[140px] md:w-[120px] max-sm:w-[100px] bg-[#593D53] drop-shadow-md"
+                class="flex justify-center rounded-full xl:text-[15px] md:text-[12px] sm:text-[11px] max-sm:text-[6px] text-white font-bold p-1 w-[140px] md:w-[120px] max-sm:w-[100px] textmain drop-shadow-md"
               >
                 สรุปยอดการขาย
               </h1>
@@ -329,48 +335,6 @@ const order = ref<Order[]>([
         product_id: 202,
         product_name: "Wireless Headphones",
         quantity: 1,
-        price: 250,
-      },
-    ],
-  },
-  {
-    order_id: 12346,
-    customer: {
-      user_id: 102,
-      username: "jane_smith",
-      email: "jane_smith@example.com",
-    },
-    total_amount: 500,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-18T09:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      {
-        product_id: 203,
-        product_name: "Smartwatch Y",
-        quantity: 2,
-        price: 250,
-      },
-    ],
-  },
-  {
-    order_id: 12346,
-    customer: {
-      user_id: 102,
-      username: "jane_smith",
-      email: "jane_smith@example.com",
-    },
-    total_amount: 500,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-18T09:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      {
-        product_id: 203,
-        product_name: "Smartwatch Y",
-        quantity: 2,
         price: 250,
       },
     ],

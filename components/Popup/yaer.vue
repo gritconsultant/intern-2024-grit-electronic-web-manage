@@ -1,6 +1,6 @@
 <template>
   <div>
-    porfile
+    <input type=" ">
   </div>
 </template>
 

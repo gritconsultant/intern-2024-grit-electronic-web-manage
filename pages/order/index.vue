@@ -5,10 +5,12 @@
       <hr class="hrpages" />
       <div class="flex gap-2 p-1 h-[100%] w-full">
         <!-- รายการคำสั่งซื้อ -->
-        <div class="p-2 h-full w-[80%] roundedmain bg-[#FFFAE9] dropshadowbottomsub">
+        <div
+          class="p-2 h-full w-[80%] roundedmain bg-[#FFFAE9] dropshadowbottomsub"
+        >
           <div class="flex justify-between gap-2">
             <h1 class="flex items-center textmain font-bold text-[25px]">
-              รายงานคำสั่งซื้อ
+              รายการคำสั่งซื้อ
             </h1>
             <div class="w-[50%]">
               <Search />
@@ -28,27 +30,50 @@
                   <th class="w-[20%]">จำนวนรวม</th>
                   <th class="w-[20%]">ราคารวม</th>
                   <th class="w-[20%]">สถานะ</th>
+                  <th class="w-[1%]"></th>
                 </tr>
               </thead>
               <tbody v-for="(orders, data) in order" :key="data">
-                <NuxtLink to="/order/[id]">
-                  <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
-                    <td class="w-[20%] truncate">{{ orders.order_id }}</td>
-                    <td class="w-[20%] text-center truncate">
-                      {{ orders.created_at }}
-                    </td>
-                    <td class="w-[20%] text-center truncate">{{}}</td>
-                    <td class="w-[20%] text-center truncate">
-                      {{ orders.total_amount }}
-                    </td>
-                    <td class="w-[20%] text-center truncate">
-                      {{ orders.total_amount }}
-                    </td>
-                    <td class="w-[20%] text-center truncate">
-                      {{ orders.status }}
-                    </td>
-                  </tr>
-                </NuxtLink>
+                <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
+                  <td class="w-[20%] truncate">{{ orders.order_id }}</td>
+                  <td class="w-[20%] text-center truncate">
+                    {{ orders.created_at }}
+                  </td>
+                  <td class="w-[20%] text-center truncate">{{}}</td>
+                  <td class="w-[20%] text-center truncate">
+                    {{ orders.total_amount }}
+                  </td>
+                  <td class="w-[20%] text-center truncate">
+                    {{ orders.total_amount }}
+                  </td>
+                  <td class="w-[20%] flex justify-center truncate">
+                    <div class="absolute flex text-center w-[100px]">
+                      <div
+                        class="relative group flex justify-center bg-white w-full"
+                      >
+                        <div class="cursor-pointer">
+                          {{ orders.status }}
+                        </div>
+                        <!-- Dropdown manu -->
+                        <div
+                          class="absolute bg-white rounded-[20px] border shadow w-44 z-20 hidden group-hover:block mt-[23px]"
+                        >
+                          <ul class="py-2 text-sm text-gray-700 flex flex-col gap-2">
+                            <li class="block px-4 py-2 bg-red-400 mx-2 hover:bg-gray-100 rounded-[20px]">
+                              delivered
+                            </li>
+                            <li class="block px-4 py-2 bg-green-400 mx-2 hover:bg-gray-100 rounded-[20px]">
+                              pending
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <NuxtLink to="/order/[id]">
+                    <i class="fa-solid fa-eye"></i>
+                  </NuxtLink>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -64,11 +89,7 @@
           >
             <h1 class="text-[20px] text-center font-bold">ยอดคำสั่งซื้อ</h1>
             <hr class="hrpages" />
-            <div
-              class="bg-slate-500 flex items-center place-content-center h-[85%]"
-            >
-              graph
-            </div>
+            <div class="flex items-center place-content-center h-[85%]"></div>
           </div>
           <!-- ยอดรวมแต่ละประเภท -->
           <div
@@ -78,11 +99,7 @@
               ยอดคำสั่งซื้อแต่ละประเภท
             </h1>
             <hr class="hrpages" />
-            <div
-              class="bg-slate-500 flex items-center place-content-center h-[85%]"
-            >
-              graph
-            </div>
+            <div class="flex items-center place-content-center h-[85%]"></div>
           </div>
         </div>
       </div>

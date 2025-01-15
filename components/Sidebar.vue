@@ -82,7 +82,7 @@ const page = ref<Pages[]>([
     path: "report_page",
     name: "รายงาน",
     active: true,
-    icon: "fa-solid fa-cart-shopping",
+    icon: "fa-solid fa-paste",
   },
   {
     path: "order",
@@ -94,37 +94,31 @@ const page = ref<Pages[]>([
     path: "product_return",
     name: "รายการคำขอคืนสินค้า",
     active: true,
-    icon: "fa-solid fa-cart-shopping",
+    icon: "fa-solid fa-rotate-left",
   },
   {
     path: "product",
     name: "สินค้า",
     active: true,
-    icon: "fa-solid fa-cart-shopping",
+    icon: "fa-solid fa-boxes-stacked",
   },
   {
     path: "logs",
     name: "รายละเอียดการทำงาน ",
     active: true,
-    icon: "fa-solid fa-cart-shopping",
+    icon: "fa-solid fa-file-lines",
   },
   {
     path: "manages_user",
     name: "จัดการผู้ใช้งาน",
     active: true,
-    icon: "fa-solid fa-cart-shopping",
+    icon: "fa-solid fa-users-rectangle",
   },
   {
     path: "manages",
     name: "จัดการทั่วไป",
     active: true,
-    icon: "fa-solid fa-cart-shopping",
-  },
-  {
-    path: "ex",
-    name: "ทดลอง",
-    active: true,
-    icon: "fa-solid fa-cart-shopping",
+    icon: "fa-solid fa-store",
   },
 ]);
 </script>

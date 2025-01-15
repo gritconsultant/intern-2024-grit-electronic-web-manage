@@ -1,6 +1,6 @@
 <template>
   <div>
-    porfile
+    เพิ่มประเภทผลิตภัณฑ์
   </div>
 </template>
 
