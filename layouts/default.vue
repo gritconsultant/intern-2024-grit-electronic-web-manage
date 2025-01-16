@@ -1,8 +1,8 @@
 <template>
-  <div class="flex gap-1">
+  <div class="flex flex-col">
+    <Header />
+    <div class="flex ">
       <Sidebar />
-    <div class="flex flex-col  w-screen h-screen ">
-      <Header />
       <slot />
     </div>
   </div>

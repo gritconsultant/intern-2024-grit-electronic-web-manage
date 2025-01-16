@@ -1,13 +1,13 @@
 // main.scss */
 .defaultpages{
-    @apply pl-1 w-full h-screen
+    @apply  w-full h-screen bg-gray-100
 }
 
 .pages {
-    @apply w-full h-full p-2    
+    @apply w-full h-full p-2  
 }
 .textmain {
-    @apply text-[#2B1E28] font-bold 
+    @apply font-bold 
 }
 
 .roundedmain {
@@ -58,10 +58,11 @@
 }
 
 .dropshadowbottom {
-    filter: drop-shadow(1px 3px 2px rgb(0, 0, 0));
+    filter: drop-shadow(1px 2px 1px rgb(0, 0, 0));
 }
 
 .dropshadowbottomsub {
     filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
 }
-// 
+
+//  

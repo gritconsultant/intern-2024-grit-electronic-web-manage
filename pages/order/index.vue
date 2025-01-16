@@ -1,108 +1,45 @@
 <template>
   <div class="defaultpages">
-    <div class="pages">
-      <!-- Header -->
-      <hr class="hrpages" />
-      <div class="flex gap-2 p-1 h-[100%] w-full">
-        <!-- รายการคำสั่งซื้อ -->
-        <div
-          class="p-2 h-full w-[80%] roundedmain bg-[#FFFAE9] dropshadowbottomsub"
-        >
-          <div class="flex justify-between gap-2">
-            <h1 class="flex items-center textmain font-bold text-[25px]">
-              รายการคำสั่งซื้อ
-            </h1>
-            <div class="w-[50%]">
-              <Search />
-            </div>
-            <div class="flex gap-2">
-              <DropdownCategory />
-              <SelectorDate />
-            </div>
-          </div>
-          <div class="h-[90%] mt-2">
-            <table class="w-full text-[#2B1E28] font-semibold">
-              <thead class="border-b-2 border-[#7A4711]">
-                <tr class="flex gap-2 w-full">
-                  <th class="flex justify-start w-[20%]">หมายเลขคำสั่งซื้อ</th>
-                  <th class="w-[20%]">วันที่</th>
-                  <th class="w-[20%]">ชื่อสินค้า</th>
-                  <th class="w-[20%]">จำนวนรวม</th>
-                  <th class="w-[20%]">ราคารวม</th>
-                  <th class="w-[20%]">สถานะ</th>
-                  <th class="w-[1%]"></th>
-                </tr>
-              </thead>
-              <tbody v-for="(orders, data) in order" :key="data">
-                <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
-                  <td class="w-[20%] truncate">{{ orders.order_id }}</td>
-                  <td class="w-[20%] text-center truncate">
-                    {{ orders.created_at }}
-                  </td>
-                  <td class="w-[20%] text-center truncate">{{}}</td>
-                  <td class="w-[20%] text-center truncate">
-                    {{ orders.total_amount }}
-                  </td>
-                  <td class="w-[20%] text-center truncate">
-                    {{ orders.total_amount }}
-                  </td>
-                  <td class="w-[20%] flex justify-center truncate">
-                    <div class="absolute flex text-center w-[100px]">
-                      <div
-                        class="relative group flex justify-center bg-white w-full"
-                      >
-                        <div class="cursor-pointer">
-                          {{ orders.status }}
-                        </div>
-                        <!-- Dropdown manu -->
-                        <div
-                          class="absolute bg-white rounded-[20px] border shadow w-44 z-20 hidden group-hover:block mt-[23px]"
-                        >
-                          <ul class="py-2 text-sm text-gray-700 flex flex-col gap-2">
-                            <li class="block px-4 py-2 bg-red-400 mx-2 hover:bg-gray-100 rounded-[20px]">
-                              delivered
-                            </li>
-                            <li class="block px-4 py-2 bg-green-400 mx-2 hover:bg-gray-100 rounded-[20px]">
-                              pending
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <NuxtLink to="/order/[id]">
-                    <i class="fa-solid fa-eye"></i>
-                  </NuxtLink>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- paginate -->
-          <div class="mt-[15px]">
-            <Paginate />
-          </div>
-        </div>
-        <div class="flex flex-col gap-2 h-full w-[20%]">
-          <!-- ยอดรวมคำสั่งซื้อ -->
-          <div
-            class="w-full h-[40%] p-2 roundedmain bg-[#FFFAE9] dropshadowbottomsub"
-          >
-            <h1 class="text-[20px] text-center font-bold">ยอดคำสั่งซื้อ</h1>
-            <hr class="hrpages" />
-            <div class="flex items-center place-content-center h-[85%]"></div>
-          </div>
-          <!-- ยอดรวมแต่ละประเภท -->
-          <div
-            class="w-full h-[60%] p-2 roundedmain bg-[#FFFAE9] dropshadowbottomsub"
-          >
-            <h1 class="text-[20px] text-center font-bold">
-              ยอดคำสั่งซื้อแต่ละประเภท
-            </h1>
-            <hr class="hrpages" />
-            <div class="flex items-center place-content-center h-[85%]"></div>
-          </div>
-        </div>
+    <div class="flex items-center justify-between h-[5%] pl-[35px]">
+      <h1 class="text-[20px] font-bold">รายการคำสั่งซื้อ</h1>
+      <div
+        class="flex justify-center mr-[40px] border-2 rounded-[5px] bg-white/50 w-[310px]"
+      >
+        <DropdownPaymentstatus />
+        <DropdownStatusorder />
       </div>
+    </div>
+    <div class="w-full h-[90%] pt-2 bg-white">
+      <table class="flex flex-col px-8 gap-2 w-ful">
+        <thead class="w-full">
+          <tr class="flex gap-2">
+            <th class="w-[15%] text-start bg-slate-400">หมายเลขคำสั่งซื้อ</th>
+            <th class="w-[15%] bg-slate-400">วัน/เวลา</th>
+            <th class="w-[15%] bg-slate-400">ลูกค้า</th>
+            <th class="w-[15%] bg-slate-400">ราคารวม</th>
+            <th class="w-[15%] bg-slate-400">จำนวนรวม</th>
+            <th class="w-[15%] bg-slate-400">สถานะการชำระเงิน</th>
+            <th class="w-[15%] bg-slate-400">สถานะการจัดส่ง</th>
+            <th class="w-[5%] bg-slate-400"></th>
+          </tr>
+        </thead>
+        <tbody class="w-full">
+          <tr class="flex gap-2">
+            <th class="w-[15%] text-start bg-slate-400 truncate">
+              หมายเลขคำสั่งซื้อ
+            </th>
+            <th class="w-[15%] bg-slate-400 truncate">วัน/เวลา</th>
+            <th class="w-[15%] bg-slate-400 truncate">ลูกค้า</th>
+            <th class="w-[15%] bg-slate-400 truncate">ราคารวม</th>
+            <th class="w-[15%] bg-slate-400 truncate">จำนวนรวม</th>
+            <th class="w-[15%] bg-slate-400 truncate">สถานะการชำระเงิน</th>
+            <th class="w-[15%] bg-slate-400 truncate">สถานะการจัดส่ง</th>
+            <th class="w-[5%] bg-slate-400">
+              <i class="fa-solid fa-bars  rounded-[5px] border-[1px] border-slate-400  w-[25px] hover:bg-slate-200 hover:border-slate-600 "></i>
+            </th>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

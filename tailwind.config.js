@@ -7,7 +7,11 @@ export default {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        thai: ['Prompt', 'sans-serif'], // เพิ่มฟอนต์ Prompt
+      },
+    },
   },
   plugins: [],
 }

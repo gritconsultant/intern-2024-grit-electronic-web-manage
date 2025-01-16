@@ -21,3 +21,13 @@ export interface Item {
     quantity:     number;
     price:        number;
 }
+
+export interface StatusOrder {
+    id: number;
+    status: string;
+}
+
+export interface PaymentStatus {
+    id: number;
+    status: string;
+}

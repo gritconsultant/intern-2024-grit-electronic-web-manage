@@ -2,125 +2,104 @@
   <div>
     <!-- Desktop -->
     <div
-      class="bg-[#EAA04B] w-[220px] h-screen rounded-tr-[30px] max-xl:hidden duration-700"
+      class="w-[200px] h-screen border-r-[1px] border-gray-400 max-xl:hidden duration-700"
     >
-      <div
-        class="p-[5px] bg-[#7A4711]/60 rounded-tr-[30px] hover:bg-[#7A4711]"
-      >
-        <NuxtLink to="/">
-          <img
-            class="object-cover h-[53px] w-full flex justify-center bg-left"
-            src="https://bangkokbrands.com/wp-content/uploads/2023/06/Bangkok-brand-site-logo.png"
-            alt=""
-          />
-        </NuxtLink>
-      </div>
       <div class="flex flex-col">
         <!-- menu -->
-        <div v-for="(data, i) in page" :key="i" class="mt-1 pr-2">
-          <NuxtLink :to="data.path" class="">
-            <div
-              class="flex gap-2 justify-start pl-[30px] p-2 rounded-r-[100px] font-bold text-[12px] text-[#712900] hover:bg-[#7A4711] hover:text-[#FFD700] duration-700"
-            >
-              <i :class="data.icon" class="text-[25px]"> </i>
-              <div class="mt-[5px]">
-                {{ data.name }}
-              </div>
+        <div
+          class="flex flex-col gap-2 mt-1  pl-[30px] text-gray-500 text-[15px] mr-5"
+        >
+          <NuxtLink to="/" class="flex gap-2">
+            <div>
+              <i class="fa-solid fa-chart-pie"></i>
             </div>
+            <span class="font-semibold">แดชบอร์ด</span>
+          </NuxtLink>
+          <NuxtLink to="order" class="flex gap-2">
+            <div>
+              <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+            <span class="font-semibold">รายการคำสั่งซื้อ</span>
+          </NuxtLink>
+          <NuxtLink to="refund" class="flex gap-2">
+            <div>
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+            </div>
+            <span class="font-semibold">รายการคืนสินค้า</span>
+          </NuxtLink>
+          <!-- DropdownProduct -->
+          <div class="relative group">
+            <div class="flex gap-2 text-[15px]">
+              <i class="fa-solid fa-boxes-stacked"></i>
+              <span class="font-semibold">ผลิตภัณฑ์</span>
+              <i class="fa-solid fa-caret-down text-[12px] flex items-end"></i>
+            </div>
+            <!-- Dropdown manu -->
+            <div
+              class="bg-white rounded-lg border shadow w-44 hidden group-hover:block"
+            >
+              <ul class="py-2 text-sm text-gray-700">
+                <li class="block px-4 py-2 hover:bg-gray-100">
+                  <NuxtLink to="/profile">ผลิตภัณฑ์</NuxtLink>
+                </li>
+                <li class="block px-4 py-2 hover:bg-gray-100">
+                  ประเภทผลิตภัณฑ์
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- DropdowUser -->
+          <div class="relative group">
+            <div class="flex gap-2 text-[15px]">
+              <i class="fa-solid fa-users-line"></i>
+              <span class="font-semibold">ผู้ใช้งาน</span>
+              <i class="fa-solid fa-caret-down text-[12px] flex items-end"></i>
+            </div>
+            <!-- Dropdown manu -->
+            <div
+              class="bg-white rounded-lg border shadow w-44 hidden group-hover:block"
+            >
+              <ul class="py-2 text-sm text-gray-700">
+                <li class="block px-4 py-2 hover:bg-gray-100">
+                  <NuxtLink to="/profile">ลูกค้า</NuxtLink>
+                </li>
+                <li class="block px-4 py-2 hover:bg-gray-100">
+                  เจ้าหน้าที่ดูแล
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- DropdowManages -->
+          <div class="relative group">
+            <div class="flex gap-2 text-[15px]">
+              <i class="fa-solid fa-gear"></i>
+              <span class="font-semibold">จัดการทั่วไป</span>
+              <i class="fa-solid fa-caret-down text-[12px] flex items-end"></i>
+            </div>
+            <!-- Dropdown manu -->
+            <div
+              class="bg-white rounded-lg border shadow w-44 hidden group-hover:block"
+            >
+              <ul class="py-2 text-sm text-gray-700">
+                <li class="block px-4 py-2 hover:bg-gray-100">
+                  <NuxtLink to="/profile">ธนาคาร</NuxtLink>
+                </li>
+                <li class="block px-4 py-2 hover:bg-gray-100">แบรนด์เดอร์</li>
+              </ul>
+            </div>
+          </div>
+          <NuxtLink to="logs" class="flex gap-2">
+            <div>
+              <i class="fa-regular fa-clock"></i>
+            </div>
+            <span class="font-semibold">รายการคืนสินค้า</span>
           </NuxtLink>
         </div>
-      </div>
-    </div>
-    <!-- Ipad -->
-    <div
-      class="bg-[#EAA04B] w-[65px] h-screen rounded-tr-[30px] xl:hidden duration-700 max-sm:hidden"
-    >
-      <div class="p-[5px] bg-[#7A4711]/60 rounded-tr-[30px] hover:bg-[#7A4711]">
-        <NuxtLink to="/">
-          <img
-            class="object-cover"
-            src="/images/Logo2.ico"
-            alt=""
-          />
-        </NuxtLink>
-      </div>
-      <div class="flex flex-col">
-        <!-- menu -->
-        <div v-for="(data, i) in page" :key="i" class="mt-2 pr-1">
-          <NuxtLink :to="data.path">
-            <div
-              class="flex gap-2 justify-center items-center  p-2 rounded-r-[100px] h-[45px] text-xl text-[#712900] hover:bg-[#7A4711] hover:text-[#FFD700]"
-            >
-              <i :class="data.icon" class="text-[25px]"> </i>
-            </div>
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-    <!-- Mobile -->
-    <div
-      class=" bg-[#EAA04B] flex justify-center items-center p-1 w-[50px] ml-[5px] mt-[1px] rounded-full sm:hidden duration-700 absolute"
-    >
-      <div>
-        <NuxtLink to="/">
-          <img
-            class="object-cover"
-            src="/images/Logo2.ico"
-            alt=""
-          />
-        </NuxtLink>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import type { Pages } from "~/models/page.model";
-
-const page = ref<Pages[]>([
-  {
-    path: "report_page",
-    name: "รายงาน",
-    active: true,
-    icon: "fa-solid fa-paste",
-  },
-  {
-    path: "order",
-    name: "รายการคำสั่งซื้อ",
-    active: true,
-    icon: "fa-solid fa-cart-shopping",
-  },
-  {
-    path: "product_return",
-    name: "รายการคำขอคืนสินค้า",
-    active: true,
-    icon: "fa-solid fa-rotate-left",
-  },
-  {
-    path: "product",
-    name: "สินค้า",
-    active: true,
-    icon: "fa-solid fa-boxes-stacked",
-  },
-  {
-    path: "logs",
-    name: "รายละเอียดการทำงาน ",
-    active: true,
-    icon: "fa-solid fa-file-lines",
-  },
-  {
-    path: "manages_user",
-    name: "จัดการผู้ใช้งาน",
-    active: true,
-    icon: "fa-solid fa-users-rectangle",
-  },
-  {
-    path: "manages",
-    name: "จัดการทั่วไป",
-    active: true,
-    icon: "fa-solid fa-store",
-  },
-]);
-</script>
+<script lang="ts" setup></script>
 
 <style></style>
