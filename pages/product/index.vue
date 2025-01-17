@@ -160,7 +160,7 @@ const products = ref<Product[]>([
     price: 62,
     amount: 10,
     img: "https://th-test-11.slatic.net/p/2b0d5f80a00b77d2c6490b09a053a1c0.png",
-    categoryId: "อาหาร",
+    categoryId: 1,
   },
   {
     id: 2,
@@ -169,7 +169,7 @@ const products = ref<Product[]>([
     price: 62,
     amount: 13,
     img: "https://halal.co.th/storages/products/343928.png",
-    categoryId: "อาหาร",
+    categoryId: 1,
   },
   {
     id: 3,
@@ -178,7 +178,7 @@ const products = ref<Product[]>([
     price: 59,
     amount: 10,
     img: "https://halal.co.th/storages/products/390694.jpg",
-    categoryId: "อาหาร",
+    categoryId: 1,
   },
   {
     id: 4,
@@ -187,7 +187,7 @@ const products = ref<Product[]>([
     price: 58,
     amount: 20,
     img: "https://halal.co.th/storages/products/680694.jpg",
-    categoryId: "อาหาร",
+    categoryId: 1,
   },
 
   // cate 2
@@ -198,7 +198,7 @@ const products = ref<Product[]>([
     price: 150,
     amount: 5,
     img: "https://halal.co.th/storages/products/679578.jpg",
-    categoryId: "เครื่องดื่ม",
+    categoryId: 2,
   },
   {
     id: 6,
@@ -207,7 +207,7 @@ const products = ref<Product[]>([
     price: 150,
     amount: 3,
     img: "https://halal.co.th/storages/products/p135225.jpg",
-    categoryId: "เครื่องดื่ม",
+    categoryId: 2,
   },
   {
     id: 7,
@@ -217,7 +217,7 @@ const products = ref<Product[]>([
     price: 40,
     amount: 3,
     img: "https://farmfoodsmart.com/upload/products/1634/637982414838759739.png",
-    categoryId: "เครื่องดื่ม",
+    categoryId: 2,
   },
   {
     id: 8,
@@ -226,7 +226,7 @@ const products = ref<Product[]>([
     price: 155,
     amount: 3,
     img: "https://obs-ect.line-scdn.net/r/ect/ect/image_1695790690327236876b5788947t124fdd52",
-    categoryId: "เครื่องดื่ม",
+    categoryId: 2,
   },
 
   // cate 3
@@ -238,7 +238,7 @@ const products = ref<Product[]>([
     price: 350,
     amount: 5,
     img: "https://cx.lnwfile.com/_/cx/_resize/250/333/ua/fr/ep.jpg",
-    categoryId: "สมุนไพร",
+    categoryId: 3,
   },
   {
     id: 10,
@@ -248,7 +248,7 @@ const products = ref<Product[]>([
     price: 250,
     amount: 3,
     img: "https://cx.lnwfile.com/_/cx/_raw/me/be/uu.jpg",
-    categoryId: "สมุนไพร",
+    categoryId: 3,
   },
   {
     id: 11,
@@ -258,7 +258,7 @@ const products = ref<Product[]>([
     price: 40,
     amount: 3,
     img: "https://cx.lnwfile.com/_/cx/_raw/vk/e5/12.jpg",
-    categoryId: "สมุนไพร",
+    categoryId: 3,
   },
   {
     id: 12,
@@ -268,7 +268,7 @@ const products = ref<Product[]>([
     price: 155,
     amount: 3,
     img: "https://cx.lnwfile.com/_/cx/_raw/h6/kd/qy.jpg",
-    categoryId: "สมุนไพร",
+    categoryId: 3,
   },
 
   // cate 4
@@ -279,7 +279,7 @@ const products = ref<Product[]>([
     price: 200,
     amount: 10,
     img: "https://cx.lnwfile.com/_/cx/_raw/63/ue/5l.jpg",
-    categoryId: "ผ้าและเครื่องแต่งกาย",
+    categoryId: 4,
   },
   {
     id: 14,
@@ -289,7 +289,7 @@ const products = ref<Product[]>([
     price: 450,
     amount: 5,
     img: "https://cx.lnwfile.com/_/cx/_raw/hj/c0/ii.png",
-    categoryId: "ผ้าและเครื่องแต่งกาย",
+    categoryId: 4,
   },
   {
     id: 15,
@@ -298,7 +298,7 @@ const products = ref<Product[]>([
     price: 300,
     amount: 8,
     img: "https://image.makewebcdn.com/makeweb/m_1200x600/7zapn1NU1/Fabric%20Bag/21-Pentagram%20music%20bag.jpg",
-    categoryId: "ผ้าและเครื่องแต่งกาย",
+    categoryId: 4,
   },
   {
     id: 16,
@@ -308,7 +308,7 @@ const products = ref<Product[]>([
     price: 550,
     amount: 12,
     img: "https://cx.lnwfile.com/_/cx/_raw/te/ql/5d.png",
-    categoryId: "ผ้าและเครื่องแต่งกาย",
+    categoryId: 4,
   },
 
   // cate 5
@@ -319,7 +319,7 @@ const products = ref<Product[]>([
     price: 600,
     amount: 4,
     img: "https://www.xsxlightfactory.com/uploads/Bamboo-desk-lamp-China.jpg",
-    categoryId: "ของใช้และของตกแต่ง",
+    categoryId: 5,
   },
   {
     id: 18,
@@ -328,7 +328,7 @@ const products = ref<Product[]>([
     price: 100,
     amount: 6,
     img: "https://cx.lnwfile.com/_/cx/_raw/08/dn/3a.png",
-    categoryId: "ของใช้และของตกแต่ง",
+    categoryId: 5,
   },
   {
     id: 19,
@@ -337,7 +337,7 @@ const products = ref<Product[]>([
     price: 400,
     amount: 3,
     img: "https://cx.lnwfile.com/_/cx/_raw/nw/am/qk.jpg",
-    categoryId: "ของใช้และของตกแต่ง",
+    categoryId: 5,
   },
   {
     id: 20,
@@ -346,7 +346,7 @@ const products = ref<Product[]>([
     price: 275,
     amount: 0,
     img: "https://cx.lnwfile.com/_/cx/_raw/f4/12/hf.png",
-    categoryId: "ของใช้และของตกแต่ง",
+    categoryId: 5,
   },
 ]);
 </script>

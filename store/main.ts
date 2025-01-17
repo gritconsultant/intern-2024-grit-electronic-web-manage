@@ -4,6 +4,8 @@ interface State {
   token : string
   userId : string
   notification : boolean
+  orderstatus : boolean
+  paymentstatus : boolean
 }
 
 export const useIndexStore = defineStore('index', {
@@ -11,5 +13,7 @@ export const useIndexStore = defineStore('index', {
     token:'',
     userId:'',
     notification : false,
+    orderstatus : false,
+    paymentstatus : false,
    }),
 })

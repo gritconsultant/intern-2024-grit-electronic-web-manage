@@ -2,36 +2,38 @@
   <div>
     <!-- Desktop -->
     <div
-      class="w-[200px] h-screen border-r-[1px] border-gray-400 max-xl:hidden duration-700"
+      class="w-[200px] h-screen border-r-[1px] border-gray-400 max-xl:hidden  duration-700"
     >
       <div class="flex flex-col">
         <!-- menu -->
         <div
-          class="flex flex-col gap-2 mt-1  pl-[30px] text-gray-500 text-[15px] mr-5"
+          class="flex flex-col gap-2 mt-1  pl-[30px] text-gray-600 text-[15px] mr-5"
         >
-          <NuxtLink to="/" class="flex gap-2">
+          <NuxtLink to="/" class="flex gap-2 " :class="{'text-blue-500': route.path === '/' }"
+          
+          >
             <div>
               <i class="fa-solid fa-chart-pie"></i>
             </div>
-            <span class="font-semibold">แดชบอร์ด</span>
+            <span class="  ">แดชบอร์ด</span>
           </NuxtLink>
-          <NuxtLink to="order" class="flex gap-2">
+          <NuxtLink to="/order" class="flex gap-2" :class="{'text-blue-500': route.path === '/order' }" >
             <div>
               <i class="fa-solid fa-cart-shopping"></i>
             </div>
-            <span class="font-semibold">รายการคำสั่งซื้อ</span>
+            <span class="">รายการคำสั่งซื้อ</span>
           </NuxtLink>
-          <NuxtLink to="refund" class="flex gap-2">
+          <NuxtLink to="/refund" class="flex gap-2" :class="{'text-blue-500': route.path === '/refund' }">
             <div>
               <i class="fa-solid fa-arrow-rotate-left"></i>
             </div>
-            <span class="font-semibold">รายการคืนสินค้า</span>
+            <span class="">รายการคืนสินค้า</span>
           </NuxtLink>
           <!-- DropdownProduct -->
           <div class="relative group">
             <div class="flex gap-2 text-[15px]">
               <i class="fa-solid fa-boxes-stacked"></i>
-              <span class="font-semibold">ผลิตภัณฑ์</span>
+              <span class="">ผลิตภัณฑ์</span>
               <i class="fa-solid fa-caret-down text-[12px] flex items-end"></i>
             </div>
             <!-- Dropdown manu -->
@@ -40,10 +42,10 @@
             >
               <ul class="py-2 text-sm text-gray-700">
                 <li class="block px-4 py-2 hover:bg-gray-100">
-                  <NuxtLink to="/profile">ผลิตภัณฑ์</NuxtLink>
+                  <NuxtLink to="/product">ผลิตภัณฑ์</NuxtLink>
                 </li>
                 <li class="block px-4 py-2 hover:bg-gray-100">
-                  ประเภทผลิตภัณฑ์
+                  <NuxtLink to="/product/category">ประเภทผลิตภัณฑ์</NuxtLink>
                 </li>
               </ul>
             </div>
@@ -52,7 +54,7 @@
           <div class="relative group">
             <div class="flex gap-2 text-[15px]">
               <i class="fa-solid fa-users-line"></i>
-              <span class="font-semibold">ผู้ใช้งาน</span>
+              <span class="">ผู้ใช้งาน</span>
               <i class="fa-solid fa-caret-down text-[12px] flex items-end"></i>
             </div>
             <!-- Dropdown manu -->
@@ -73,7 +75,7 @@
           <div class="relative group">
             <div class="flex gap-2 text-[15px]">
               <i class="fa-solid fa-gear"></i>
-              <span class="font-semibold">จัดการทั่วไป</span>
+              <span class="">จัดการทั่วไป</span>
               <i class="fa-solid fa-caret-down text-[12px] flex items-end"></i>
             </div>
             <!-- Dropdown manu -->
@@ -92,7 +94,7 @@
             <div>
               <i class="fa-regular fa-clock"></i>
             </div>
-            <span class="font-semibold">รายการคืนสินค้า</span>
+            <span class="">รายงานการทำงาน</span>
           </NuxtLink>
         </div>
       </div>
@@ -100,6 +102,11 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useRoute } from 'vue-router'; // ใช้สำหรับตรวจสอบ path
+
+const route = useRoute();
+
+</script>
 
 <style></style>

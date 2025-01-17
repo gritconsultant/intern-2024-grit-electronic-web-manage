@@ -40,7 +40,7 @@ export interface Product {
   price: number;
   amount: number;
   img: string;
-  categoryId: string;
+  categoryId: number;
 }
 
 export interface Category {

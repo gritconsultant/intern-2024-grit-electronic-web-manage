@@ -6,7 +6,7 @@
       >
         <div class="flex justify-center items-center gap-[3px] font-bold text-[14px] pt-[3px] w-full h-[30px] ">
           {{selectedStatus.status }}
-          <i class="fa-solid fa-caret-down text-[12px] pt-[10px]"></i>
+          <i class="fa-solid fa-caret-down text-[12px] pt-[5px]"></i>
         </div>
       </div>
       <!-- Dropdown manu -->
@@ -27,7 +27,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import type { PaymentStatus } from '~/models/order.model';
-
 
 
 // สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก

@@ -6,7 +6,7 @@
       >
         <div class="flex justify-center items-center gap-[2px] font-bold text-[14px] pt-[3px] w-full h-[30px] ">
           {{selectedStatus.status }}
-          <i class="fa-solid fa-caret-down text-[12px] pt-[10px]"></i>
+          <i class="fa-solid fa-caret-down text-[12px] pt-[5px]"></i>
         </div>
       </div>
       <!-- Dropdown manu -->
