@@ -6,6 +6,7 @@ interface State {
   notification : boolean
   orderstatus : boolean
   paymentstatus : boolean
+  statusrefund : boolean
 }
 
 export const useIndexStore = defineStore('index', {
@@ -15,5 +16,6 @@ export const useIndexStore = defineStore('index', {
     notification : false,
     orderstatus : false,
     paymentstatus : false,
+    statusrefund : false,
    }),
 })

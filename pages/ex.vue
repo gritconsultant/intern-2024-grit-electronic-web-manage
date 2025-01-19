@@ -141,6 +141,7 @@
 <script lang="ts" setup>
 import type { Params } from "~/models/client.model";
 import type { Listproduct } from "~/models/product.model";
+
 import service from "~/service";
 
 const loading = ref(false);
