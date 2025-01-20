@@ -1,6 +1,5 @@
 <template>
   <div class="flex justify-center " >
-
       <!-- Search -->
       <div class="w-[100%]">
         <div
@@ -9,8 +8,8 @@
           <i class="fa-solid fa-magnifying-glass text-[20px]"></i>
         </div>
         <input
-          type="text"
-          class="w-[90%] h-[40px] rounded-full ml-[1px] pl-[60px] pr-[20px] border-none outline-none bg-[#7A4711]/50 text-white placeholder-white"
+          type="search "
+          class="w-[100%] h-[40px] rounded-[5px] ml-[1px] pl-[60px] pr-[20px] border-none outline-none bg-[#7A4711]/50 text-white placeholder-white"
           placeholder="พิมชื่อสิ่งที่ต้องการค้นหา"
         />
       </div>

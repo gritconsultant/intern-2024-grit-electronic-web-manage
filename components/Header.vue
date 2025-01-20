@@ -1,5 +1,5 @@
 <template>
-  <div class=" flex justify-between items-center h-[60px]  border-b-[1px] border-gray-400  ">
+  <div class=" flex justify-between items-center h-[60px]  border-b-[1px] border-gray-400 bg-white ">
     <div class="w-[180px] ml-[20px]">
       <NuxtLink to="/">
         <img
