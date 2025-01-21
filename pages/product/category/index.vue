@@ -5,7 +5,7 @@
     </div>
     <div class="flex justify-between px-[25px]">
       <div class="flex gap-2 w-[80%] ">
-        <div class="w-[40%] bg-slate-400">
+        <div class="w-[40%] ">
           <Search />
         </div>
       </div>

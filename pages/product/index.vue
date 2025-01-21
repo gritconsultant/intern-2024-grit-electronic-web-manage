@@ -5,10 +5,44 @@
     </div>
     <div class="flex justify-between px-[25px]">
       <div class="flex gap-2 w-[80%]">
-        <div class="w-[40%] bg-slate-400">
+        <div class="w-[40%]">
           <Search />
         </div>
-        <DropdownCategory />
+        <!-- filter category -->
+        <div class=" ">
+          <div class="relative group h-full">
+            <div
+              class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
+            >
+              <button
+                class="bg-[#F68D44] rounded-full flex justify-center items-center pt-[3px] w-[35px] h-full cursor-pointer"
+                type="button"
+              >
+                <i class="fa-solid fa-filter text-[20px]"></i>
+              </button>
+              <div
+                class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[] "
+              >
+                {{ selectedCategory.name }}
+              </div>
+            </div>
+            <!-- Dropdown manu -->
+            <div
+              class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
+            >
+              <ul class="py-2 text-sm text-gray-700">
+                <li
+                  class="block px-4 py-2 hover:bg-gray-100"
+                  v-for="(category, i) in categories"
+                  :key="i"
+                  @click="selectCategory(category)"
+                >
+                  {{ category.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="pr-[50px]">
         <NuxtLink to="/product/create">
@@ -35,10 +69,12 @@
         <tbody class="w-full">
           <tr
             class="flex gap-2 py-2 border-b-[1px]"
-            v-for="(product, data) in products"
-            :key="data"
+            v-for="(product, index) in filteredProducts"
+            :key="index"
           >
-            <th class="w-[40%] truncate flex gap-2 justify-between  border-r-[2px]">
+            <th
+              class="w-[40%] truncate flex gap-2 justify-between border-r-[2px]"
+            >
               <div class="w-full flex justify-center">
                 <img
                   :src="product.img"
@@ -46,12 +82,18 @@
                   class="w-[80px] h-[80px] object-cover border-2 border-black rounded-[5px]"
                 />
               </div>
-              <div class="w-full flex justify-start ">{{ product.name }}</div>
+              <div class="w-full flex justify-start">{{ product.name }}</div>
             </th>
-            <th class="w-[15%] truncate border-r-[2px]">{{ product.categoryId }}</th>
+            <th class="w-[15%] truncate border-r-[2px]">
+              {{ product.categoryId }}
+            </th>
             <th class="w-[15%] truncate border-r-[2px]">{{ product.price }}</th>
-            <th class="w-[15%] truncate border-r-[2px]">{{ product.amount }}</th>
-            <th class="w-[15%] flex items-center justify-center truncate border-r-[2px]">
+            <th class="w-[15%] truncate border-r-[2px]">
+              {{ product.amount }}
+            </th>
+            <th
+              class="w-[15%] flex items-center justify-center truncate border-r-[2px]"
+            >
               <label class="relative inline-flex items-center cursor-pointer">
                 <!-- Checkbox -->
                 <input type="checkbox" class="sr-only peer" />
@@ -97,8 +139,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import type { Product } from "~/models/product.model";
+import { ref, computed } from "vue";
+import type { Category, Product } from "~/models/product.model";
 
 const isMenuVisible = ref<Record<number, boolean>>({}); // เก็บสถานะการแสดงผลเมนูแยกตาม ID
 
@@ -166,6 +208,54 @@ const products = ref<Product[]>([
     categoryId: 5,
   },
 ]);
+
+// สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
+const selectedCategory = ref<Category>({
+  id: 1,
+  name: 'ทั้งหมด'
+});
+
+
+const categories = ref<Category[]>([
+  {
+    id: 1,
+    name: 'ทั้งหมด',
+  },
+  {
+    id: 2,
+    name: 'อาหาร',
+  },
+  {
+    id: 3,
+    name: 'เครื่องดื่ม',
+  },
+  {
+    id: 4,
+    name: 'สมุนไพร',
+  },
+  {
+    id: 5,
+    name: 'ผ้าและเครื่องดื่ม',
+  },
+  {
+    id: 6,
+    name: 'ของใช้และของตกแต่ง',
+  },
+]);
+
+// ฟังก์ชันเพื่อเลือกหมวดหมู่
+const selectCategory = (category: Category) => {
+  selectedCategory.value = category;
+};
+
+const filteredProducts = computed(() => {
+  if (selectedCategory.value.id === 1) {
+    // หมวดหมู่ "ทั้งหมด" (id = 1)
+    return products.value;
+  }
+  // กรองสินค้าตามหมวดหมู่ที่เลือก
+  return products.value.filter(product => product.categoryId === selectedCategory.value.id);
+});
 </script>
 
 <style></style>

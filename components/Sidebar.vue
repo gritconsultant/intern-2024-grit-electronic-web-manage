@@ -1,7 +1,7 @@
 <template>
   <!-- Desktop -->
   <div
-    class="w-[200px] h-screen  border-r-[1px] bg-white border-gray-400 max-xl:hidden duration-700"
+    class="w-[200px] h-full border-r-[1px] bg-white border-gray-400 max-xl:hidden duration-700"
   >
     <div class="flex flex-col">
       <!-- menu -->
@@ -11,7 +11,7 @@
         <NuxtLink
           to="/"
           class="flex gap-2"
-          :class="{ 'text-blue-500': route.path === '/' }"
+          :class="{ 'text-orange-500': route.path === '/' }"
         >
           <div>
             <i class="fa-solid fa-chart-pie"></i>
@@ -21,7 +21,7 @@
         <NuxtLink
           to="/order"
           class="flex gap-2"
-          :class="{ 'text-blue-500': route.path === '/order' }"
+          :class="{ 'text-orange-500': route.path === '/order' }"
         >
           <div>
             <i class="fa-solid fa-cart-shopping"></i>
@@ -31,7 +31,7 @@
         <NuxtLink
           to="/refund"
           class="flex gap-2"
-          :class="{ 'text-blue-500': route.path === '/refund' }"
+          :class="{ 'text-orange-500': route.path === '/refund' }"
         >
           <div>
             <i class="fa-solid fa-arrow-rotate-left"></i>
@@ -41,8 +41,15 @@
         <!-- DropdownProduct -->
         <div class="relative group">
           <div class="flex gap-2 text-[15px]">
-            <i class="fa-solid fa-boxes-stacked"></i>
-            <span class="">ผลิตภัณฑ์</span>
+            <NuxtLink
+              to="/product"
+              :class="{ 'text-orange-500': route.path === '/product' }"
+            >
+              <div class="flex gap-2 text-[15px]">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span class="">ผลิตภัณฑ์</span>
+              </div>
+            </NuxtLink>
             <i class="fa-solid fa-caret-down text-[12px] flex items-end"></i>
           </div>
           <!-- Dropdown manu -->
@@ -50,12 +57,11 @@
             class="bg-white rounded-lg border shadow w-44 hidden group-hover:block"
           >
             <ul class="py-2 text-sm text-gray-700">
-              <li class="block px-4 py-2 hover:bg-gray-100">
-                <NuxtLink to="/product">ผลิตภัณฑ์</NuxtLink>
-              </li>
-              <li class="block px-4 py-2 hover:bg-gray-100">
-                <NuxtLink to="/product/category">ประเภทผลิตภัณฑ์</NuxtLink>
-              </li>
+              <NuxtLink to="/product/category">
+                <li class="block px-4 py-2 hover:bg-gray-100">
+                  ประเภทผลิตภัณฑ์
+                </li>
+              </NuxtLink>
             </ul>
           </div>
         </div>
@@ -71,10 +77,14 @@
             class="bg-white rounded-lg border shadow w-44 hidden group-hover:block"
           >
             <ul class="py-2 text-sm text-gray-700">
-              <li class="block px-4 py-2 hover:bg-gray-100">
-                <NuxtLink to="/profile">ลูกค้า</NuxtLink>
-              </li>
-              <li class="block px-4 py-2 hover:bg-gray-100">เจ้าหน้าที่ดูแล</li>
+              <NuxtLink to="/manages_user/customer">
+                <li class="block px-4 py-2 hover:bg-gray-100">ลูกค้า</li>
+              </NuxtLink>
+              <NuxtLink to="/manages_user/admin">
+                <li class="block px-4 py-2 hover:bg-gray-100">
+                  เจ้าหน้าที่ดูแล
+                </li>
+              </NuxtLink>
             </ul>
           </div>
         </div>
@@ -87,21 +97,23 @@
           </div>
           <!-- Dropdown manu -->
           <div
-            class="bg-white rounded-lg border shadow w-44 hidden group-hover:block"
+            class="bg-white rounded-lg border shadow w-40  hidden group-hover:block"
           >
             <ul class="py-2 text-sm text-gray-700">
-              <li class="block px-4 py-2 hover:bg-gray-100">
-                <NuxtLink to="/profile">ธนาคาร</NuxtLink>
-              </li>
-              <li class="block px-4 py-2 hover:bg-gray-100">แบรนด์เดอร์</li>
+              <NuxtLink to="/manages/bank">
+                <li class="block px-4 py-2 hover:bg-gray-100">ธนาคาร</li>
+              </NuxtLink>
+              <NuxtLink to="/manages/banner">
+                <li class="block px-4 py-2 hover:bg-gray-100">แบนเนอร์  </li>
+              </NuxtLink>
             </ul>
           </div>
         </div>
-        <NuxtLink to="logs" class="flex gap-2">
+        <NuxtLink to="/logs" class="flex gap-2">
           <div>
             <i class="fa-regular fa-clock"></i>
           </div>
-          <span class="">รายงานการทำงาน</span>
+          <span class="text-[14px]   ">รายงานการทำงาน</span>
         </NuxtLink>
       </div>
     </div>

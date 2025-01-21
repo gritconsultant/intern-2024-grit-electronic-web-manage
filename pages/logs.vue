@@ -1,477 +1,111 @@
 <template>
-  <div class="defaultpages">
-    <div class="pages">
-      <!-- Header -->
-      <hr class="hrpages" />
+  <div class="defaultpages flex flex-col gap-4 p-4">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-bold">รายงานการทำงาน</h1>
+    </div>
+    <div>
+      <!-- ส่วนตัวกรอง -->
+      <div class="flex items-center space-x-4">
+        <!-- วันที่เริ่มต้น -->
+        <div>
+          <label
+            for="startDate"
+            class="block text-sm font-medium text-black mb-1"
+            >วันที่เริ่มต้น</label
+          >
+          <input
+            type="date"
+            id="startDate"
+            v-model="filters.startDate"
+            class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
+          />
+        </div>
 
-      <!-- รายการคำสั่งซื้อ -->
-      <div
-        class="p-2 h-full w-[100%] roundedmain bg-[#FFFAE9] dropshadowbottomsub"
-      >
-        <div class="flex justify-between gap-2">
-          <h1 class="flex items-center textmain font-bold text-[25px]">
-            รายงานการทำงาน
-          </h1>
-          <!-- <PopupDate /> -->
-        </div>
-        <div class="h-[90%] mt-2">
-          <table class="w-full text-[#2B1E28] font-semibold">
-            <thead class="border-b-2 border-[#7A4711]">
-              <tr class="flex gap-2 w-full">
-                <th class="flex justify-start w-[20%]">หมายเลขการทำงาน</th>
-                <th class="w-[20%]">วันที่</th>
-                <th class="w-[20%]">ชื่อ</th>
-                <th class="w-[50%]">รายละเอียด</th>
-              </tr>
-            </thead>
-            <tbody v-for="(orders, data) in order" :key="data">
-              <tr class="flex gap-2 hover:bg-[#F68D44]/50 mt-[11px]">
-                <td class="w-[20%] truncate">{{ orders.order_id }}</td>
-                <td class="w-[20%] text-center truncate">
-                  {{ orders.created_at }}
-                </td>
-                <td class="w-[20%] text-center truncate">
-                  {{ orders.customer.username }}
-                </td>
-                <td class="w-[50%] text-center flex justify-between gap-2">
-                  <div class="truncate w-[95%">
-                    {{ orders.total_amount }}
-                  </div>
-                  <div>
-                    <i
-                      class="fa-solid fa-trash-can text-red-600 hover:text-red-950 hover:translate-x-1 duration-300"
-                    ></i>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- paginate -->
-        <div class="mt-[5px]">
-          <Paginate />
+        <!-- วันที่สิ้นสุด -->
+        <div>
+          <label for="endDate" class="block text-sm font-medium text-black mb-1"
+            >วันที่สิ้นสุด</label
+          >
+          <input
+            type="date"
+            id="endDate"
+            v-model="filters.endDate"
+            class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
+          />
         </div>
       </div>
     </div>
+    <div class="bg-white">
+      <!-- ตาราง Logs -->
+      <table class="table-auto w-full border-collapse border border-gray-200">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-200 p-2 text-left">#</th>
+            <th class="border border-gray-200 p-2 text-left">วัน</th>
+            <th class="border border-gray-200 p-2 text-left">รายละเอียด</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- แสดงข้อมูลที่ผ่านการกรอง -->
+          <tr
+            v-for="(log, index) in filteredLogs"
+            :key="index"
+            class="hover:bg-gray-50"
+          >
+            <td class="border border-gray-200 p-2">{{ index + 1 }}</td>
+            <td class="border border-gray-200 p-2">{{ log.date }}</td>
+            <td class="border border-gray-200 p-2">{{ log.details }}</td>
+          </tr>
+
+          <!-- หากไม่มี Logs -->
+          <tr v-if="filteredLogs.length === 0">
+            <td
+              colspan="3"
+              class="border border-gray-200 p-4 text-center text-gray-500"
+            >
+              ไม่พบ Logs ในช่วงวันที่ที่เลือก
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div></div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import type { Order } from "~/models/order.model";
+<script setup lang="ts">
+import { ref, computed } from "vue";
 
-const order = ref<Order[]>([
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
-  {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
-    },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        product_id: 202,
-        product_name: "Wireless Headphones",
-        quantity: 1,
-        price: 250,
-      },
-      {
-        product_id: 201,
-        product_name: "Smartphone X Pro",
-        quantity: 1,
-        price: 1000,
-      },
-    ],
-  },
+const filters = ref({
+  startDate: "",
+  endDate: "",
+});
+
+// ข้อมูล Logs ตัวอย่าง (มีวันและรายละเอียด)
+const logs = ref([
+  { date: '2025-01-20', details: 'เริ่มต้นระบบ' },
+  { date: '2025-01-21', details: 'ปรับปรุงฐานข้อมูล' },
+  { date: '2025-01-22', details: 'ทดสอบระบบสำรองข้อมูล' },
+  { date: '2025-01-23', details: 'อัปเดตซอฟต์แวร์' },
+  { date: '2025-01-24', details: 'บันทึกการปิดระบบ' },
 ]);
+
+// ฟิลเตอร์ Logs ตามวันที่
+const filteredLogs = computed(() => {
+  if (!filters.value.startDate && !filters.value.endDate) {
+    return logs.value
+  }
+  return logs.value.filter((log) => {
+    const logDate = new Date(log.date)
+    const startDate = filters.value.startDate ? new Date(filters.value.startDate) : null
+    const endDate = filters.value.endDate ? new Date(filters.value.endDate) : null
+
+    return (
+      (!startDate || logDate >= startDate) &&
+      (!endDate || logDate <= endDate)
+    )
+  })
+});
 </script>
 
-<style></style>
+<style scoped></style>

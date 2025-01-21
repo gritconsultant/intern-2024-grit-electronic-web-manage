@@ -83,48 +83,45 @@
         <div
           class="flex flex-col gap-2 p-5 w-[90%] h-[30%] bg-white rounded-[5px] dropshadowbottomsub"
         >
-          <h3 class="text-[20px] font-bold">สถานะสินค้า</h3>
-          <div class="flex flex-col  gap-5">
-            <div class="px-5">
-              <label for="" class="text-[12px] font-semibold"
-                >สถานะการชำระ</label
+          <h3 class="text-[20px] text-center font-bold">สถานะสินค้า</h3>
+          <div class="flex flex-col mt-5    ">
+            <div class="flex flex-col items-center cursor-pointer" v-for="(order, index) in orders" :key="index">
+              <div
+                class="text-center   p-[1px] px-2 w-[50%] border-[1px] rounded-[5px] bg-white dropshadowbottomsub "
+                @click="toggleMenu(order.order_id)"
               >
-              <div class="   px-2 border-[1px] border-gray-600  rounded-[5px] focus:outline-none  focus:ring-8 focus:ring-blue-500 ">
-                <div
-                  class="cursor-pointer w-full"
-                  @click="store.paymentstatus = !store.paymentstatus"
+                {{ order.status }}
+              </div>
+              <div>
+                <ul
+                  class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
+                  v-if="isMenuVisible[order.order_id]"
                 >
-                  <div class="flex justify-between w-full">
-                    <span>รอการชำระ</span>
-                    <div>
-                      <i class="fa-solid fa-caret-down"></i>
-                    </div>
-                  </div>
-                  <div v-if="store.paymentstatus" class="flex justify-start">
-                    <PopupPaymentstatus />
-                  </div>
-                </div>
-              </div>
-            </div >
-            <div class="px-5 ">
-              <label for="" class="text-[12px] font-semibold"
-                >สถานะคำสั่งซื้อ</label
-              >
-              <div class="   px-2 border-[1px] border-gray-600  rounded-[5px] focus:boreder   focus:border-blue-500 focus:outline-none  ">
-                <div
-                class="bg-white cursor-pointer"
-                @click="store.orderstatus = !store.orderstatus"
-              >
-              <div class="flex justify-between w-full">
-                    <span>รอจัดส่ง</span>
-                    <div>
-                      <i class="fa-solid fa-caret-down"></i>
-                    </div>
-                  </div>
-                <div v-if="store.orderstatus" class="flex justify-start">
-                  <PopupOrderstatus />
-                </div>
-              </div>
+                  <li
+                    class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
+                    @click="changeStatus(order.order_id, 'รอการชำระ')"
+                  >
+                    รอการชำระ
+                  </li>
+                  <li
+                    class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
+                    @click="changeStatus(order.order_id, 'กำลังจัดส่ง')"
+                  >
+                    กำลังจัดส่ง
+                  </li>
+                  <li
+                    class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
+                    @click="changeStatus(order.order_id, 'จัดส่งเรียบร้อย')"
+                  >
+                    จัดส่งเรียบร้อย
+                  </li>
+                  <li
+                    class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
+                    @click="changeStatus(order.order_id, 'ชำระล้มเหลว')"
+                  >
+                    ชำระล้มเหลว
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -138,8 +135,61 @@
 import type { Product } from "~/models/product.model";
 import { ref, computed } from "vue";
 import { useIndexStore } from "~/store/main";
+import type { Order } from "~/models/order.model";
 
 const store = useIndexStore();
+
+const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
+
+// Toggle the visibility of the menu for a specific order
+const toggleMenu = (orderId: number) => {
+  // Toggle the menu visibility, close all other menus before opening the new one
+  isMenuVisible.value = {
+    ...Object.fromEntries(
+      Object.keys(isMenuVisible.value).map((key) => [key, false])
+    ), // Close all menus
+    [orderId]: !isMenuVisible.value[orderId], // Toggle current order's menu
+  };
+};
+
+// Update the status of the order
+const changeStatus = (orderId: number, status: string) => {
+  const order = orders.find((order) => order.order_id === orderId);
+  if (order) {
+    order.status = status; // Change the status of the order
+    toggleMenu(orderId); // Close the dropdown menu after selection
+  }
+};
+
+const orders = <Order[]>[
+  {
+    order_id: 12345,
+    customer: {
+      user_id: 101,
+      username: "john_doe",
+      email: "john_doe@example.com",
+    },
+    total_amount: 1250,
+    currency: "USD",
+    status: "delivered",
+    created_at: "2024-12-15T08:30:00Z",
+    payment_status: "paid",
+    items: [
+      {
+        product_id: 201,
+        product_name: "Smartphone X Pro",
+        quantity: 1,
+        price: 1000,
+      },
+      {
+        product_id: 202,
+        product_name: "Wireless Headphones",
+        quantity: 1,
+        price: 250,
+      },
+    ],
+  },
+];
 
 // Product data
 const products = ref<Product[]>([

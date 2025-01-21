@@ -1,6 +1,8 @@
 <template>
   <div>
-    เพิ่มประเภทผลิตภัณฑ์
+    <div>
+      <h1>โปรไฟล์</h1>
+    </div>
   </div>
 </template>
 
