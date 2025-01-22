@@ -49,7 +49,12 @@
           <div class="flex gap-2 text-[15px]">
             <NuxtLink
               to="/product"
-              :class="{ 'text-orange-500': route.path === '/product' || route.path === '/product/[id]' }"
+              :class="{
+                'text-orange-500':
+                  route.path === '/product' ||
+                  route.path === '/product/[id]' ||
+                  route.path === '/product/category',
+              }"
             >
               <div class="flex gap-2 text-[15px]">
                 <i class="fa-solid fa-boxes-stacked"></i>
@@ -60,7 +65,7 @@
           </div>
           <!-- Dropdown manu -->
           <div
-            class="bg-white rounded-lg border shadow w-[120px]    hidden group-hover:block"
+            class="bg-white rounded-lg border shadow w-[120px] hidden group-hover:block"
           >
             <ul class="py-2 text-sm text-gray-700">
               <NuxtLink to="/product/category">
@@ -74,8 +79,19 @@
         <!-- DropdowUser -->
         <div class="relative group">
           <div class="flex gap-2 text-[15px]">
-            <i class="fa-solid fa-users-line"></i>
-            <span class="">ผู้ใช้งาน</span>
+            <div
+              class="flex gap-2"
+              :class="{
+                'text-orange-500':
+                  route.path === '/manages_user/customer' ||
+                  route.path === '/manages_user/admin',
+              }"
+            >
+              <div>
+                <i class="fa-solid fa-users-line"></i>
+              </div>
+              <span class="">ผู้ใช้งาน</span>
+            </div>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
           </div>
           <!-- Dropdown manu -->
@@ -97,8 +113,18 @@
         <!-- DropdowManages -->
         <div class="relative group">
           <div class="flex gap-2 text-[15px]">
-            <i class="fa-solid fa-gear"></i>
-            <span class="">จัดการทั่วไป</span>
+            <div class="flex gap-2" 
+            :class="{
+                'text-orange-500':
+                  route.path === '/manages/bank' ||
+                  route.path === '/manages/banner',
+              }"
+            >
+              <div > 
+                <i class="fa-solid fa-gear"></i>
+              </div>
+              <span class="">จัดการทั่วไป</span>
+            </div>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
           </div>
           <!-- Dropdown manu -->
@@ -115,7 +141,13 @@
             </ul>
           </div>
         </div>
-        <NuxtLink to="/logs" class="flex gap-2">
+        <NuxtLink
+          to="/logs"
+          class="flex gap-2"
+          :class="{
+            'text-orange-500': route.path === '/logs',
+          }"
+        >
           <div>
             <i class="fa-regular fa-clock"></i>
           </div>

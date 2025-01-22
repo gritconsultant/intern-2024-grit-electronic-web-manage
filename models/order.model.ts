@@ -31,3 +31,8 @@ export interface PaymentStatus {
     id: number;
     status: string;
 }
+
+export interface StatusRefund {
+    id: number;
+    status: string;
+}

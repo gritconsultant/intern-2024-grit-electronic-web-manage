@@ -7,7 +7,7 @@
     <div class="flex gap-2 w-full h-[85%]  ">
       <div class="flex flex-col gap-2 h-[100%] w-[70%] bg-white p-2 rounded-[5px] dropshadowbottomsub">
         <table class="flex flex-col gap-[1px] h-[95%]">
-          <thead class="w-full border-y-[1px] border-gray-600 p-2">
+          <thead class="w-full border-b-[2px] pb-[5px]  border-gray-600">
             <tr class="flex gap-2 w-full">
               <th class="w-[40%]">ผลิตภัณฑ์</th>
               <th class="w-[20%]">ราคา</th>
@@ -30,7 +30,7 @@
                   <img
                     :src="product.img"
                     alt=""
-                    class="w-[65px] h-[65px] object-cover place-content-center border-[1px] rounded-[5px]"
+                    class="w-[60px] h-[60px] object-cover place-content-center border-[1px] rounded-[5px]"
                   />
                 </div>
                 <div
@@ -52,7 +52,7 @@
           </tbody>
         </table>
         <div
-          class="flex justify-between h-[5%] border-y-[1px]  border-gray-600 font-semibold p-[1px]"
+          class="flex justify-between h-[5%] border-y-[2px]  border-gray-600 font-semibold p-[1px]"
         >
           <span class=" ">รวมทั้งหมด</span>
           <div class="w-[38%] flex justify-between">
@@ -63,7 +63,7 @@
           </div>
         </div>
       </div>
-      <div class="w-[30%] px-5 flex flex-col gap-5 items-center 0">
+      <div class="w-[30%] px-5 flex flex-col gap-2 items-center 0">
         <!-- หลักฐานการชำระ -->
         <div
           class="flex flex-col gap-5 items-center py-5 w-[90%] h-[60%] bg-white rounded-[5px] dropshadowbottomsub"
@@ -79,12 +79,18 @@
             <span class=" ">--/--/---- --/--</span>
           </div>
         </div>
+        <!-- ที่อยู๋จัด่ง -->
+        <div class="w-[90%] h-[25%]  bg-white rounded-[5px] dropshadowbottomsub ">
+          <div>
+
+          </div>
+        </div>
         <!-- สถานะคำสั่งซื้อ -->
         <div
-          class="flex flex-col gap-2 p-5 w-[90%] h-[30%] bg-white rounded-[5px] dropshadowbottomsub"
+          class="flex flex-col  p-5 w-[90%] h-[15%] bg-white  rounded-[5px] dropshadowbottomsub"
         >
           <h3 class="text-[20px] text-center font-bold">สถานะสินค้า</h3>
-          <div class="flex flex-col mt-5    ">
+          <div class="flex flex-col     ">
             <div class="flex flex-col items-center cursor-pointer" v-for="(order, index) in orders" :key="index">
               <div
                 class="text-center   p-[1px] px-2 w-[50%] border-[1px] rounded-[5px] bg-white dropshadowbottomsub "

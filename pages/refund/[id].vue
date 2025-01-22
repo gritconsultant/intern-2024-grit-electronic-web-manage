@@ -1,17 +1,20 @@
 <template>
   <div class="defaultpages p-5 ml-5">
     <div class="h-[10%]">
-      <h1 class="text-[28px] font-bold">คำสั่งซื้อ # {{}}</h1>
-      <h5 class=" ">หมายเลขผู้ใช้งาน :</h5>
+      <h1 class="text-[28px] font-bold">คำร้องขอ # {{}}</h1>
+      <div class="flex justify-between  gap- w-[30%]">
+        <h5 class=" w-[40%] ">หมายเลขคำสั่งซื้อ :</h5>
+        <h5 class=" w-[60%] ">หมายเลขผู้ใช้งาน :</h5>
+      </div>
     </div>
     <div class="flex gap-2 w-full h-[85%]">
       <div
         class="flex flex-col gap-2 w-[70%] bg-white dropshadowbottomsub rounded-[5px] p-2"
       >
         <table class="flex flex-col gap-[1px] h-[95%]">
-          <thead class="w-full border-y-[1px] border-gray-600 p-2">
+          <thead class="w-full border-b-[2px] border-gray-600 p-2">
             <tr class="flex gap-2 w-full">
-              <th class="w-[10%] flex items-center ">
+              <th class="w-[10%] flex items-center">
                 <!-- Checkbox Select All -->
                 <div class="flex items-center gap-2">
                   <input
@@ -28,16 +31,16 @@
                   >
                 </div>
               </th>
-              <th class="w-[30%] ">ผลิตภัณฑ์</th>
+              <th class="w-[30%]">ผลิตภัณฑ์</th>
               <th class="w-[10%]">ราคา</th>
               <th class="w-[10%]">จำนวน</th>
               <th class="w-[10%]">รวม</th>
               <th class="w-[20%]">รายละเอียดคำร้องขอ</th>
             </tr>
           </thead>
-          <tbody class="w-full h-[100%] overflow-y-auto">
+          <tbody class="w-full h-[100%]  overflow-y-auto">
             <tr
-              class="flex gap-2 w-full h-[10%] hover:bg-[#FFD652]/50"
+              class="flex gap-2 w-full py-2 h-[10%] hover:bg-[#FFD652]/50"
               v-for="(product, data) in products"
               :key="data"
             >
@@ -51,14 +54,14 @@
               </th>
               <NuxtLink
                 to="/product/[id] "
-                class="w-[30%]   flex justify-between items-center gap-2 text-black hover:text-orange-600 cursor-pointer"
+                class="w-[30%] flex justify-between items-center gap-2 text-black hover:text-orange-600 cursor-pointer"
               >
                 <!-- images -->
                 <div class="flex justify-center items-center w-full h-full">
                   <img
                     :src="product.img"
                     alt=""
-                    class="w-[65px] h-[65px] object-cover place-content-center border-[1px] rounded-[5px]"
+                    class="w-[60px] h-[60px] object-cover place-content-center border-[1px] rounded-[5px]"
                   />
                 </div>
                 <div
@@ -67,13 +70,13 @@
                   {{ product.name }}
                 </div>
               </NuxtLink>
-              <th class="w-[10.1%] ml-10 text-wrap truncate font-medium ">
+              <th class="w-[10.1%] ml-10 text-wrap truncate font-medium">
                 ฿{{ product.price }}
               </th>
-              <th class="w-[10.12%] text-wrap truncate font-medium ">
+              <th class="w-[10.12%] text-wrap truncate font-medium">
                 {{ product.amount }}
               </th>
-              <th class="w-[10.1%] pl-[25px] text-wrap truncate font-medium ">
+              <th class="w-[10.1%] pl-[25px] text-wrap truncate font-medium">
                 ฿{{ product.price * product.amount }}
               </th>
               <th class="w-[30%] pl-[25px] text-wrap truncate font-medium"></th>
