@@ -2,9 +2,9 @@
   <div class="defaultpages p-5 ml-5">
     <div class="h-[10%]">
       <h1 class="text-[28px] font-bold">คำร้องขอ # {{}}</h1>
-      <div class="flex justify-between  gap- w-[30%]">
-        <h5 class=" w-[40%] ">หมายเลขคำสั่งซื้อ :</h5>
-        <h5 class=" w-[60%] ">หมายเลขผู้ใช้งาน :</h5>
+      <div class="flex justify-between gap- w-[30%]">
+        <h5 class="w-[40%]">หมายเลขคำสั่งซื้อ :</h5>
+        <h5 class="w-[60%]">หมายเลขผู้ใช้งาน :</h5>
       </div>
     </div>
     <div class="flex gap-2 w-full h-[85%]">
@@ -38,7 +38,7 @@
               <th class="w-[20%]">รายละเอียดคำร้องขอ</th>
             </tr>
           </thead>
-          <tbody class="w-full h-[100%]  overflow-y-auto">
+          <tbody class="w-full h-[100%] overflow-y-auto">
             <tr
               class="flex gap-2 w-full py-2 h-[10%] hover:bg-[#FFD652]/50"
               v-for="(product, data) in products"
@@ -117,24 +117,69 @@
         >
           <h3 class="text-[20px] font-bold">สถานะคำร้อง</h3>
           <div class="flex flex-col gap-5">
-            <div class="px-5">
+            <div
+              class="flex flex-col items-center cursor-pointer"
+              v-for="(order, index) in orders"
+              :key="index"
+            >
+              <!-- ส่วนแสดงสถานะ -->
               <div
-                class="px-2 border-[1px] border-gray-600 rounded-[5px] focus:outline-none focus:ring-8 focus:ring-blue-500"
+                class="text-center w-[150px] p-[1px] px-2 border-[1px] rounded-[5px]"
+                @click="toggleMenu(order.order_id)"
               >
-                <div
-                  class="cursor-pointer w-full"
-                  @click="store.statusrefund = !store.statusrefund"
+                {{ order.status }}
+              </div>
+
+              <!-- เมนูเลือกสถานะ -->
+              <div>
+                <ul
+                  class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
+                  v-show="isMenuVisible[order.order_id]"
                 >
-                  <div class="flex justify-between w-full">
-                    <span>รอการชำระ</span>
-                    <div>
-                      <i class="fa-solid fa-caret-down"></i>
-                    </div>
-                  </div>
-                  <div v-if="store.statusrefund" class="flex justify-start">
-                    <PopupStatusrefund />
-                  </div>
-                </div>
+                  <!-- ตรวจสอบว่าไม่ใช่สถานะปัจจุบัน -->
+                  <li
+                    class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
+                    @click="changeStatus(order.order_id, '  รอการตรวจสอบ')"
+                    :class="{
+                      'bg-gray-200': order.status === '  รอการตรวจสอบ',
+                    }"
+                    :disabled="order.status === '  รอการตรวจสอบ'"
+                  >
+                    รอการตรวจสอบ
+                  </li>
+                  <li
+                    class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
+                    @click="changeStatus(order.order_id, 'อนุมัติการคืนสินค้า')"
+                    :class="{
+                      'bg-gray-200': order.status === 'อนุมัติการคืนสินค้า',
+                    }"
+                    :disabled="order.status === 'อนุมัติการคืนสินค้า'"
+                  >
+                    อนุมัติการคืนสินค้า
+                  </li>
+                  <li
+                    class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
+                    @click="changeStatus(order.order_id, 'การคืนเงินเสร็จสิ้น')"
+                    :class="{
+                      'bg-gray-200': order.status === 'การคืนเงินเสร็จสิ้น',
+                    }"
+                    :disabled="order.status === 'การคืนเงินเสร็จสิ้น'"
+                  >
+                    การคืนเงินเสร็จสิ้น
+                  </li>
+                  <li
+                    class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
+                    @click="
+                      changeStatus(order.order_id, 'ไม่อนุมัติการคืนสินค้า')
+                    "
+                    :class="{
+                      'bg-gray-200': order.status === 'ไม่อนุมัติการคืนสินค้า',
+                    }"
+                    :disabled="order.status === 'ไม่อนุมัติการคืนสินค้า'"
+                  >
+                    ไม่อนุมัติการคืนสินค้า
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -145,11 +190,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
 import type { Product } from "~/models/product.model";
-import { useIndexStore } from "~/store/main";
-
-const store = useIndexStore();
+import Swal from "sweetalert2";
+import type { Order } from "~/models/order.model";
 
 // Product data
 const products = ref<Product[]>([
@@ -374,36 +417,81 @@ const checkIfAllSelected = () => {
   selectAll.value = selectedProducts.value.every((selected) => selected);
 };
 
+// ฟังก์ชันนับจำนวนที่เลือก
+const selectedCount = computed(() => {
+  return selectedProducts.value.filter((selected) => selected).length;
+});
+
 // ฟังก์ชันเลือกทั้งหมด
 const toggleSelectAll = () => {
   const newSelectAllState = selectAll.value;
   selectedProducts.value = Array(products.value.length).fill(newSelectAllState);
 };
 
-// ฟังก์ชันนับจำนวนที่เลือก
-const selectedCount = computed(() => {
-  return selectedProducts.value.filter((selected) => selected).length;
-});
+const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
 
-// // ฟังก์ชันยืนยันการเลือก
-// const confirmSelection = () => {
-//   const selectedItems = selectedProducts.value.filter(selected => selected);
+// Toggle the visibility of the menu for a specific order
+const toggleMenu = (orderId: number) => {
+  // Toggle the menu visibility, close all other menus before opening the new one
+  isMenuVisible.value = {
+    ...Object.fromEntries(
+      Object.keys(isMenuVisible.value).map((key) => [key, false])
+    ), // Close all menus
+    [orderId]: !isMenuVisible.value[orderId], // Toggle current order's menu
+  };
+};
 
-//   // แสดงรายละเอียดใน alert
-//   if (selectedItems.length === 0) {
-//     alert("กรุณาเลือกสินค้าอย่างน้อย 1 รายการ");
-//   } else {
-//     const selectedProductDetails = products.value
-//       .filter((_, index) => selectedProducts.value[index])
-//       .map(product => `${product.name} (${product.price} บาท)`);
+const changeStatus = (orderId: number, status: string) => {
+  // Find the order by ID
+  const order = orders.find((order) => order.order_id === orderId);
 
-//     const totalItems = products.value.length;
-//     const totalSelected = selectedItems.length;
-//     const selectedDetails = selectedProductDetails.join(", ");
+  if (order) {
+    // Check if the new status is different from the current one
+    if (order.status === status) {
+      Swal.fire("ไม่สามารถเปลี่ยนสถานะ", "สถานะนี้ได้ถูกตั้งไว้แล้ว", "info");
+      return; // Stop execution if the status is the same
+    }
 
-//     alert(`จำนวนสินค้าทั้งหมด: ${totalItems}\nจำนวนที่เลือก: ${totalSelected}\nสินค้าที่เลือก: ${selectedDetails}`);
-//   }
-// };
+    Swal.fire({
+      title: "ยืนยันการเปลี่ยนสถานะ",
+      text: `คุณต้องการเปลี่ยนสถานะเป็น "${status}" ใช่หรือไม่?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        order.status = status; // Update status
+        toggleMenu(orderId); // Close menu
+        Swal.fire("สำเร็จ!", `สถานะถูกเปลี่ยนเป็น "${status}" แล้ว`, "success");
+      }
+    });
+  }
+};
+
+const orders = <Order[]>[
+  {
+    order_id: 12346,
+    customer: {
+      user_id: 102,
+      username: "jane_smith",
+      email: "jane_smith@example.com",
+    },
+    total_amount: 500,
+    currency: "USD",
+    status: "รอการตรวจสอบ",
+    created_at: "2024-12-18T09:00:00Z",
+    payment_status: "unpaid",
+    items: [
+      {
+        product_id: 203,
+        product_name: "Smartwatch Y",
+        quantity: 2,
+        price: 250,
+      },
+    ],
+  },
+];
 </script>
 
 <style></style>

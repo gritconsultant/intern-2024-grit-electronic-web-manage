@@ -6,23 +6,36 @@
     <div class="bg-gray-100 w-full h-full p-5">
       <!-- แสดงรูปภาพในตาราง -->
       <div class="overflow-x-auto">
-        <table class="min-w-full table-auto bg-white border border-gray-200 rounded-lg shadow-md">
+        <table
+          class="min-w-full table-auto bg-white border border-gray-200 rounded-lg shadow-md"
+        >
           <thead>
             <tr class="bg-gray-50">
               <th class="px-4 py-2 text-left font-semibold text-gray-900">#</th>
-              <th class="px-4 py-2 text-left font-semibold w-[80%]  text-gray-900">รูปภาพ</th>
-              <th class="px-4 py-2 text-left font-semibold text-gray-900">จัดการ</th>
+              <th
+                class="px-4 py-2 text-left font-semibold w-[80%] text-gray-900"
+              >
+                รูปภาพ
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-900">
+                จัดการ
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(url, index) in imageUrls" :key="index" class="border-b">
-              <td class="px-4 py-2">{{ index + 1 }}</td> <!-- แสดงลำดับที่ -->
+            <tr v-for="(url, index) in confirmedImageUrls" :key="index" class="border-b">
+              <td class="px-4 py-2">{{ index + 1 }}</td>
+              <!-- แสดงลำดับที่ -->
               <td class="px-4 py-2 flex items-center justify-center">
-                <img :src="url" alt="Preview" class="w-[90%] h-[200px] object-cover rounded-md" />
+                <img
+                  :src="url"
+                  alt="Preview"
+                  class="w-[90%] h-[200px] object-cover rounded-md"
+                />
               </td>
               <td class="px-4 py-2">
                 <button
-                  @click="() => removeImage(index)"
+                  @click="() => removeConfirmedImage(index)"
                   class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
                 >
                   ลบ
@@ -35,7 +48,10 @@
 
       <!-- Input file -->
       <div class="flex flex-col items-start mt-4">
-        <label for="fileInput" class="px-4 py-2 bg-orange-500 font-semibold  rounded-md hover:bg-orange-700 hover:text-white transition cursor-pointer">
+        <label
+          for="fileInput"
+          class="px-4 py-2 bg-orange-500 font-semibold rounded-md hover:bg-orange-700 hover:text-white transition cursor-pointer"
+        >
           เพิ่มรูปภาพ
         </label>
         <input
@@ -48,6 +64,37 @@
           class="hidden"
         />
       </div>
+
+      <!-- แสดงรูปภาพที่อัปโหลดใหม่ -->
+      <div v-if="imageUrls.length" class="mt-4">
+        <h2 class="text-lg font-bold">รูปภาพที่อัปโหลดใหม่</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+          <div v-for="(url, index) in imageUrls" :key="index" class="relative">
+            <img
+              :src="url"
+              alt="Preview"
+              class="w-full h-[150px] object-cover rounded-md"
+            />
+            <button
+              @click="() => removeImage(index)"
+              class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-xs rounded-md hover:bg-red-600 transition"
+            >
+              ลบ
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ปุ่มยืนยัน -->
+      <div class="flex justify-end mt-4">
+        <button
+          @click="confirmImages"
+          :disabled="!imageUrls.length"
+          class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          ยืนยันการบันทึก
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -55,7 +102,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-// ใช้ ref เพื่อเก็บ URL ของรูปภาพหลายรูป
+// ใช้ ref เพื่อเก็บ URL ของรูปภาพที่ยืนยันแล้วและรูปภาพที่อัปโหลดใหม่
+const confirmedImageUrls = ref<string[]>([]);
 const imageUrls = ref<string[]>([]);
 
 // ใช้ ref สำหรับ input file
@@ -78,8 +126,19 @@ const onFileChange = (event: Event) => {
   }
 };
 
-// ฟังก์ชันลบรูปภาพ
+// ฟังก์ชันลบรูปภาพใหม่
 const removeImage = (index: number) => imageUrls.value.splice(index, 1); // ลบรูปภาพที่ตำแหน่งที่กำหนด
+
+// ฟังก์ชันลบรูปภาพที่ยืนยันแล้ว
+const removeConfirmedImage = (index: number) => confirmedImageUrls.value.splice(index, 1);
+
+// ฟังก์ชันยืนยันรูปภาพใหม่
+const confirmImages = () => {
+  // ย้ายรูปภาพจาก imageUrls ไปยัง confirmedImageUrls
+  confirmedImageUrls.value = [...imageUrls.value, ...confirmedImageUrls.value];
+  imageUrls.value = []; // ล้างรูปภาพใหม่หลังยืนยัน
+  alert("บันทึกรูปภาพสำเร็จ!");
+};
 </script>
 
 <style scoped>

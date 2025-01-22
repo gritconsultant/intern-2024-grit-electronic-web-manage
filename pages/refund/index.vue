@@ -97,28 +97,96 @@
           v-for="(order, index) in filteredOrders"
           :key="index"
         >
-          <tr class="flex gap-2 py-2 border-b-[1px]">
-            <th class="w-[10%] text-start pl-2 truncate">
+          <tr class="flex gap-2 pb-[6px] border-b-[1px]">
+            <th
+              class="w-[10%] text-start text-[15px] font-medium pl-2 truncate"
+            >
               {{ order.order_id }}
             </th>
-            <th class="w-[10%] text-start pl-2 truncate">
+            <th
+              class="w-[10%] text-start text-[15px] font-medium pl-2 truncate"
+            >
               {{ order.order_id }}
             </th>
-            <th class="w-[15%] text-start pl-2 truncate">
+            <th
+              class="w-[15%] text-start text-[15px] font-medium pl-2 truncate"
+            >
               {{ order.created_at }}
             </th>
-            <th class="w-[15%] truncate">{{ order.customer.username }}</th>
-            <th class="w-[15%] truncate">
+            <th class="w-[15%] text-[15px] font-medium truncate">
+              {{ order.customer.username }}
+            </th>
+            <th class="w-[15%] text-[15px] font-medium truncate">
               {{ order.items.reduce((sum, item) => sum + item.quantity, 0) }}
             </th>
-            <th class="w-[15%] truncate">{{ order.total_amount }}</th>
-            <th class="w-[15%] truncate">
+            <th class="w-[15%] text-[15px] font-medium truncate">
+              {{ order.total_amount }}
+            </th>
+            <th class="w-[15%] text-[15px] font-medium truncate">
               <div class="flex flex-col items-center cursor-pointer">
+                <!-- ส่วนแสดงสถานะ -->
                 <div
-                  class="p-[1px] px-2 w-[180px] border-[1px] rounded-[5px]"
+                  class="w-[150px] p-[1px] px-2 border-[1px] rounded-[5px]"
                   @click="toggleMenu(order.order_id)"
                 >
                   {{ order.status }}
+                </div>
+
+                <!-- เมนูเลือกสถานะ -->
+                <div>
+                  <ul
+                    class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
+                    v-show="isMenuVisible[order.order_id]"
+                  >
+                    <!-- ตรวจสอบว่าไม่ใช่สถานะปัจจุบัน -->
+                    <li
+                      class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
+                      @click="changeStatus(order.order_id, '  รอการตรวจสอบ')"
+                      :class="{
+                        'bg-gray-200': order.status === '  รอการตรวจสอบ',
+                      }"
+                      :disabled="order.status === '  รอการตรวจสอบ'"
+                    >
+                      รอการตรวจสอบ
+                    </li>
+                    <li
+                      class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
+                      @click="
+                        changeStatus(order.order_id, 'อนุมัติการคืนสินค้า')
+                      "
+                      :class="{
+                        'bg-gray-200': order.status === 'อนุมัติการคืนสินค้า',
+                      }"
+                      :disabled="order.status === 'อนุมัติการคืนสินค้า'"
+                    >
+                      อนุมัติการคืนสินค้า
+                    </li>
+                    <li
+                      class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
+                      @click="
+                        changeStatus(order.order_id, 'การคืนเงินเสร็จสิ้น')
+                      "
+                      :class="{
+                        'bg-gray-200': order.status === 'การคืนเงินเสร็จสิ้น',
+                      }"
+                      :disabled="order.status === 'การคืนเงินเสร็จสิ้น'"
+                    >
+                      การคืนเงินเสร็จสิ้น
+                    </li>
+                    <li
+                      class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
+                      @click="
+                        changeStatus(order.order_id, 'ไม่อนุมัติการคืนสินค้า')
+                      "
+                      :class="{
+                        'bg-gray-200':
+                          order.status === 'ไม่อนุมัติการคืนสินค้า',
+                      }"
+                      :disabled="order.status === 'ไม่อนุมัติการคืนสินค้า'"
+                    >
+                      ไม่อนุมัติการคืนสินค้า
+                    </li>
+                  </ul>
                 </div>
               </div>
             </th>
@@ -127,7 +195,7 @@
                 to="/refund/[id]"
                 class="flex items-center place-content-center justify-center rounded-[5px] h-[20px] w-[25px]"
               >
-                <i class="fa-regular fa-eye text-[20px]"></i>
+                <i class="fa-regular fa-eye text-[15px]"></i>
               </NuxtLink>
             </th>
           </tr>
@@ -139,6 +207,7 @@
 
 <script lang="ts" setup>
 import type { Order, StatusRefund } from "~/models/order.model";
+import Swal from "sweetalert2";
 
 const filters = ref({
   startDate: "",
@@ -159,15 +228,33 @@ const toggleMenu = (orderId: number) => {
   };
 };
 
-// Update the status of the order
 const changeStatus = (orderId: number, status: string) => {
+  // Find the order by ID
   const order = orders.find((order) => order.order_id === orderId);
+
   if (order) {
-    order.status = status; // Change the status of the order
-    toggleMenu(orderId); // Close the dropdown menu after selection
+    // Check if the new status is different from the current one
+    if (order.status === status) {
+      Swal.fire("ไม่สามารถเปลี่ยนสถานะ", "สถานะนี้ได้ถูกตั้งไว้แล้ว", "info");
+      return; // Stop execution if the status is the same
+    }
+
+    Swal.fire({
+      title: "ยืนยันการเปลี่ยนสถานะ",
+      text: `คุณต้องการเปลี่ยนสถานะเป็น "${status}" ใช่หรือไม่?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        order.status = status; // Update status
+        toggleMenu(orderId); // Close menu
+        Swal.fire("สำเร็จ!", `สถานะถูกเปลี่ยนเป็น "${status}" แล้ว`, "success");
+      }
+    });
   }
 };
-
 // กำหนดค่าเริ่มต้นให้ selectedStatusRefund
 const selectedStatusRefund = ref<StatusRefund>({
   id: 1, // หรือค่าที่เหมาะสมกับสถานะเริ่มต้น
@@ -176,17 +263,17 @@ const selectedStatusRefund = ref<StatusRefund>({
 
 // สมมติว่า Statusrefund เป็นอาเรย์ของ StatusRefund ที่มีคีย์ 'status' ในแต่ละออบเจ็กต์
 const Statusrefund = ref<StatusRefund[]>([
-  { id: 1, status: "รอการตรวจสอบ" },
-  { id: 2, status: "อนุมัติการคืนสินค้า" },
-  { id: 3, status: "การคืนเงินเสร็จสิ้น" },
-  { id: 4, status: "ไม่อนุมัติการคืนสินค้า" },
+  { id: 1, status: "ทั้งหมด" },
+  { id: 2, status: "รอการตรวจสอบ" },
+  { id: 3, status: "อนุมัติการคืนสินค้า" },
+  { id: 4, status: "การคืนเงินเสร็จสิ้น" },
+  { id: 5, status: "ไม่อนุมัติการคืนสินค้า" },
 ]);
 
 // ฟังก์ชันสำหรับการเลือก
 const selectStatusRefund = (statusrefund: StatusRefund) => {
   selectedStatusRefund.value = statusrefund;
 };
-
 // ฟิลเตอร์คำสั่งซื้อ (Orders) ตามวันที่และสถานะ
 const filteredOrders = computed(() => {
   let result = orders;

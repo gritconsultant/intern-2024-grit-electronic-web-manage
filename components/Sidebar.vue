@@ -153,6 +153,14 @@
           </div>
           <span class="text-[14px]">รายงานการทำงาน</span>
         </NuxtLink>
+        <NuxtLink
+          to="/order/report"
+        >
+          <div>
+            <i class="fa-regular fa-clock"></i>
+          </div>
+          <span class="text-[14px]">รายงานการขาย</span>
+        </NuxtLink>
       </div>
     </div>
   </div>

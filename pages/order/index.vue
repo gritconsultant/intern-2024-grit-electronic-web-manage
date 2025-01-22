@@ -81,19 +81,17 @@
     <div class="w-full h-[90%] pt-2 bg-white dropshadowtop">
       <table class="flex flex-col px-8 gap-2 w-full">
         <thead class="w-full">
-          <tr class="flex gap-5 border-b-[2px] pb-[4px] pt-[8px] border-gray-400">
-            <th class="w-[10%] text-start pl-2 ">
-              หมายเลขคำสั่งซื้อ
-            </th>
-            <th class="w-[12%] text-start pl-2 ">วัน/เวลา</th>
-            <th class="w-[15%] text-start pl-2 ">ลูกค้า</th>
-            <th class="w-[20%] text-start pl-2 ">ที่อยู่</th>
-            <th class="w-[10%] text-start pl-2 ">ราคารวม</th>
-            <th class="w-[10%] text-start pl-2 ">จำนวนรวม</th>
-            <th class="w-[10%]  ">
-              สถานะคำสั่งซื้อ
-            </th>
-            <th class="w-[3%] text-start pl-2 "></th>
+          <tr
+            class="flex gap-5 border-b-[2px] pb-[4px] pt-[8px] border-gray-400"
+          >
+            <th class="w-[10%] text-start pl-2">หมายเลขคำสั่งซื้อ</th>
+            <th class="w-[12%] text-start pl-2">วัน/เวลา</th>
+            <th class="w-[15%] text-start pl-2">ลูกค้า</th>
+            <th class="w-[20%] text-start pl-2">ที่อยู่</th>
+            <th class="w-[10%] text-start pl-2">ราคารวม</th>
+            <th class="w-[10%] text-start pl-2">จำนวนรวม</th>
+            <th class="w-[10%]">สถานะคำสั่งซื้อ</th>
+            <th class="w-[3%] text-start pl-2"></th>
           </tr>
         </thead>
         <tbody
@@ -101,75 +99,87 @@
           v-for="(order, index) in filteredOrder"
           :key="index"
         >
-          <tr class="flex gap-5 pb-2  border-b-[1px]">
+          <tr class="flex gap-5 pb-2 border-b-[1px]">
             <th
-              class="w-[10%] text-start pl-2 truncate  text-[15px] font-medium "
+              class="w-[10%] text-start pl-2 truncate text-[15px] font-medium"
             >
               {{ order.order_id }}
             </th>
             <th
-              class="w-[12%] text-[15px] text-start pl-2 font-medium  truncate"
+              class="w-[12%] text-[15px] text-start pl-2 font-medium truncate"
             >
               {{ order.created_at }}
             </th>
             <th
-              class="w-[15%] text-[15px] text-start pl-2 font-medium  truncate"
+              class="w-[15%] text-[15px] text-start pl-2 font-medium truncate"
             >
               {{ order.customer.username }}
             </th>
             <th
-              class="w-[20%] text-[15px] text-start pl-2 font-medium  truncate"
+              class="w-[20%] text-[15px] text-start pl-2 font-medium truncate"
             >
               ที่อยู่{{}}
             </th>
             <th
-              class="w-[10%] text-[15px] text-start pl-2 font-medium  truncate"
+              class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
               {{ order.total_amount }}
             </th>
             <th
-              class="w-[10%] text-[15px] text-start pl-2 font-medium  truncate"
+              class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
               {{}}
             </th>
             <th
-              class="w-[10%] text-[15px] font-medium  flex items-center justify-center"
+              class="w-[10%] text-[15px] font-medium flex items-center justify-center"
             >
-              <div
-                class="flex flex-col items-center cursor-pointer "
-              >
+              <div class="flex flex-col items-center cursor-pointer">
+                <!-- ส่วนแสดงสถานะ -->
                 <div
                   class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px]"
                   @click="toggleMenu(order.order_id)"
                 >
                   {{ order.status }}
                 </div>
+
+                <!-- เมนูเลือกสถานะ -->
                 <div>
                   <ul
                     class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
                     v-show="isMenuVisible[order.order_id]"
                   >
+                    <!-- ตรวจสอบว่าไม่ใช่สถานะปัจจุบัน -->
                     <li
                       class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
                       @click="changeStatus(order.order_id, 'รอการชำระ')"
+                      :class="{ 'bg-gray-200': order.status === 'รอการชำระ' }"
+                      :disabled="order.status === 'รอการชำระ'"
                     >
                       รอการชำระ
                     </li>
                     <li
                       class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
                       @click="changeStatus(order.order_id, 'กำลังจัดส่ง')"
+                      :class="{ 'bg-gray-200': order.status === 'กำลังจัดส่ง' }"
+                      :disabled="order.status === 'กำลังจัดส่ง'"
                     >
                       กำลังจัดส่ง
                     </li>
                     <li
                       class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
                       @click="changeStatus(order.order_id, 'จัดส่งเรียบร้อย')"
+                      :class="{
+                        'bg-gray-200': order.status === 'จัดส่งเรียบร้อย',
+                      }"
+                      :disabled="order.status === 'จัดส่งเรียบร้อย'"
                     >
                       จัดส่งเรียบร้อย
                     </li>
                     <li
                       class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
                       @click="changeStatus(order.order_id, 'ชำระล้มเหลว')"
+                      :class="{ 'bg-gray-200': order.status === 'ชำระล้มเหลว' }"
+                      :disabled="order.status === 'ชำระล้มเหลว'"
                     >
                       ชำระล้มเหลว
                     </li>
@@ -194,6 +204,7 @@
 
 <script lang="ts" setup>
 import type { Order, StatusOrder } from "~/models/order.model";
+import Swal from "sweetalert2";
 
 const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
 
@@ -208,12 +219,31 @@ const toggleMenu = (orderId: number) => {
   };
 };
 
-// Update the status of the order
 const changeStatus = (orderId: number, status: string) => {
+  // Find the order by ID
   const order = orders.find((order) => order.order_id === orderId);
+
   if (order) {
-    order.status = status; // Change the status of the order
-    toggleMenu(orderId); // Close the dropdown menu after selection
+    // Check if the new status is different from the current one
+    if (order.status === status) {
+      Swal.fire("ไม่สามารถเปลี่ยนสถานะ", "สถานะนี้ได้ถูกตั้งไว้แล้ว", "info");
+      return; // Stop execution if the status is the same
+    }
+
+    Swal.fire({
+      title: "ยืนยันการเปลี่ยนสถานะ",
+      text: `คุณต้องการเปลี่ยนสถานะเป็น "${status}" ใช่หรือไม่?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        order.status = status; // Update status
+        toggleMenu(orderId); // Close menu
+        Swal.fire("สำเร็จ!", `สถานะถูกเปลี่ยนเป็น "${status}" แล้ว`, "success");
+      }
+    });
   }
 };
 
