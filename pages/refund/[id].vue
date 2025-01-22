@@ -1,17 +1,19 @@
 <template>
-  <div class="defaultpages p-5">
+  <div class="defaultpages p-5 ml-5">
     <div class="h-[10%]">
       <h1 class="text-[28px] font-bold">คำสั่งซื้อ # {{}}</h1>
       <h5 class=" ">หมายเลขผู้ใช้งาน :</h5>
     </div>
     <div class="flex gap-2 w-full h-[85%]">
-      <div class="flex flex-col gap-2 w-[70%]">
+      <div
+        class="flex flex-col gap-2 w-[70%] bg-white dropshadowbottomsub rounded-[5px] p-2"
+      >
         <table class="flex flex-col gap-[1px] h-[95%]">
-          <thead class="w-full border-y-[1px] border-gray-600">
+          <thead class="w-full border-y-[1px] border-gray-600 p-2">
             <tr class="flex gap-2 w-full">
-              <th class="w-[10%] flex items-center  ">
+              <th class="w-[10%] flex items-center ">
                 <!-- Checkbox Select All -->
-                <div class="flex items-center gap-2  ">
+                <div class="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="selectAll"
@@ -19,12 +21,14 @@
                     v-model="selectAll"
                     @change="toggleSelectAll"
                   />
-                  <label for="selectAll" class="font-semibold text-[12px] cursor-pointer   "
+                  <label
+                    for="selectAll"
+                    class="font-semibold text-[12px] cursor-pointer"
                     >เลือกทั้งหมด</label
                   >
                 </div>
               </th>
-              <th class="w-[30%]">ผลิตภัณฑ์</th>
+              <th class="w-[30%] ">ผลิตภัณฑ์</th>
               <th class="w-[10%]">ราคา</th>
               <th class="w-[10%]">จำนวน</th>
               <th class="w-[10%]">รวม</th>
@@ -37,7 +41,7 @@
               v-for="(product, data) in products"
               :key="data"
             >
-              <th class="w-[5.1%] flex justify-center items-center ">
+              <th class="w-[11.3%] flex justify-center items-center">
                 <input
                   type="checkbox"
                   class="w-[25px] h-[25px] bg-gray-200 rounded-full checked:bg-green-500 border-2 border-gray-400 checked:border-blue-500 focus:ring-2 focus:ring-purple-500 focus:ring-rounded"
@@ -47,8 +51,8 @@
               </th>
               <NuxtLink
                 to="/product/[id] "
-                class="w-[30.4%] flex justify-between items-center gap-2 text-black hover:text-orange-600 cursor-pointer"
-                >
+                class="w-[30%]   flex justify-between items-center gap-2 text-black hover:text-orange-600 cursor-pointer"
+              >
                 <!-- images -->
                 <div class="flex justify-center items-center w-full h-full">
                   <img
@@ -63,13 +67,13 @@
                   {{ product.name }}
                 </div>
               </NuxtLink>
-              <th class="w-[10.1%] text-wrap truncate font-medium">
+              <th class="w-[10.1%] ml-10 text-wrap truncate font-medium ">
                 ฿{{ product.price }}
               </th>
-              <th class="w-[10.12%] text-wrap truncate font-medium">
+              <th class="w-[10.12%] text-wrap truncate font-medium ">
                 {{ product.amount }}
               </th>
-              <th class="w-[10.1%] pl-[25px] text-wrap truncate font-medium">
+              <th class="w-[10.1%] pl-[25px] text-wrap truncate font-medium ">
                 ฿{{ product.price * product.amount }}
               </th>
               <th class="w-[30%] pl-[25px] text-wrap truncate font-medium"></th>
@@ -77,7 +81,7 @@
           </tbody>
         </table>
         <div
-          class="flex justify-between h-[5%] border-y-[1px] border-gray-600 font-semibold"
+          class="flex justify-between h-[5%] border-y-[1px] border-gray-600 font-semibold p-[1px]"
         >
           <span class=" ">รวมทั้งหมด : {{ selectedCount }}</span>
           <div class="w-[38%] flex justify-between">
@@ -344,17 +348,18 @@ const products = ref<Product[]>([
   },
 ]);
 
-// คำนวณจำนวนรวม
+// คำนวณจำนวนรวมของสินค้าที่เลือก
 const totalAmount = computed(() => {
-  return products.value.reduce((sum, product) => sum + product.amount, 0);
+  return products.value
+    .filter((_, index) => selectedProducts.value[index]) // Filter selected products
+    .reduce((sum, product) => sum + product.amount, 0);
 });
 
-// คำนวณราคารวม
+// คำนวณราคารวมของสินค้าที่เลือก
 const totalPrice = computed(() => {
-  return products.value.reduce(
-    (sum, product) => sum + product.price * product.amount,
-    0
-  );
+  return products.value
+    .filter((_, index) => selectedProducts.value[index]) // Filter selected products
+    .reduce((sum, product) => sum + product.price * product.amount, 0);
 });
 
 const selectAll = ref(false);
@@ -396,8 +401,6 @@ const selectedCount = computed(() => {
 //     alert(`จำนวนสินค้าทั้งหมด: ${totalItems}\nจำนวนที่เลือก: ${totalSelected}\nสินค้าที่เลือก: ${selectedDetails}`);
 //   }
 // };
-
-
 </script>
 
 <style></style>

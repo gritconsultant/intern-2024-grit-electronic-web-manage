@@ -4,10 +4,10 @@
       <h1 class="text-[28px] font-bold">คำสั่งซื้อ # {{}}</h1>
       <h5 class=" ">หมายเลขผู้ใช้งาน :</h5>
     </div>
-    <div class="flex gap-2 w-full h-[85%]">
-      <div class="flex flex-col gap-2 w-[70%]">
+    <div class="flex gap-2 w-full h-[85%]  ">
+      <div class="flex flex-col gap-2 h-[100%] w-[70%] bg-white p-2 rounded-[5px] dropshadowbottomsub">
         <table class="flex flex-col gap-[1px] h-[95%]">
-          <thead class="w-full border-y-[1px] border-gray-600">
+          <thead class="w-full border-y-[1px] border-gray-600 p-2">
             <tr class="flex gap-2 w-full">
               <th class="w-[40%]">ผลิตภัณฑ์</th>
               <th class="w-[20%]">ราคา</th>
@@ -52,7 +52,7 @@
           </tbody>
         </table>
         <div
-          class="flex justify-between h-[5%] border-y-[1px] border-gray-600 font-semibold"
+          class="flex justify-between h-[5%] border-y-[1px]  border-gray-600 font-semibold p-[1px]"
         >
           <span class=" ">รวมทั้งหมด</span>
           <div class="w-[38%] flex justify-between">
@@ -171,7 +171,7 @@ const orders = <Order[]>[
     },
     total_amount: 1250,
     currency: "USD",
-    status: "delivered",
+    status: "รอการชำระ",
     created_at: "2024-12-15T08:30:00Z",
     payment_status: "paid",
     items: [

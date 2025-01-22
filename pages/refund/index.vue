@@ -1,7 +1,7 @@
 <template>
   <div class="defaultpages flex flex-col gap-2">
     <div class="flex items-center justify-between h-[8%] pl-[35px]">
-      <h1 class="text-[20px] font-bold">รายการคำรองขอคืนสินค้า</h1>
+      <h1 class="text-[20px] font-bold">รายการคำร้องขอคืนสินค้า</h1>
       <div class="mr-5">
         <!-- ส่วนตัวกรอง -->
         <div class="flex items-center space-x-4">
@@ -51,32 +51,68 @@
             <th class="w-[5%]"></th>
           </tr>
         </thead>
-        <tbody class="w-full" v-for="(order, index) in filteredOrders" :key="index">
+        <tbody
+          class="w-full"
+          v-for="(order, index) in filteredOrders"
+          :key="index"
+        >
           <tr class="flex gap-2 py-2 border-b-[1px]">
             <th class="w-[15%] text-start truncate">
               {{ order.order_id }}
             </th>
             <th class="w-[15%] truncate">{{ order.created_at }}</th>
             <th class="w-[15%] truncate">{{ order.customer.username }}</th>
-            <th class="w-[15%] truncate">{{ order.items.reduce((sum, item) => sum + item.quantity, 0) }}</th>
+            <th class="w-[15%] truncate">
+              {{ order.items.reduce((sum, item) => sum + item.quantity, 0) }}
+            </th>
             <th class="w-[15%] truncate">{{ order.total_amount }}</th>
             <th class="w-[15%] truncate">
-              <div
-                class="bg-white cursor-pointer border-[1px] rounded-[5px]"
-                @click="store.orderstatus = !store.orderstatus"
-              >
-                รอจัดส่ง
-                <div v-if="store.orderstatus" class="flex justify-center">
-                  <PopupOrderstatus />
+              <div class="flex flex-col items-center cursor-pointer">
+                <div
+                  class="p-[1px] px-2 border-[1px] rounded-[5px]"
+                  @click="toggleMenu(order.order_id)"
+                >
+                  {{ order.status }}
+                </div>
+                <div>
+                  <ul
+                    class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[150px] h-[120px] -translate-x-[75px] mt-[2px]"
+                    v-show="isMenuVisible[order.order_id]"
+                  >
+                    <li
+                      class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
+                      @click="changeStatus(order.order_id, 'รอการตรวจสอบ')"
+                    >
+                      รอการตรวจสอบ
+                    </li>
+                    <li
+                      class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
+                      @click="changeStatus(order.order_id, 'อนุมัติการคืนสินค้า')"
+                    >
+                      อนุมัติการคืนสินค้า
+                    </li>
+                    <li
+                      class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
+                      @click="changeStatus(order.order_id, 'การคืนเงินเสร็จสิ้น')"
+                    >
+                      การคืนเงินเสร็จสิ้น
+                    </li>
+                    <li
+                      class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
+                      @click="changeStatus(order.order_id, 'ไม่อนุมัติการคืนสินค้า')"
+                    >
+                      ไม่อนุมัติการคืนสินค้า
+                    </li>
+                  </ul>
                 </div>
               </div>
             </th>
             <th class="w-[5%] flex items-center justify-center">
               <NuxtLink
                 to="/refund/[id]"
-                class="flex items-center place-content-center justify-center rounded-[5px] h-[20px] w-[25px] hover:bg-slate-500"
+                class="flex items-center place-content-center justify-center rounded-[5px] h-[20px] w-[25px] "
               >
-                <i class="fa-solid fa-bars"></i>
+              <i class="fa-regular fa-eye text-[20px] "></i>
               </NuxtLink>
             </th>
           </tr>
@@ -88,22 +124,47 @@
 
 <script lang="ts" setup>
 import type { Order } from "~/models/order.model";
-import { useIndexStore } from "~/store/main";
-import { ref, computed } from "vue";
-
-const store = useIndexStore();
 
 const filters = ref({
   startDate: "",
   endDate: "",
 });
 
+const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
+
+// Toggle the visibility of the menu for a specific order
+const toggleMenu = (orderId: number) => {
+  // Toggle the menu visibility, close all other menus before opening the new one
+  isMenuVisible.value = {
+    ...Object.fromEntries(
+      Object.keys(isMenuVisible.value).map((key) => [key, false])
+    ), // Close all menus
+    [orderId]: !isMenuVisible.value[orderId], // Toggle current order's menu
+  };
+};
+
+// Update the status of the order
+const changeStatus = (orderId: number, status: string) => {
+  const order = orders.find((order) => order.order_id === orderId);
+  if (order) {
+    order.status = status; // Change the status of the order
+    toggleMenu(orderId); // Close the dropdown menu after selection
+  }
+};
+
+// แยกการจัดเก็บสถานะของแต่ละคำสั่งซื้อ
+const orderStatusMap = ref<{ [key: number]: boolean }>({});
+
 // ฟิลเตอร์คำสั่งซื้อ (Orders) ตามวันที่
 const filteredOrders = computed(() => {
-  return orders.filter(order => {
+  return orders.filter((order) => {
     const orderDate = new Date(order.created_at);
-    const startDate = filters.value.startDate ? new Date(filters.value.startDate) : null;
-    const endDate = filters.value.endDate ? new Date(filters.value.endDate) : null;
+    const startDate = filters.value.startDate
+      ? new Date(filters.value.startDate)
+      : null;
+    const endDate = filters.value.endDate
+      ? new Date(filters.value.endDate)
+      : null;
 
     return (
       (!startDate || orderDate >= startDate) &&
@@ -114,221 +175,509 @@ const filteredOrders = computed(() => {
 
 const orders = <Order[]>[
   {
-    order_id: 12345,
-    customer: {
-      user_id: 101,
-      username: "john_doe",
-      email: "john_doe@example.com",
+    "order_id": 12346,
+    "customer": {
+      "user_id": 102,
+      "username": "jane_smith",
+      "email": "jane_smith@example.com"
     },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    updated_at: "2024-12-19T10:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 201, product_name: "Smartphone X Pro", quantity: 1, price: 1000 },
-      { product_id: 202, product_name: "Wireless Headphones", quantity: 1, price: 250 },
-    ],
+    "total_amount": 500,
+    "currency": "USD",
+    "status": "รอการตรวจสอบ",
+    "created_at": "2024-12-18T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 203,
+        "product_name": "Smartwatch Y",
+        "quantity": 2,
+        "price": 250
+      }
+    ]
   },
   {
-    order_id: 12346,
-    customer: {
-      user_id: 102,
-      username: "jane_smith",
-      email: "jane_smith@example.com",
+    "order_id": 12347,
+    "customer": {
+      "user_id": 103,
+      "username": "john_doe",
+      "email": "john_doe@example.com"
     },
-    total_amount: 500,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-18T09:00:00Z",
-    payment_status: "unpaid",
-    items: [{ product_id: 203, product_name: "Smartwatch Y", quantity: 2, price: 250 }],
+    "total_amount": 300,
+    "currency": "USD",
+    "status": "รอการตรวจสอบ",
+    "created_at": "2024-12-19T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 204,
+        "product_name": "Smartphone X",
+        "quantity": 1,
+        "price": 300
+      }
+    ]
   },
   {
-    order_id: 12345,
-    customer: { user_id: 101, username: "john_doe", email: "john_doe@example.com" },
-    total_amount: 1250,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-15T08:30:00Z",
-    updated_at: "2024-12-19T10:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 201, product_name: "Smartphone X Pro", quantity: 1, price: 1000 },
-      { product_id: 202, product_name: "Wireless Headphones", quantity: 1, price: 250 },
-    ],
+    "order_id": 12348,
+    "customer": {
+      "user_id": 104,
+      "username": "alice_wong",
+      "email": "alice_wong@example.com"
+    },
+    "total_amount": 750,
+    "currency": "USD",
+    "status": "อนุมัติการคืนสินค้า",
+    "created_at": "2024-12-20T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 205,
+        "product_name": "Laptop Z",
+        "quantity": 1,
+        "price": 750
+      }
+    ]
   },
   {
-    order_id: 12346,
-    customer: { user_id: 102, username: "jane_smith", email: "jane_smith@example.com" },
-    total_amount: 500,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-16T09:00:00Z",
-    updated_at: "2024-12-20T10:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      { product_id: 203, product_name: "Smartwatch Y", quantity: 2, price: 250 },
-    ],
+    "order_id": 12349,
+    "customer": {
+      "user_id": 105,
+      "username": "bob_lee",
+      "email": "bob_lee@example.com"
+    },
+    "total_amount": 400,
+    "currency": "USD",
+    "status": "การคืนเงินเสร็จสิ้น",
+    "created_at": "2024-12-21T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 206,
+        "product_name": "Tablet P",
+        "quantity": 1,
+        "price": 400
+      }
+    ]
   },
   {
-    order_id: 12347,
-    customer: { user_id: 103, username: "alice_lee", email: "alice_lee@example.com" },
-    total_amount: 800,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-17T10:00:00Z",
-    updated_at: "2024-12-21T11:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 204, product_name: "Laptop ABC", quantity: 1, price: 800 },
-    ],
+    "order_id": 12350,
+    "customer": {
+      "user_id": 106,
+      "username": "carol_jones",
+      "email": "carol_jones@example.com"
+    },
+    "total_amount": 200,
+    "currency": "USD",
+    "status": "ไม่อนุมัติการคืนสินค้า",
+    "created_at": "2024-12-22T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 207,
+        "product_name": "Wireless Headphones",
+        "quantity": 1,
+        "price": 200
+      }
+    ]
   },
   {
-    order_id: 12348,
-    customer: { user_id: 104, username: "bob_martin", email: "bob_martin@example.com" },
-    total_amount: 650,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-18T11:00:00Z",
-    updated_at: "2024-12-22T12:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      { product_id: 205, product_name: "Smartphone Z Max", quantity: 1, price: 650 },
-    ],
+    "order_id": 12351,
+    "customer": {
+      "user_id": 107,
+      "username": "emma_white",
+      "email": "emma_white@example.com"
+    },
+    "total_amount": 550,
+    "currency": "USD",
+    "status": "รอพิจารณา",
+    "created_at": "2024-12-23T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 208,
+        "product_name": "4K TV",
+        "quantity": 1,
+        "price": 550
+      }
+    ]
   },
   {
-    order_id: 12349,
-    customer: { user_id: 105, username: "carol_white", email: "carol_white@example.com" },
-    total_amount: 1500,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-19T12:00:00Z",
-    updated_at: "2024-12-23T13:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 206, product_name: "4K TV Ultra", quantity: 1, price: 1500 },
-    ],
+    "order_id": 12352,
+    "customer": {
+      "user_id": 108,
+      "username": "david_brown",
+      "email": "david_brown@example.com"
+    },
+    "total_amount": 180,
+    "currency": "USD",
+    "status": "รอการตรวจสอบ",
+    "created_at": "2024-12-24T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 209,
+        "product_name": "Bluetooth Speaker",
+        "quantity": 1,
+        "price": 180
+      }
+    ]
   },
   {
-    order_id: 12350,
-    customer: { user_id: 106, username: "david_jones", email: "david_jones@example.com" },
-    total_amount: 1200,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-20T13:00:00Z",
-    updated_at: "2024-12-24T14:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      { product_id: 207, product_name: "Smartwatch X", quantity: 2, price: 600 },
-    ],
+    "order_id": 12353,
+    "customer": {
+      "user_id": 109,
+      "username": "lucas_smith",
+      "email": "lucas_smith@example.com"
+    },
+    "total_amount": 400,
+    "currency": "USD",
+    "status": "อนุมัติการคืนสินค้า",
+    "created_at": "2024-12-25T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 210,
+        "product_name": "Gaming Console",
+        "quantity": 1,
+        "price": 400
+      }
+    ]
   },
   {
-    order_id: 12351,
-    customer: { user_id: 107, username: "emily_kim", email: "emily_kim@example.com" },
-    total_amount: 900,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-21T14:00:00Z",
-    updated_at: "2024-12-25T15:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 208, product_name: "Wireless Earbuds", quantity: 3, price: 300 },
-    ],
+    "order_id": 12354,
+    "customer": {
+      "user_id": 110,
+      "username": "joshua_lee",
+      "email": "joshua_lee@example.com"
+    },
+    "total_amount": 150,
+    "currency": "USD",
+    "status": "การคืนเงินเสร็จสิ้น",
+    "created_at": "2024-12-26T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 211,
+        "product_name": "Smartphone Charger",
+        "quantity": 2,
+        "price": 75
+      }
+    ]
   },
   {
-    order_id: 12352,
-    customer: { user_id: 108, username: "frank_wilson", email: "frank_wilson@example.com" },
-    total_amount: 450,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-22T15:00:00Z",
-    updated_at: "2024-12-26T16:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      { product_id: 209, product_name: "Bluetooth Speaker", quantity: 1, price: 450 },
-    ],
+    "order_id": 12355,
+    "customer": {
+      "user_id": 111,
+      "username": "michael_jones",
+      "email": "michael_jones@example.com"
+    },
+    "total_amount": 450,
+    "currency": "USD",
+    "status": "ไม่อนุมัติการคืนสินค้า",
+    "created_at": "2024-12-27T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 212,
+        "product_name": "Gaming Laptop",
+        "quantity": 1,
+        "price": 450
+      }
+    ]
   },
   {
-    order_id: 12353,
-    customer: { user_id: 109, username: "george_lee", email: "george_lee@example.com" },
-    total_amount: 700,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-23T16:00:00Z",
-    updated_at: "2024-12-27T17:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 210, product_name: "Tablet Pro", quantity: 1, price: 700 },
-    ],
+    "order_id": 12356,
+    "customer": {
+      "user_id": 112,
+      "username": "susan_clark",
+      "email": "susan_clark@example.com"
+    },
+    "total_amount": 600,
+    "currency": "USD",
+    "status": "รอพิจารณา",
+    "created_at": "2024-12-28T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 213,
+        "product_name": "Digital Camera",
+        "quantity": 1,
+        "price": 600
+      }
+    ]
   },
   {
-    order_id: 12354,
-    customer: { user_id: 110, username: "helen_smith", email: "helen_smith@example.com" },
-    total_amount: 1100,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-24T17:00:00Z",
-    updated_at: "2024-12-28T18:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      { product_id: 211, product_name: "Gaming Console X", quantity: 1, price: 1100 },
-    ],
+    "order_id": 12357,
+    "customer": {
+      "user_id": 113,
+      "username": "olivia_harris",
+      "email": "olivia_harris@example.com"
+    },
+    "total_amount": 220,
+    "currency": "USD",
+    "status": "รอการตรวจสอบ",
+    "created_at": "2024-12-29T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 214,
+        "product_name": "Wireless Mouse",
+        "quantity": 2,
+        "price": 110
+      }
+    ]
   },
   {
-    order_id: 12355,
-    customer: { user_id: 111, username: "ivan_taylor", email: "ivan_taylor@example.com" },
-    total_amount: 550,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-25T18:00:00Z",
-    updated_at: "2024-12-29T19:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 212, product_name: "Portable Charger", quantity: 2, price: 275 },
-    ],
+    "order_id": 12358,
+    "customer": {
+      "user_id": 114,
+      "username": "matthew_garcia",
+      "email": "matthew_garcia@example.com"
+    },
+    "total_amount": 550,
+    "currency": "USD",
+    "status": "อนุมัติการคืนสินค้า",
+    "created_at": "2024-12-30T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 215,
+        "product_name": "Smartwatch Z",
+        "quantity": 1,
+        "price": 550
+      }
+    ]
   },
   {
-    order_id: 12356,
-    customer: { user_id: 112, username: "julia_morris", email: "julia_morris@example.com" },
-    total_amount: 950,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-26T19:00:00Z",
-    updated_at: "2024-12-30T20:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      { product_id: 213, product_name: "Smart TV 55inch", quantity: 1, price: 950 },
-    ],
+    "order_id": 12359,
+    "customer": {
+      "user_id": 115,
+      "username": "isabella_king",
+      "email": "isabella_king@example.com"
+    },
+    "total_amount": 350,
+    "currency": "USD",
+    "status": "การคืนเงินเสร็จสิ้น",
+    "created_at": "2025-01-02T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 216,
+        "product_name": "Bluetooth Earbuds",
+        "quantity": 1,
+        "price": 350
+      }
+    ]
   },
   {
-    order_id: 12357,
-    customer: { user_id: 113, username: "karen_davis", email: "karen_davis@example.com" },
-    total_amount: 1300,
-    currency: "USD",
-    status: "delivered",
-    created_at: "2024-12-27T20:00:00Z",
-    updated_at: "2024-12-31T21:00:00Z",
-    payment_status: "paid",
-    items: [
-      { product_id: 214, product_name: "Laptop Z", quantity: 1, price: 1300 },
-    ],
+    "order_id": 12360,
+    "customer": {
+      "user_id": 116,
+      "username": "noah_martinez",
+      "email": "noah_martinez@example.com"
+    },
+    "total_amount": 500,
+    "currency": "USD",
+    "status": "รอพิจารณา",
+    "created_at": "2025-01-03T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 217,
+        "product_name": "Smartphone Case",
+        "quantity": 2,
+        "price": 250
+      }
+    ]
   },
   {
-    order_id: 12358,
-    customer: { user_id: 114, username: "lucy_evans", email: "lucy_evans@example.com" },
-    total_amount: 850,
-    currency: "USD",
-    status: "pending",
-    created_at: "2024-12-28T21:00:00Z",
-    updated_at: "2025-01-01T22:00:00Z",
-    payment_status: "unpaid",
-    items: [
-      { product_id: 215, product_name: "Camera Pro", quantity: 1, price: 850 },
-    ],
+    "order_id": 12361,
+    "customer": {
+      "user_id": 117,
+      "username": "mia_rodriguez",
+      "email": "mia_rodriguez@example.com"
+    },
+    "total_amount": 600,
+    "currency": "USD",
+    "status": "รอการตรวจสอบ",
+    "created_at": "2025-01-04T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 218,
+        "product_name": "Smartwatch",
+        "quantity": 1,
+        "price": 600
+      }
+    ]
   },
-  // ข้อมูลคำสั่งซื้อเพิ่มเติม
+  {
+    "order_id": 12362,
+    "customer": {
+      "user_id": 118,
+      "username": "lily_gonzalez",
+      "email": "lily_gonzalez@example.com"
+    },
+    "total_amount": 800,
+    "currency": "USD",
+    "status": "อนุมัติการคืนสินค้า",
+    "created_at": "2025-01-05T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 219,
+        "product_name": "Gaming Headset",
+        "quantity": 1,
+        "price": 800
+      }
+    ]
+  },
+  {
+    "order_id": 12363,
+    "customer": {
+      "user_id": 119,
+      "username": "jackson_williams",
+      "email": "jackson_williams@example.com"
+    },
+    "total_amount": 400,
+    "currency": "USD",
+    "status": "การคืนเงินเสร็จสิ้น",
+    "created_at": "2025-01-06T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 220,
+        "product_name": "Laptop Sleeve",
+        "quantity": 1,
+        "price": 400
+      }
+    ]
+  },
+  {
+    "order_id": 12364,
+    "customer": {
+      "user_id": 120,
+      "username": "ella_johnson",
+      "email": "ella_johnson@example.com"
+    },
+    "total_amount": 350,
+    "currency": "USD",
+    "status": "ไม่อนุมัติการคืนสินค้า",
+    "created_at": "2025-01-07T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 221,
+        "product_name": "Portable Charger",
+        "quantity": 2,
+        "price": 175
+      }
+    ]
+  },
+  {
+    "order_id": 12365,
+    "customer": {
+      "user_id": 121,
+      "username": "ethan_smith",
+      "email": "ethan_smith@example.com"
+    },
+    "total_amount": 900,
+    "currency": "USD",
+    "status": "รอพิจารณา",
+    "created_at": "2025-01-08T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 222,
+        "product_name": "Bluetooth Speaker Pro",
+        "quantity": 1,
+        "price": 900
+      }
+    ]
+  },
+  {
+    "order_id": 12366,
+    "customer": {
+      "user_id": 122,
+      "username": "lucas_miller",
+      "email": "lucas_miller@example.com"
+    },
+    "total_amount": 450,
+    "currency": "USD",
+    "status": "รอการตรวจสอบ",
+    "created_at": "2025-01-09T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 223,
+        "product_name": "Wireless Mouse",
+        "quantity": 1,
+        "price": 450
+      }
+    ]
+  },
+  {
+    "order_id": 12367,
+    "customer": {
+      "user_id": 123,
+      "username": "sophia_martinez",
+      "email": "sophia_martinez@example.com"
+    },
+    "total_amount": 500,
+    "currency": "USD",
+    "status": "อนุมัติการคืนสินค้า",
+    "created_at": "2025-01-10T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 224,
+        "product_name": "Smartphone Screen Protector",
+        "quantity": 1,
+        "price": 500
+      }
+    ]
+  },
+  {
+    "order_id": 12368,
+    "customer": {
+      "user_id": 124,
+      "username": "oliver_thomas",
+      "email": "oliver_thomas@example.com"
+    },
+    "total_amount": 320,
+    "currency": "USD",
+    "status": "การคืนเงินเสร็จสิ้น",
+    "created_at": "2025-01-11T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 225,
+        "product_name": "Laptop Stand",
+        "quantity": 2,
+        "price": 160
+      }
+    ]
+  },
+  {
+    "order_id": 12369,
+    "customer": {
+      "user_id": 125,
+      "username": "madison_white",
+      "email": "madison_white@example.com"
+    },
+    "total_amount": 700,
+    "currency": "USD",
+    "status": "ไม่อนุมัติการคืนสินค้า",
+    "created_at": "2025-01-12T09:00:00Z",
+    "payment_status": "unpaid",
+    "items": [
+      {
+        "product_id": 226,
+        "product_name": "Drone Camera",
+        "quantity": 1,
+        "price": 700
+      }
+    ]
+  }
 ];
 </script>
 
