@@ -6,7 +6,7 @@
     <div class="flex justify-between px-[25px]">
       <div class="flex gap-2 w-[80%]">
         <div class="w-[40%]">
-          <Search />
+          <Search v-model="filters.searchTerm" />
         </div>
         <!-- filter category -->
         <div class=" ">
@@ -21,7 +21,7 @@
                 <i class="fa-solid fa-filter text-[20px]"></i>
               </button>
               <div
-                class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[] "
+                class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[]"
               >
                 {{ selectedCategory.name }}
               </div>
@@ -86,6 +86,8 @@
             </th>
             <th class="w-[15%] truncate border-r-[2px]">
               {{ product.categoryId }}
+
+              status: true,
             </th>
             <th class="w-[15%] truncate border-r-[2px]">{{ product.price }}</th>
             <th class="w-[15%] truncate border-r-[2px]">
@@ -96,7 +98,12 @@
             >
               <label class="relative inline-flex items-center cursor-pointer">
                 <!-- Checkbox -->
-                <input type="checkbox" class="sr-only peer" />
+                <input
+                  type="checkbox"
+                  class="sr-only peer"
+                  :checked="product.status"
+                  @click="changeProductStatus(product.id)"
+                />
                 <!-- Toggle Switch Background -->
                 <div
                   class="w-11 h-6 bg-orange-200 peer-focus:outline-none peer-focus:ring-[1px] peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
@@ -124,6 +131,7 @@
                     </li>
                     <li
                       class="h-[50%] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
+                      @click="deleteProduct(product.id)"
                     >
                       ลบสินค้า
                     </li>
@@ -139,19 +147,139 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
 import type { Category, Product } from "~/models/product.model";
+import Swal from "sweetalert2";
 
-const isMenuVisible = ref<Record<number, boolean>>({}); // เก็บสถานะการแสดงผลเมนูแยกตาม ID
+const filters = ref({
+  searchTerm: "", // คำค้นหา
+});
+
+// สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
+const selectedCategory = ref<Category>({
+  id: 1,
+  name: "ทั้งหมด",
+});
+
+const categories = ref<Category[]>([
+  {
+    id: 1,
+    name: "ทั้งหมด",
+  },
+  {
+    id: 2,
+    name: "อาหาร",
+  },
+  {
+    id: 3,
+    name: "เครื่องดื่ม",
+  },
+  {
+    id: 4,
+    name: "สมุนไพร",
+  },
+  {
+    id: 5,
+    name: "ผ้าและเครื่องดื่ม",
+  },
+  {
+    id: 6,
+    name: "ของใช้และของตกแต่ง",
+  },
+]);
+// ฟังก์ชันเลือกหมวดหมู่
+const selectCategory = (category: Category) => {
+  selectedCategory.value = category;
+};
+
+const filteredProducts = computed(() => {
+  let result = products.value;
+
+  // ฟิลเตอร์ตามคำค้นหา
+  if (filters.value.searchTerm) {
+    const term = filters.value.searchTerm.toLowerCase();
+    result = result.filter((product) => {
+      return (
+        product.name.toLowerCase().includes(term) || // ตรวจสอบชื่อสินค้า
+        product.categoryId.toString().includes(term) || // ตรวจสอบหมวดหมู่
+        product.price.toString().includes(term) // ตรวจสอบราคา
+      );
+    });
+  }
+
+  // ฟิลเตอร์ตามหมวดหมู่ที่เลือก
+  if (selectedCategory.value.id !== 1) {
+    result = result.filter(
+      (product) => product.categoryId === selectedCategory.value.id // ตรวจสอบหมวดหมู่ที่เลือก
+    );
+  }
+
+  return result;
+});
+
+// สถานะการแสดงเมนูของสินค้า
+const isMenuVisible = ref<Record<number, boolean>>({});
 
 // ฟังก์ชันสำหรับสลับการแสดงผลของเมนู
 const toggleMenu = (productId: number) => {
-  // ปิดเมนูทั้งหมดก่อน แล้วค่อยเปิดเมนูใหม่
   isMenuVisible.value = {
     ...isMenuVisible.value,
     [productId]: !isMenuVisible.value[productId],
   };
 };
+
+const changeProductStatus = (productId: number) => {
+  // Find the product by ID
+  const product = products.value.find((product) => product.id === productId);
+
+  if (product) {
+    // Toggle the status (true becomes false, and false becomes true)
+    const newStatus = !product.status;
+
+    Swal.fire({
+      title: "ยืนยันการเปลี่ยนสถานะ",
+      text: `คุณต้องการเปลี่ยนสถานะของสินค้าเป็น "${
+        newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
+      }" ใช่หรือไม่?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        product.status = newStatus; // Update the status
+        toggleMenu(productId); // Close menu if needed
+        Swal.fire(
+          "สำเร็จ!",
+          `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
+            newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
+          }" แล้ว`,
+          "success"
+        );
+      }
+    });
+  }
+};
+
+const deleteProduct = (productId: number) => {
+  Swal.fire({
+    title: "คุณแน่ใจหรือไม่?",
+    text: "คุณต้องการลบสินค้านี้หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // ลบสินค้าออกจากรายการ
+      products.value = products.value.filter(
+        (product) => product.id !== productId
+      );
+
+      Swal.fire("สำเร็จ!", "สินค้าถูกลบออกจากรายการแล้ว.", "success");
+    }
+  });
+};
+
 const products = ref<Product[]>([
   {
     id: 1,
@@ -161,6 +289,7 @@ const products = ref<Product[]>([
     amount: 10,
     img: "https://th-test-11.slatic.net/p/2b0d5f80a00b77d2c6490b09a053a1c0.png",
     categoryId: 1,
+    status: true,
   },
   {
     id: 2,
@@ -170,6 +299,7 @@ const products = ref<Product[]>([
     amount: 13,
     img: "https://halal.co.th/storages/products/343928.png",
     categoryId: 1,
+    status: true,
   },
   {
     id: 3,
@@ -179,6 +309,7 @@ const products = ref<Product[]>([
     amount: 10,
     img: "https://halal.co.th/storages/products/390694.jpg",
     categoryId: 2,
+    status: true,
   },
   {
     id: 4,
@@ -188,6 +319,7 @@ const products = ref<Product[]>([
     amount: 20,
     img: "https://halal.co.th/storages/products/680694.jpg",
     categoryId: 3,
+    status: true,
   },
   {
     id: 5,
@@ -197,6 +329,7 @@ const products = ref<Product[]>([
     amount: 5,
     img: "https://example.com/bag.png",
     categoryId: 4,
+    status: true,
   },
   {
     id: 6,
@@ -206,56 +339,9 @@ const products = ref<Product[]>([
     amount: 3,
     img: "https://example.com/vase.png",
     categoryId: 5,
+    status: true,
   },
 ]);
-
-// สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
-const selectedCategory = ref<Category>({
-  id: 1,
-  name: 'ทั้งหมด'
-});
-
-
-const categories = ref<Category[]>([
-  {
-    id: 1,
-    name: 'ทั้งหมด',
-  },
-  {
-    id: 2,
-    name: 'อาหาร',
-  },
-  {
-    id: 3,
-    name: 'เครื่องดื่ม',
-  },
-  {
-    id: 4,
-    name: 'สมุนไพร',
-  },
-  {
-    id: 5,
-    name: 'ผ้าและเครื่องดื่ม',
-  },
-  {
-    id: 6,
-    name: 'ของใช้และของตกแต่ง',
-  },
-]);
-
-// ฟังก์ชันเพื่อเลือกหมวดหมู่
-const selectCategory = (category: Category) => {
-  selectedCategory.value = category;
-};
-
-const filteredProducts = computed(() => {
-  if (selectedCategory.value.id === 1) {
-    // หมวดหมู่ "ทั้งหมด" (id = 1)
-    return products.value;
-  }
-  // กรองสินค้าตามหมวดหมู่ที่เลือก
-  return products.value.filter(product => product.categoryId === selectedCategory.value.id);
-});
 </script>
 
 <style></style>

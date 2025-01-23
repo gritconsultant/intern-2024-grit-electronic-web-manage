@@ -3,62 +3,62 @@
     <div class="flex items-center h-[5%] pl-[35px]">
       <h1 class="text-[25px] font-bold">แดชบอร์ด</h1>
     </div>
-    <div class="flex gap-[90px] justify-center w-full h-[15%]">
+    <div class="flex gap-[45px] justify-center w-full h-[15%]">
       <div
-        class="w-[20%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
+        class="w-[22%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
       >
         <div class="flex gap-5 h-full">
           <div class="flex flex-col gap-4">
             <h1 class="font-semibold">ยอดขายรวม</h1>
-            <i class="fa-solid fa-face-smile text-[50px] pl-5"></i>
+            <i class="fa-solid fa-face-smile text-[60px] pl-5"></i>
           </div>
           <div
-            class="w-[50%] flex items-center justify-center text-[50px] font-medium pt-3 pl-8"
+            class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
           >
             15154
           </div>
         </div>
       </div>
       <div
-        class="w-[20%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
+        class="w-[22%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
       >
         <div class="flex gap-5 h-full">
           <div class="flex flex-col gap-4">
             <h1 class="font-semibold">คำสั่งซื้อทั้งหมด</h1>
-            <i class="fa-solid fa-face-smile text-[50px] pl-5"></i>
+            <i class="fa-solid fa-face-smile text-[60px] pl-5"></i>
           </div>
           <div
-            class="w-[50%] flex items-center justify-center text-[50px] font-medium pt-3 pl-8"
+            class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
           >
             15154
           </div>
         </div>
       </div>
       <div
-        class="w-[20%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
+        class="w-[22%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
       >
         <div class="flex gap-5 h-full">
           <div class="flex flex-col gap-4">
             <h1 class="font-semibold">คืนสินค้าทั้งหมด</h1>
-            <i class="fa-solid fa-face-smile text-[50px] pl-5"></i>
+            <i class="fa-solid fa-face-smile text-[60px] pl-5"></i>
           </div>
           <div
-            class="w-[50%] flex items-center justify-center text-[50px] font-medium pt-3"
+            class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3"
           >
             15154
           </div>
         </div>
       </div>
       <div
-        class="w-[20%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
+        class="w-[22%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
       >
         <div class="flex gap-5 h-full">
           <div class="flex flex-col gap-4">
             <h1 class="font-semibold">บัญชีลูกค้าทั้งหมด</h1>
-            <i class="fa-solid fa-face-smile text-[50px] pl-5"></i>
+            <i class="fa-solid fa-face-smile text-[60px] pl-5"></i>
           </div>
           <div
-            class="w-[50%] flex items-center justify-center text-[50px] font-medium pt-3"
+            class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3"
           >
             15154
           </div>

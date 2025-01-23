@@ -41,6 +41,7 @@ export interface Product {
   amount: number;
   img: string;
   categoryId: number;
+  status:  boolean;
 }
 
 export interface Category {

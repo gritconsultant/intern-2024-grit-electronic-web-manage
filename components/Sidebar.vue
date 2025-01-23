@@ -53,7 +53,8 @@
                 'text-orange-500':
                   route.path === '/product' ||
                   route.path === '/product/[id]' ||
-                  route.path === '/product/category',
+                  route.path === '/product/category' || 
+                  route.path === '/product/create',
               }"
             >
               <div class="flex gap-2 text-[15px]">
