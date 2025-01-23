@@ -85,7 +85,8 @@
               :class="{
                 'text-orange-500':
                   route.path === '/manages_user/customer' ||
-                  route.path === '/manages_user/admin',
+                  route.path === '/manages_user/admin' ||
+                  route.path === '/manages_user/customer/[id]',
               }"
             >
               <div>
@@ -152,15 +153,16 @@
           <div>
             <i class="fa-regular fa-clock"></i>
           </div>
-          <span class="text-[14px]">รายงานการทำงาน</span>
+          <span class="text-[13px]">การทำงานของระบบ</span>
         </NuxtLink>
         <NuxtLink
           to="/order/report"
+          class="flex gap-2"
         >
           <div>
             <i class="fa-regular fa-clock"></i>
           </div>
-          <span class="text-[14px]">รายงานการขาย</span>
+          <span class="text-[13px]">รายงานการขาย</span>
         </NuxtLink>
       </div>
     </div>

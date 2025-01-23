@@ -6,17 +6,17 @@
       <h1 class="text-4xl font-bold text-gray-800">เพิ่มประเภทสินค้า</h1>
     </div>
     <div class="flex flex-col gap-6">
-      <!-- ชื่อสินค้า -->
+      <!-- ชื่อประเภทสินค้า -->
       <div class="flex flex-col gap-2">
-        <label for="product-name" class="text-lg font-medium text-gray-700"
-          >ชื่อสินค้า</label
+        <label for="category-name" class="text-lg font-medium text-gray-700"
+          >ชื่อประเภทสินค้า</label
         >
         <input
           type="text"
-          id="product-name"
-          v-model="productName"
+          id="category-name"
+          v-model="categoryName"
           class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full p-3 text-gray-700"
-          placeholder="กรอกชื่อสินค้า"
+          placeholder="กรอกชื่อประเภทสินค้า"
         />
       </div>
 
@@ -82,10 +82,10 @@ import { ref, defineEmits } from "vue";
 import Swal from "sweetalert2";
 
 // เพิ่มอีเวนต์ emit
-const emit = defineEmits(["close", "addProduct"]);
+const emit = defineEmits(["close", "addCategory"]);
 
 const imageUrl = ref<string | null>(null);
-const productName = ref<string>("");
+const categoryName = ref<string>("");
 
 const fileInput = ref<HTMLInputElement | null>(null);
 
@@ -124,10 +124,10 @@ const confirmCancel = () => {
 };
 
 const confirm = () => {
-  if (productName.value.trim() === "") {
+  if (categoryName.value.trim() === "") {
     Swal.fire({
       title: "ข้อผิดพลาด",
-      text: "กรุณากรอกชื่อสินค้า",
+      text: "กรุณากรอกชื่อประเภทสินค้า",
       icon: "error",
       confirmButtonText: "ตกลง",
     });
@@ -153,11 +153,11 @@ const confirm = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       // เพิ่ม console.log เพื่อดูว่าข้อมูลถูกต้องหรือไม่
-      console.log("ส่งข้อมูลสินค้าไปยัง parent:", {
-        name: productName.value,
+      console.log("ส่งข้อมูลประเภทสินค้าไปยัง parent:", {
+        name: categoryName.value,
         image: imageUrl.value,
       });
-      emit("addProduct", { name: productName.value, image: imageUrl.value }); // ส่งข้อมูลสินค้า
+      emit("addCategory", { name: categoryName.value, image: imageUrl.value }); // ส่งข้อมูลประเภทสินค้า
       emit("close"); // ปิดฟอร์ม
     }
   });

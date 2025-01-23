@@ -9,7 +9,6 @@
     <div class="flex justify-between px-[25px]">
       <div class="flex gap-2 w-[80%]">
         <div class="w-[40%]">
-          <!-- Binding searchQuery -->
           <Search v-model="searchQuery" />
         </div>
       </div>
@@ -36,7 +35,7 @@
         </thead>
         <tbody class="w-full">
           <tr
-            v-for="(product, index) in filteredProducts"
+            v-for="(category, index) in filteredCategories"
             :key="index"
             class="flex gap-2 py-2 border-b-[1px]"
           >
@@ -44,36 +43,32 @@
             <th class="w-[30%] truncate flex gap-5">
               <div class="w-full flex justify-center">
                 <img
-                  :src="product.image"
-                  alt="รูปสินค้า"
-                  class="border-[1px] border-black w-[100px] h-[100px] rounded-full"
+                  :src="category.image"
+                  alt="รูปประเภท"
+                  class="border-[1px] border-black w-[80px] h-[80px] rounded-full"
                 />
               </div>
               <div class="w-full">{{ index + 1 }}</div>
             </th>
 
             <!-- ชื่อประเภท -->
-            <th class="w-[15%] truncate">{{ product.name }}</th>
+            <th class="w-[15%] truncate">{{ category.name }}</th>
 
             <!-- จำนวน (mock data, ปรับได้ตามต้องการ) -->
             <th class="w-[15%] truncate">-</th>
 
-            <!-- ปุ่มแก้ไขและลบสินค้า -->
-            <th class="w-[35%] flex items-center justify-end truncate">
+            <!-- ปุ่มแก้ไขและลบประเภท -->
+            <th class="w-[35%] flex gap-5 items-center justify-end truncate">
               <!-- ปุ่มแก้ไข -->
-              <button
-                @click="editProduct(index)"
-                class="bg-[#F68D44] w-[100px] h-[40px] rounded-[5px] hover:bg-blue-500 text-[18px] font-semibold dropshadowbutton mr-2"
-              >
-                แก้ไขสินค้า
+              <button @click="editCategory(index)" class="">
+                <i
+                  class="fa-solid fa-pen-to-square text-[30px] text-orange-400"
+                ></i>
               </button>
 
-              <!-- ปุ่มลบสินค้า -->
-              <button
-                @click="removeProduct(index)"
-                class="bg-[#F68D44] w-[100px] h-[40px] rounded-[5px] hover:bg-red-500 text-[18px] font-semibold dropshadowbutton"
-              >
-                ลบสินค้า
+              <!-- ปุ่มลบประเภท -->
+              <button @click="removeCategory(index)" class=" ">
+                <i class="fa-solid fa-trash text-[30px] text-red-600"></i>
               </button>
             </th>
           </tr>
@@ -85,9 +80,17 @@
     <AddCategory
       v-if="showAddCategory"
       @close="closeForm"
-      @addProduct="addProduct"
+      @addCategory="addCategory"
       class="absolute top-[200px] left-[700px]"
     />
+
+    <!-- เรียกใช้ EditCategory -->
+    <!-- <EditCategory
+      v-if="editMode && editIndex !== null && editIndex >= 0 && editIndex < categories.length"
+      :category="categories[editIndex]"
+      @close="closeForm"
+      @updateCategory="updateCategory"
+    /> -->
   </div>
 </template>
 
@@ -96,38 +99,62 @@ import { ref, computed } from "vue";
 
 // ตัวแปร state
 const showAddCategory = ref(false);
-const products = ref<{ name: string; image: string }[]>([]);
+const categories = ref<{ name: string; image: any }[]>([]);
 const searchQuery = ref<string>(""); // ตัวแปรสำหรับเก็บคำค้นหา
 
-// ฟังก์ชันปิดฟอร์ม
 const closeForm = () => {
   showAddCategory.value = false;
+  editMode.value = false;
+  editIndex.value = null;
 };
 
-// ฟังก์ชันเพิ่มสินค้า
-const addProduct = (product: { name: string; image: string }) => {
-  console.log("เพิ่มสินค้าใน parent:", product);
-  products.value.push(product);
+// ฟังก์ชันเพิ่มประเภทสินค้า
+const addCategory = (category: { name: string; image: string }) => {
+  categories.value.push(category);
   closeForm();
 };
 
-// ฟังก์ชันลบสินค้า
-const removeProduct = (index: number) => {
-  products.value.splice(index, 1);
+// ฟังก์ชันลบประเภทสินค้า
+const removeCategory = (index: number) => {
+  categories.value.splice(index, 1);
 };
 
-// ฟังก์ชันแก้ไขสินค้า
-const editProduct = (index: number) => {
-  const product = products.value[index];
-  console.log("กำลังแก้ไขสินค้า", product);
-  // เพิ่มฟังก์ชันการแก้ไข เช่น เปิด modal หรือ form สำหรับแก้ไข
+const editMode = ref(false);
+const editIndex = ref<number | null>(null);
+
+// ฟังก์ชันแก้ไขประเภทสินค้า
+const editCategory = (index: number) => {
+  if (index >= 0 && index < categories.value.length) {
+    editMode.value = true;
+    editIndex.value = index;
+  } else {
+    console.error("Invalid index for editing:", index);
+  }
 };
 
-// Computed property สำหรับกรองสินค้า
-const filteredProducts = computed(() => {
+// ฟังก์ชันอัปเดตประเภทสินค้า
+const updateCategory = (updatedCategory: { name: string; image: string }) => {
+  if (
+    editIndex.value !== null &&
+    editIndex.value >= 0 &&
+    editIndex.value < categories.value.length
+  ) {
+    categories.value[editIndex.value] = updatedCategory;
+    closeForm();
+  } else {
+    console.error("Invalid editIndex:", editIndex.value);
+  }
+};
+
+// Computed property สำหรับกรองประเภทสินค้า
+const filteredCategories = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
-  return products.value.filter((product) =>
-    product.name.toLowerCase().includes(query)
+  return categories.value.filter((category) =>
+    category.name.toLowerCase().includes(query)
   );
 });
 </script>
+
+<style scoped>
+/* Add styles if necessary */
+</style>
