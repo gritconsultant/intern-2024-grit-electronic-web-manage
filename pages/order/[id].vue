@@ -73,7 +73,7 @@
           <h3 class="text-[20px] text-center font-bold mb-2">
             ข้อมูลการจัดส่ง
           </h3>
-          <p class="p-2">
+          <p class="p-2 px-5">
             นายสมชาย ทองดี,  123/45 ถนนรามคำแหง, ตำบลบางจาก,
             อำเภอเมือง, กรุงเทพมหานคร 10250, 098-123-4567,
             เพิ่มเติม: บ้านอยู่ใกล้กับร้านกาแฟ ABC.
@@ -103,7 +103,7 @@
           </h3>
           <div class="flex flex-col items-center">
             <div
-              class="flex items-center cursor-pointer"
+              class="flex items-start cursor-pointer"
               v-for="(order, index) in orders"
               :key="index"
             >
@@ -115,7 +115,7 @@
               </div>
               <div>
                 <ul
-                  class="absolute bg-white border-[1px] rounded-[5px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-y-[15px]"
+                  class="absolute bg-white border-[1px] rounded-[5px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-y-[90px]"
                   v-if="isMenuVisible[order.order_id]"
                 >
                   <li
