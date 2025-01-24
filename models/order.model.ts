@@ -13,6 +13,8 @@ export interface Customer {
     user_id:  number;
     username: string;
     email:    string;
+    address: string
+    phonnumber: number;
 }
 
 export interface Item {
@@ -36,3 +38,5 @@ export interface StatusRefund {
     id: number;
     status: string;
 }
+
+

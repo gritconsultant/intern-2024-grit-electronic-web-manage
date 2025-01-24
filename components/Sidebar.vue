@@ -1,7 +1,7 @@
 <template>
   <!-- Desktop -->
   <div
-    class="w-[200px] h-full border-r-[1px] bg-white border-gray-400 max-xl:hidden duration-700"
+    class="w-[220px] h-full border-r-[1px] bg-white border-gray-400 max-xl:hidden duration-700"
   >
     <div class="flex flex-col">
       <!-- menu -->
@@ -18,32 +18,7 @@
           </div>
           <span class="  ">แดชบอร์ด</span>
         </NuxtLink>
-        <NuxtLink
-          to="/order"
-          class="flex gap-2"
-          :class="{
-            'text-orange-500':
-              route.path === '/order' || route.path === '/order/[id]',
-          }"
-        >
-          <div>
-            <i class="fa-solid fa-cart-shopping"></i>
-          </div>
-          <span class="">รายการคำสั่งซื้อ</span>
-        </NuxtLink>
-        <NuxtLink
-          to="/refund"
-          class="flex gap-2"
-          :class="{
-            'text-orange-500':
-              route.path === '/refund' || route.path === '/refund/[id]',
-          }"
-        >
-          <div>
-            <i class="fa-solid fa-arrow-rotate-left"></i>
-          </div>
-          <span class="">รายการคืนสินค้า</span>
-        </NuxtLink>
+
         <!-- DropdownProduct -->
         <div class="relative group">
           <div class="flex gap-2 text-[15px]">
@@ -51,32 +26,113 @@
               to="/product"
               :class="{
                 'text-orange-500':
-                  route.path === '/product' ||
-                  route.path === '/product/[id]' ||
-                  route.path === '/product/category' || 
-                  route.path === '/product/create',
+                  route.path === '/order' ||
+                  route.path === '/order/[id]' ||
+                  route.path === '/order/report',
               }"
             >
               <div class="flex gap-2 text-[15px]">
-                <i class="fa-solid fa-boxes-stacked"></i>
-                <span class="">ผลิตภัณฑ์</span>
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="">รายการขาย</span>
               </div>
             </NuxtLink>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
           </div>
           <!-- Dropdown manu -->
           <div
-            class="bg-white rounded-lg border shadow w-[120px] hidden group-hover:block"
+            class="bg-white rounded-lg border shadow w-[145px] hidden group-hover:block"
           >
             <ul class="py-2 text-sm text-gray-700">
+              <NuxtLink to="/order">
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
+                  จัดการคำสั่งซื้อ
+                </li>
+              </NuxtLink>
+              <NuxtLink to="/order/report">
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
+                  รายงานการขาย
+                </li>
+              </NuxtLink>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DropdownProduct -->
+        <div class="relative group">
+          <div class="flex gap-2 text-[15px]">
+            <NuxtLink
+              to="/product"
+              :class="{
+                'text-orange-500':
+                  route.path === '/refund' ||
+                  route.path === '/refund/[id]' ||
+                  route.path === '/refund/report',
+              }"
+            >
+              <div class="flex gap-2 text-[15px]">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                <span class="">รายการคืนสินค้า</span>
+              </div>
+            </NuxtLink>
+            <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
+          </div>
+          <!-- Dropdown manu -->
+          <div
+            class="bg-white rounded-lg border shadow w-[145px] hidden group-hover:block"
+          >
+            <ul class="py-2 text-sm text-gray-700">
+              <NuxtLink to="/refund">
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
+                  จัดการคำร้อง
+                </li>
+              </NuxtLink>
+              <NuxtLink to="/refund/report">
+                <li class="block px-4 py-2 text-[13px] hover:bg-gray-100">
+                  รายงานการคืนสินค้า
+                </li>
+              </NuxtLink>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DropdownProduct -->
+        <div class="relative group">
+          <div class="flex gap-2 text-[15px]">
+            <div
+              :class="{
+                'text-orange-500':
+                  route.path === '/product' ||
+                  route.path === '/product/[id]' ||
+                  route.path === '/product/category' ||
+                  route.path === '/product/create',
+              }"
+            >
+              <div class="flex gap-2 text-[15px]">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span class="">จัดการผลิตภัณฑ์</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
+          </div>
+          <!-- Dropdown manu -->
+          <div
+            class="bg-white rounded-lg border shadow w-[145px] hidden group-hover:block"
+          >
+            <ul class="py-2 text-gray-700">
+              <NuxtLink to="/product">
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
+                  ผลิตภัณฑ์
+                </li>
+              </NuxtLink>
               <NuxtLink to="/product/category">
-                <li class="block px-4 py-2 text-[11px] hover:bg-gray-100">
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
                   ประเภทผลิตภัณฑ์
                 </li>
               </NuxtLink>
             </ul>
           </div>
         </div>
+
         <!-- DropdowUser -->
         <div class="relative group">
           <div class="flex gap-2 text-[15px]">
@@ -85,8 +141,8 @@
               :class="{
                 'text-orange-500':
                   route.path === '/manages_user/customer' ||
-                  route.path === '/manages_user/admin' ||
-                  route.path === '/manages_user/customer/[id]',
+                  route.path === '/manages_user/customer/1' ||
+                  route.path === '/manages_user/admin',
               }"
             >
               <div>
@@ -98,31 +154,35 @@
           </div>
           <!-- Dropdown manu -->
           <div
-            class="bg-white rounded-lg border shadow w-[120px] hidden group-hover:block"
+            class="bg-white rounded-lg border shadow w-[145px] hidden group-hover:block"
           >
             <ul class="py-2 text-sm text-gray-700">
               <NuxtLink to="/manages_user/customer">
-                <li class="block px-4 py-2 hover:bg-gray-100">ลูกค้า</li>
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
+                  ลูกค้า
+                </li>
               </NuxtLink>
               <NuxtLink to="/manages_user/admin">
-                <li class="block px-4 py-2 hover:bg-gray-100">
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
                   เจ้าหน้าที่ดูแล
                 </li>
               </NuxtLink>
             </ul>
           </div>
         </div>
+
         <!-- DropdowManages -->
         <div class="relative group">
           <div class="flex gap-2 text-[15px]">
-            <div class="flex gap-2" 
-            :class="{
+            <div
+              class="flex gap-2"
+              :class="{
                 'text-orange-500':
                   route.path === '/manages/bank' ||
                   route.path === '/manages/banner',
               }"
             >
-              <div > 
+              <div>
                 <i class="fa-solid fa-gear"></i>
               </div>
               <span class="">จัดการทั่วไป</span>
@@ -131,14 +191,18 @@
           </div>
           <!-- Dropdown manu -->
           <div
-            class="bg-white rounded-lg border shadow w-[120px] hidden group-hover:block"
+            class="bg-white rounded-lg border shadow w-[145px] hidden group-hover:block"
           >
-            <ul class="py-2 text-sm text-gray-700">
+            <ul class="py-2 text-gray-700">
               <NuxtLink to="/manages/bank">
-                <li class="block px-4 py-2 hover:bg-gray-100">ธนาคาร</li>
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
+                  ธนาคาร
+                </li>
               </NuxtLink>
               <NuxtLink to="/manages/banner">
-                <li class="block px-4 py-2 hover:bg-gray-100">แบนเนอร์</li>
+                <li class="block px-4 py-2 text-[15px] hover:bg-gray-100">
+                  แบนเนอร์
+                </li>
               </NuxtLink>
             </ul>
           </div>
@@ -155,23 +219,12 @@
           </div>
           <span class="text-[13px]">การทำงานของระบบ</span>
         </NuxtLink>
-        <NuxtLink
-          to="/order/report"
-          class="flex gap-2"
-        >
-          <div>
-            <i class="fa-regular fa-clock"></i>
-          </div>
-          <span class="text-[13px]">รายงานการขาย</span>
-        </NuxtLink>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "vue-router"; // ใช้สำหรับตรวจสอบ path
-
 const route = useRoute();
 </script>
 

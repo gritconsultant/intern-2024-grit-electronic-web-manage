@@ -1,15 +1,17 @@
 <template>
   <div class="defaultpages flex flex-col gap-2">
-    <div class="flex items-center justify-between h-[8%] pl-[35px]">
+    <!-- Header -->
+    <div class="flex items-center justify-between h-[8%] mt-5 pl-[35px]">
       <h1 class="text-[25px] font-bold">รายการคำสั่งซื้อ</h1>
       <div class="flex justify-end mr-[30px] rounded-[5px] w-[70%]">
         <div class="flex justify-end gap-5 w-full">
+          <!-- Search -->
           <div class="flex items-end w-[50%]">
             <Search v-model="filters.searchTerm" />
           </div>
-          <!-- ส่วนตัวกรอง -->
+
+          <!-- Date Filters -->
           <div class="flex items-center space-x-4">
-            <!-- วันที่เริ่มต้น -->
             <div>
               <label
                 for="startDate"
@@ -23,8 +25,6 @@
                 class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
               />
             </div>
-
-            <!-- วันที่สิ้นสุด -->
             <div>
               <label
                 for="endDate"
@@ -39,8 +39,9 @@
               />
             </div>
           </div>
+
+          <!-- Status Filter -->
           <div class="flex items-end">
-            <!-- filter order -->
             <div class="relative group h-[70%]">
               <div
                 class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
@@ -57,15 +58,16 @@
                   {{ selectedStatusOrder.status }}
                 </div>
               </div>
-              <!-- Dropdown manu -->
+
+              <!-- Dropdown Menu -->
               <div
                 class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
               >
                 <ul class="py-2 text-sm text-gray-700">
                   <li
-                    class="block px-4 py-2 hover:bg-gray-100"
                     v-for="(statusorder, i) in Statusorders"
                     :key="i"
+                    class="block px-4 py-2 hover:bg-gray-100"
                     @click="selectStatusOrder(statusorder)"
                   >
                     {{ statusorder.status }}
@@ -78,6 +80,7 @@
       </div>
     </div>
 
+    <!-- Order Table -->
     <div class="w-full h-[90%] pt-2 bg-white dropshadowtop">
       <table class="flex flex-col px-8 gap-2 w-full">
         <thead class="w-full">
@@ -96,7 +99,7 @@
         </thead>
         <tbody
           class="w-full"
-          v-for="(order, index) in filteredOrder"
+          v-for="(order, index) in paginatedOrders"
           :key="index"
         >
           <tr class="flex gap-5 pb-2 border-b-[1px]">
@@ -118,7 +121,7 @@
             <th
               class="w-[20%] text-[15px] text-start pl-2 font-medium truncate"
             >
-              ที่อยู่{{}}
+              {{ order.customer.address }}
             </th>
             <th
               class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
@@ -128,32 +131,27 @@
             <th
               class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
-              {{}}
+              {{ order.items.length }} ชิ้น
             </th>
             <th
               class="w-[10%] text-[15px] font-medium flex items-center justify-center"
             >
               <div class="flex flex-col items-center cursor-pointer">
-                <!-- ส่วนแสดงสถานะ -->
                 <div
                   class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px]"
                   @click="toggleMenu(order.order_id)"
                 >
                   {{ order.status }}
                 </div>
-
-                <!-- เมนูเลือกสถานะ -->
                 <div>
                   <ul
                     class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
                     v-show="isMenuVisible[order.order_id]"
                   >
-                    <!-- ตรวจสอบว่าไม่ใช่สถานะปัจจุบัน -->
                     <li
                       class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
                       @click="changeStatus(order.order_id, 'รอการชำระ')"
                       :class="{ 'bg-gray-200': order.status === 'รอการชำระ' }"
-                      :disabled="order.status === 'รอการชำระ'"
                     >
                       รอการชำระ
                     </li>
@@ -161,7 +159,6 @@
                       class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
                       @click="changeStatus(order.order_id, 'กำลังจัดส่ง')"
                       :class="{ 'bg-gray-200': order.status === 'กำลังจัดส่ง' }"
-                      :disabled="order.status === 'กำลังจัดส่ง'"
                     >
                       กำลังจัดส่ง
                     </li>
@@ -171,7 +168,6 @@
                       :class="{
                         'bg-gray-200': order.status === 'จัดส่งเรียบร้อย',
                       }"
-                      :disabled="order.status === 'จัดส่งเรียบร้อย'"
                     >
                       จัดส่งเรียบร้อย
                     </li>
@@ -179,7 +175,6 @@
                       class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
                       @click="changeStatus(order.order_id, 'ชำระล้มเหลว')"
                       :class="{ 'bg-gray-200': order.status === 'ชำระล้มเหลว' }"
-                      :disabled="order.status === 'ชำระล้มเหลว'"
                     >
                       ชำระล้มเหลว
                     </li>
@@ -198,6 +193,30 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between items-center px-8">
+      <p class="text-sm text-gray-700">
+        คำสั่งซื้อ {{ paginatedOrders.length }} จาก
+        {{ filteredOrder.length }} คำสั่งซื้อ
+      </p>
+      <div class="flex gap-4">
+        <button
+          :disabled="currentPage === 1"
+          @click="changePage(currentPage - 1)"
+          class="px-4 py-2 border rounded-md flex items-center justify-center"
+        >
+          <i class="fa-solid fa-circle-left text-[25px] text-orange-500"></i>
+        </button>
+        <button
+          :disabled="currentPage === totalPages"
+          @click="changePage(currentPage + 1)"
+          class="px-4 py-2 border rounded-md flex items-center justify-center"
+        >
+          <i class="fa-solid fa-circle-right text-[25px] text-orange-500"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -219,6 +238,7 @@ const toggleMenu = (orderId: number) => {
   };
 };
 
+// Change the status of a specific order
 const changeStatus = (orderId: number, status: string) => {
   // Find the order by ID
   const order = orders.find((order) => order.order_id === orderId);
@@ -247,18 +267,20 @@ const changeStatus = (orderId: number, status: string) => {
   }
 };
 
+// Filter configuration
 const filters = ref({
   startDate: "",
   endDate: "",
   searchTerm: "", // คำค้นหา
 });
 
-// สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
+// Selected status order
 const selectedStatusOrder = ref<StatusOrder>({
   id: 1,
   status: "ทั้งหมด",
 });
 
+// List of status orders
 const Statusorders = ref<StatusOrder[]>([
   {
     id: 1,
@@ -282,11 +304,12 @@ const Statusorders = ref<StatusOrder[]>([
   },
 ]);
 
-// ฟังก์ชันเพื่อเลือกหมวดหมู่
+// Function to select a status order
 const selectStatusOrder = (statusorder: StatusOrder) => {
   selectedStatusOrder.value = statusorder;
 };
 
+// Filter orders based on selected criteria
 const filteredOrder = computed(() => {
   let filteredOrders = orders;
 
@@ -311,6 +334,7 @@ const filteredOrder = computed(() => {
     );
   }
 
+  // Filter by search term
   if (filters.value.searchTerm) {
     const term = filters.value.searchTerm.toLowerCase();
 
@@ -323,12 +347,33 @@ const filteredOrder = computed(() => {
           order.customer.email.toLowerCase().includes(term)) // ตรวจสอบ email
       );
     });
-    console.log("Search Term:", filters.value.searchTerm);
-    console.log("Filtered Orders:", filteredOrders);
   }
 
   return filteredOrders;
 });
+
+// Pagination variables
+const currentPage = ref(1);
+const itemsPerPage = 15; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
+
+// Paginate the filtered orders
+const paginatedOrders = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = currentPage.value * itemsPerPage;
+  return filteredOrder.value.slice(start, end);
+});
+
+// Calculate total pages
+const totalPages = computed(() => {
+  return Math.ceil(filteredOrder.value.length / itemsPerPage);
+});
+
+// Change the current page
+const changePage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
 
 const orders = <Order[]>[
   {

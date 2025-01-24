@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chart-container">
     <canvas ref="chartCanvas"></canvas>
   </div>
 </template>
@@ -41,8 +41,42 @@ onMounted(() => {
               "#10B981",
               "#8B5CF6",
             ],
+            hoverOffset: 10, // เพิ่มระยะห่างตอน hover
           },
         ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top",
+            labels: {
+              font: {
+                family: "Arial, sans-serif",
+                size: 14,
+                weight: "bold",
+              },
+              color: "#333", // สีของข้อความ Legend
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                const value = tooltipItem.raw;
+                return `${tooltipItem.label}: ${value} `;
+              },
+            },
+            backgroundColor: "rgba(0, 0, 0, 0.8)", // สีพื้นหลัง Tooltip
+            titleFont: {
+              size: 16,
+              weight: "bold",
+            },
+            bodyFont: {
+              size: 14,
+            },
+            padding: 10,
+          },
+        },
       },
     });
   }
@@ -50,6 +84,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.chart-container {
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 canvas {
   display: block;
   max-width: 100%;

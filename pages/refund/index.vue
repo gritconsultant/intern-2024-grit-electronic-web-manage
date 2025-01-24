@@ -94,7 +94,7 @@
         </thead>
         <tbody
           class="w-full"
-          v-for="(order, index) in filteredOrders"
+          v-for="(order, index) in paginatedOrders"
           :key="index"
         >
           <tr class="flex gap-2 pb-[6px] border-b-[1px]">
@@ -124,28 +124,24 @@
             </th>
             <th class="w-[15%] text-[15px] font-medium truncate">
               <div class="flex flex-col items-center cursor-pointer">
-                <!-- ส่วนแสดงสถานะ -->
                 <div
                   class="w-[150px] p-[1px] px-2 border-[1px] rounded-[5px]"
                   @click="toggleMenu(order.order_id)"
                 >
                   {{ order.status }}
                 </div>
-
-                <!-- เมนูเลือกสถานะ -->
                 <div>
                   <ul
                     class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
                     v-show="isMenuVisible[order.order_id]"
                   >
-                    <!-- ตรวจสอบว่าไม่ใช่สถานะปัจจุบัน -->
                     <li
                       class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
-                      @click="changeStatus(order.order_id, '  รอการตรวจสอบ')"
+                      @click="changeStatus(order.order_id, 'รอการตรวจสอบ')"
                       :class="{
-                        'bg-gray-200': order.status === '  รอการตรวจสอบ',
+                        'bg-gray-200': order.status === 'รอการตรวจสอบ',
                       }"
-                      :disabled="order.status === '  รอการตรวจสอบ'"
+                      :disabled="order.status === 'รอการตรวจสอบ'"
                     >
                       รอการตรวจสอบ
                     </li>
@@ -202,6 +198,30 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between items-center px-8">
+      <p class="text-sm text-gray-700">
+        คำสั่งซื้อ {{ paginatedOrders.length }} จาก
+        {{ filteredOrders.length }} คำสั่งซื้อ
+      </p>
+      <div class="flex gap-4">
+        <button
+          :disabled="currentPage === 1"
+          @click="changePage(currentPage - 1)"
+          class="px-4 py-2 border rounded-md flex items-center justify-center"
+        >
+          <i class="fa-solid fa-circle-left text-[25px] text-orange-500"></i>
+        </button>
+        <button
+          :disabled="currentPage === totalPages"
+          @click="changePage(currentPage + 1)"
+          class="px-4 py-2 border rounded-md flex items-center justify-center"
+        >
+          <i class="fa-solid fa-circle-right text-[25px] text-orange-500"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -209,34 +229,35 @@
 import type { Order, StatusRefund } from "~/models/order.model";
 import Swal from "sweetalert2";
 
+// ตัวแปรสำหรับกรองข้อมูล
 const filters = ref({
   startDate: "",
   endDate: "",
   searchTerm: "", // คำค้นหา
 });
 
-const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
+// ตัวแปรที่เก็บสถานะการแสดงเมนูของคำสั่งซื้อแต่ละรายการ
+const isMenuVisible = ref<Record<number, boolean>>({});
 
-// Toggle the visibility of the menu for a specific order
+// ฟังก์ชันที่ใช้สำหรับเปิด/ปิดเมนูของคำสั่งซื้อ
 const toggleMenu = (orderId: number) => {
-  // Toggle the menu visibility, close all other menus before opening the new one
+  // เปิด/ปิดเมนูคำสั่งซื้อ โดยปิดทุกเมนูที่เหลือก่อน
   isMenuVisible.value = {
     ...Object.fromEntries(
       Object.keys(isMenuVisible.value).map((key) => [key, false])
-    ), // Close all menus
-    [orderId]: !isMenuVisible.value[orderId], // Toggle current order's menu
+    ), // ปิดเมนูทั้งหมด
+    [orderId]: !isMenuVisible.value[orderId], // เปิด/ปิดเมนูคำสั่งซื้อที่เลือก
   };
 };
 
+// ฟังก์ชันสำหรับเปลี่ยนสถานะของคำสั่งซื้อ
 const changeStatus = (orderId: number, status: string) => {
-  // Find the order by ID
   const order = orders.find((order) => order.order_id === orderId);
 
   if (order) {
-    // Check if the new status is different from the current one
     if (order.status === status) {
       Swal.fire("ไม่สามารถเปลี่ยนสถานะ", "สถานะนี้ได้ถูกตั้งไว้แล้ว", "info");
-      return; // Stop execution if the status is the same
+      return;
     }
 
     Swal.fire({
@@ -248,20 +269,21 @@ const changeStatus = (orderId: number, status: string) => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        order.status = status; // Update status
-        toggleMenu(orderId); // Close menu
+        order.status = status; // เปลี่ยนสถานะ
+        toggleMenu(orderId); // ปิดเมนู
         Swal.fire("สำเร็จ!", `สถานะถูกเปลี่ยนเป็น "${status}" แล้ว`, "success");
       }
     });
   }
 };
+
 // กำหนดค่าเริ่มต้นให้ selectedStatusRefund
 const selectedStatusRefund = ref<StatusRefund>({
-  id: 1, // หรือค่าที่เหมาะสมกับสถานะเริ่มต้น
-  status: "ทั้งหมด", // ค่าตามที่ต้องการ
+  id: 1,
+  status: "ทั้งหมด",
 });
 
-// สมมติว่า Statusrefund เป็นอาเรย์ของ StatusRefund ที่มีคีย์ 'status' ในแต่ละออบเจ็กต์
+// รายการสถานะการคืนสินค้า
 const Statusrefund = ref<StatusRefund[]>([
   { id: 1, status: "ทั้งหมด" },
   { id: 2, status: "รอการตรวจสอบ" },
@@ -270,22 +292,21 @@ const Statusrefund = ref<StatusRefund[]>([
   { id: 5, status: "ไม่อนุมัติการคืนสินค้า" },
 ]);
 
-// ฟังก์ชันสำหรับการเลือก
+// ฟังก์ชันสำหรับเลือกสถานะการคืนสินค้า
 const selectStatusRefund = (statusrefund: StatusRefund) => {
   selectedStatusRefund.value = statusrefund;
 };
+
 // ฟิลเตอร์คำสั่งซื้อ (Orders) ตามวันที่และสถานะ
 const filteredOrders = computed(() => {
   let result = orders;
 
-  // ฟิลเตอร์ตามสถานะ
   if (selectedStatusRefund.value && selectedStatusRefund.value.id !== 1) {
     result = result.filter(
       (order) => order.status === selectedStatusRefund.value.status
     );
   }
 
-  // ฟิลเตอร์ตามวันที่เริ่มต้นและวันที่สิ้นสุด
   const startDate = filters.value.startDate
     ? new Date(filters.value.startDate)
     : null;
@@ -301,22 +322,44 @@ const filteredOrders = computed(() => {
     );
   });
 
-  // ฟิลเตอร์ตามคำค้นหา
   if (filters.value.searchTerm) {
     const term = filters.value.searchTerm.toLowerCase();
     result = result.filter((order) => {
       return (
-        order.order_id.toString().includes(term) || // ตรวจสอบ order_id
+        order.order_id.toString().includes(term) ||
         (order.customer.username &&
-          order.customer.username.toLowerCase().includes(term)) || // ตรวจสอบ username
+          order.customer.username.toLowerCase().includes(term)) ||
         (order.customer.email &&
-          order.customer.email.toLowerCase().includes(term)) // ตรวจสอบ email
+          order.customer.email.toLowerCase().includes(term))
       );
     });
   }
 
   return result;
 });
+
+// ตัวแปรสำหรับแบ่งหน้า
+const currentPage = ref(1);
+const itemsPerPage = 15; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
+
+// ฟังก์ชันสำหรับแบ่งหน้า
+const paginatedOrders = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = currentPage.value * itemsPerPage;
+  return filteredOrders.value.slice(start, end);
+});
+
+// คำนวณจำนวนหน้าทั้งหมด
+const totalPages = computed(() => {
+  return Math.ceil(filteredOrders.value.length / itemsPerPage);
+});
+
+// ฟังก์ชันสำหรับเปลี่ยนหน้า
+const changePage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
 
 const orders = <Order[]>[
   {

@@ -1,8 +1,8 @@
 <template>
   <div
-    class="flex justify-center items-center w-full h-[300px]  p-2"
+    class="flex justify-center items-center w-full h-[350px]  rounded-lg p-4"
   >
-    <div class="w-[800px] h-[300px]   ">
+    <div class="w-[950px] h-[350px]">
       <canvas ref="chartCanvas"></canvas>
     </div>
   </div>
@@ -58,10 +58,64 @@ const createChart = () => {
             borderColor: "#3B82F6",
             backgroundColor: "rgba(59, 130, 246, 0.2)",
             pointBackgroundColor: "#1E40AF",
+            pointBorderColor: "#ffffff",
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
             fill: true,
             tension: 0.4,
           },
         ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: "top",
+            labels: {
+              font: {
+                size: 16,
+              },
+            },
+          },
+          tooltip: {
+            backgroundColor: "rgba(0,0,0,0.7)",
+            titleFont: {
+              size: 14,
+            },
+            bodyFont: {
+              size: 12,
+            },
+            cornerRadius: 6,
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              font: {
+                size: 14,
+              },
+              color: "#374151",
+            },
+            grid: {
+              color: "#E5E7EB",
+            },
+          },
+          y: {
+            ticks: {
+              font: {
+                size: 14,
+              },
+              color: "#374151",
+              callback: (value) => `$${value}`, // แสดงค่าพร้อมสัญลักษณ์ดอลลาร์
+            },
+            grid: {
+              color: "#E5E7EB",
+            },
+          },
+        },
       },
     });
   }
@@ -73,5 +127,11 @@ watch(() => props.salesDataLine, createChart, { deep: true });
 </script>
 
 <style>
-/* ถ้าต้องการกำหนดขนาดเพิ่มเติม สามารถเพิ่มในส่วนนี้ */
+/* เพิ่มการปรับแต่งสไตล์ */
+.drop-shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.rounded-lg {
+  border-radius: 12px;
+}
 </style>

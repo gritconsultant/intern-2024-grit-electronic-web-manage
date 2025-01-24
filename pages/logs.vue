@@ -47,7 +47,7 @@
         <tbody>
           <!-- แสดงข้อมูลที่ผ่านการกรอง -->
           <tr
-            v-for="(log, index) in filteredLogs"
+            v-for="(log, index) in paginatedLogs"
             :key="index"
             class="hover:bg-gray-50"
           >
@@ -67,7 +67,37 @@
         </tbody>
       </table>
     </div>
-    <div></div>
+
+    <!-- แสดงข้อมูลเกี่ยวกับการแบ่งหน้า -->
+    <div class="flex justify-between items-center mt-4 text-sm text-gray-700">
+      <div>
+        <span>ข้อมูลทั้งหมด: {{ filteredLogs.length }} รายการ</span>
+      </div>
+      <div>
+        <span>หน้า {{ currentPage }} จาก {{ totalPages }}</span>
+      </div>
+      <div>
+        <span>แสดงข้อมูล {{ startItem }} ถึง {{ endItem }}</span>
+      </div>
+    </div>
+
+    <!-- ปุ่มเปลี่ยนหน้า -->
+    <div class="flex justify-between mt-4">
+      <button
+        :disabled="currentPage === 1"
+        @click="currentPage--"
+        class="bg-orange-500 text-white p-2 rounded"
+      >
+        ก่อนหน้า
+      </button>
+      <button
+        :disabled="currentPage === totalPages"
+        @click="currentPage++"
+        class="bg-orange-500 text-white p-2 rounded"
+      >
+        ถัดไป
+      </button>
+    </div>
   </div>
 </template>
 
@@ -199,6 +229,37 @@ const filteredLogs = computed(() => {
     );
   });
 });
+
+// ตั้งค่าการแบ่งหน้า
+const currentPage = ref(1);
+const logsPerPage = 13;
+
+// คำนวณข้อมูลที่แสดงในแต่ละหน้า
+const paginatedLogs = computed(() => {
+  const start = (currentPage.value - 1) * logsPerPage;
+  const end = currentPage.value * logsPerPage;
+  return filteredLogs.value.slice(start, end);
+});
+
+// คำนวณจำนวนหน้า
+const totalPages = computed(() => {
+  return Math.ceil(filteredLogs.value.length / logsPerPage);
+});
+
+// คำนวณข้อมูลที่แสดง
+const startItem = computed(() => {
+  return (currentPage.value - 1) * logsPerPage + 1;
+});
+
+const endItem = computed(() => {
+  return Math.min(currentPage.value * logsPerPage, filteredLogs.value.length);
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+/* ปรับปรุงสไตล์ของปุ่มสำหรับการเปลี่ยนหน้า */
+button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+</style>
