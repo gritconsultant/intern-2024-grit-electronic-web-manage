@@ -16,7 +16,7 @@
           <div>
             <i class="fa-solid fa-chart-pie"></i>
           </div>
-          <span class="  ">แดชบอร์ด</span>
+          <span class="ml-[5px]">แดชบอร์ด</span>
         </NuxtLink>
 
         <!-- DropdownProduct -->
@@ -32,8 +32,10 @@
               }"
             >
               <div class="flex gap-2 text-[15px]">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span class="">รายการขาย</span>
+                <div>
+                  <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <span class="ml-[5px]">รายการขาย</span>
               </div>
             </NuxtLink>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
@@ -70,8 +72,10 @@
               }"
             >
               <div class="flex gap-2 text-[15px]">
-                <i class="fa-solid fa-arrows-rotate"></i>
-                <span class="">รายการคืนสินค้า</span>
+                <div>
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                <span class="ml-[7px]">รายการคืนสินค้า</span>
               </div>
             </NuxtLink>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
@@ -107,9 +111,11 @@
                   route.path === '/product/create',
               }"
             >
-              <div class="flex gap-2 text-[15px]">
-                <i class="fa-solid fa-boxes-stacked"></i>
-                <span class="">จัดการผลิตภัณฑ์</span>
+              <div class="flex gap-2 text-[14px]">
+                <div>
+                  <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+                <span class="ml-[6px]">จัดการผลิตภัณฑ์</span>
               </div>
             </div>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
@@ -148,7 +154,7 @@
               <div>
                 <i class="fa-solid fa-users-line"></i>
               </div>
-              <span class="">ผู้ใช้งาน</span>
+              <span class="ml-[2px]">ผู้ใช้งาน</span>
             </div>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
           </div>
@@ -185,7 +191,7 @@
               <div>
                 <i class="fa-solid fa-gear"></i>
               </div>
-              <span class="">จัดการทั่วไป</span>
+              <span class="ml-[6px]">จัดการทั่วไป</span>
             </div>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
           </div>
@@ -217,7 +223,7 @@
           <div>
             <i class="fa-regular fa-clock"></i>
           </div>
-          <span class="text-[13px]">การทำงานของระบบ</span>
+          <span class="text-[13px] ml-[6px]">การทำงานของระบบ</span>
         </NuxtLink>
       </div>
     </div>
