@@ -122,7 +122,7 @@ const updateChartData = () => {
             text: 'Sales Count',
           },
           ticks: {
-            a: true,
+            autoSkip: true,
             font: {
               size: 14,
             },
