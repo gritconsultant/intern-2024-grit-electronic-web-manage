@@ -16,7 +16,7 @@
           <div
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
           <div
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
           <div
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pl-10 pt-3"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@
           <div
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pl-7 pt-3"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
@@ -70,13 +70,8 @@
 
     <div class="flex gap-5">
       <div class="bg-white rounded-lg dropshadowbox p-5 w-[30%]">
-        <h1>เปรียบเทียบสถานะ</h1>
+        <h1 class="font-semibold mb-2">เปรียบเทียบสถานะ</h1>
         <GarphStatusChart />
-      </div>
-      <div class="bg-white rounded-lg dropshadowbox p-5 w-[70%]">
-        <div>
-          <GarphOrderTimeChart />
-        </div>
       </div>
     </div>
   </div>

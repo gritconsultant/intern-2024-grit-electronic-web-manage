@@ -53,7 +53,7 @@
               <select
                 v-model="selectedBank"
                 @change="onBankChange"
-                class="bg-orange-200 rounded-[5px] w-[400px] text-center"
+                class="bg-orange-100 rounded-[5px] w-[400px] text-center"
               >
                 <option v-for="bank in banks" :key="bank" :value="bank">
                   {{ bank }}

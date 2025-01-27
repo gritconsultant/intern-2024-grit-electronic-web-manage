@@ -9,7 +9,6 @@ export const client = (ops : Option) => {
 
     api.defaults.baseURL = config.public.BASE_URL
     api.defaults.headers.common['Content-Type'] = 'application/json'
-    api.defaults.headers.common['ngrok-skip-browser-warning'] = 'true'
 
 
     // ตรวจสอบtoken

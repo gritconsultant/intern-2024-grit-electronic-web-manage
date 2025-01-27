@@ -86,7 +86,7 @@
 
     <!-- เรียกใช้ EditCategory -->
     <!-- <EditCategory
-      v-if="editMode && editIndex !== null && editIndex >= 0 && editIndex < categories.length"
+      v-if="isValidEditCategory()"
       :category="categories[editIndex]"
       @close="closeForm"
       @updateCategory="updateCategory"
@@ -99,7 +99,6 @@ import { ref, computed } from "vue";
 
 // ตัวแปร state
 const showAddCategory = ref(false);
-const categories = ref<{ name: string; image: any }[]>([]);
 const searchQuery = ref<string>(""); // ตัวแปรสำหรับเก็บคำค้นหา
 
 const closeForm = () => {
@@ -107,6 +106,24 @@ const closeForm = () => {
   editMode.value = false;
   editIndex.value = null;
 };
+
+const isValidEditCategory = () => {
+  return (
+    editMode.value &&
+    editIndex.value !== null &&
+    editIndex.value >= 0 &&
+    editIndex.value < categories.value.length &&
+    categories.value[editIndex.value]
+  );
+};
+
+const categories = ref([
+  {
+    name: "อาหาร",
+    image:
+      "https://www.themercuryville.com/wp-content/uploads/2024/07/%E0%B8%AA%E0%B9%89%E0%B8%A1%E0%B8%95%E0%B8%B3-%E0%B8%AB%E0%B8%99%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B9%83%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%97%E0%B8%A2%E0%B8%A2%E0%B8%AD%E0%B8%94%E0%B8%99%E0%B8%B4%E0%B8%A2%E0%B8%A1.jpg",
+  },
+]);
 
 // ฟังก์ชันเพิ่มประเภทสินค้า
 const addCategory = (category: { name: string; image: string }) => {
@@ -129,6 +146,7 @@ const editCategory = (index: number) => {
     editIndex.value = index;
   } else {
     console.error("Invalid index for editing:", index);
+    console.error("Categories:", categories.value);
   }
 };
 

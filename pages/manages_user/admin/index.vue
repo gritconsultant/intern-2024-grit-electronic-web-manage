@@ -57,12 +57,14 @@
       </table>
     </div>
 
+    <!-- Add Admin Modal -->
     <AddAdmin
       :show="showAddAdmin"
       @close="toggleModal('add', false)"
       @addAdmin="addAdmin"
     />
 
+    <!-- Edit Admin Modal -->
     <EditAdmin
       v-if="selectedAdmin && showEditAdmin"
       :show="showEditAdmin"
@@ -73,14 +75,16 @@
 
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal
-      v-if="showConfirmDelete"
+      :show="showConfirmDelete"
       title="ยืนยันการลบ"
       message="คุณต้องการลบผู้ใช้นี้ใช่หรือไม่?"
       :confirmButtonText="'ยืนยัน'"
       :cancelButtonText="'ยกเลิก'"
       @confirm="deleteAdmin"
-      @cancel="cancelDelete"
+      @update:show="showConfirmDelete = $event"
     />
+
+    <!-- No Admins Message -->
     <div v-if="filteredAdmins.length === 0" class="text-center text-gray-500">
       ไม่พบผู้ดูแลที่ตรงกับคำค้นหา
     </div>
@@ -91,7 +95,6 @@
 import { ref, computed } from "vue";
 import type { Admin } from "~/models/user.model";
 
-// ข้อมูลตัวอย่างของผู้ดูแล
 const admins = ref<Admin[]>([
   {
     id: "1",
@@ -113,10 +116,7 @@ const admins = ref<Admin[]>([
   },
 ]);
 
-// ตัวกรองการค้นหา
 const filters = ref({ searchTerm: "" });
-
-// ตัวกรองผู้ดูแล
 const filteredAdmins = computed(() => {
   return admins.value.filter(
     (admin) =>
@@ -127,42 +127,25 @@ const filteredAdmins = computed(() => {
   );
 });
 
-// ตัวควบคุม Modal
 const showAddAdmin = ref(false);
 const showEditAdmin = ref(false);
 const selectedAdmin = ref<Admin | null>(null);
 const showConfirmDelete = ref(false);
 const selectedAdminId = ref<string | null>(null);
 
-// ฟังก์ชันเปิด/ปิด Modal
 const toggleModal = (type: "add" | "edit", state = true) => {
   if (type === "add") showAddAdmin.value = state;
   if (type === "edit") {
     showEditAdmin.value = state;
-    if (!state) selectedAdmin.value = null; // รีเซ็ต selectedAdmin เมื่อปิดโมดอล
+    if (!state) selectedAdmin.value = null;
   }
 };
 
-// ฟังก์ชันยืนยันการลบ
-const confirmDelete = (id: string) => {
-  showConfirmDelete.value = true;
-  selectedAdminId.value = id;
-};
-
-// ฟังก์ชันยกเลิกการลบ
-const cancelDelete = () => {
-  showConfirmDelete.value = false;
-  selectedAdminId.value = null;
-};
-
-// ฟังก์ชันลบผู้ดูแล
 const deleteAdmin = () => {
   if (selectedAdminId.value) {
-    // ลบผู้ดูแล
     admins.value = admins.value.filter(
       (admin) => admin.id !== selectedAdminId.value
     );
-    // ซ่อน Modal และรีเซ็ต ID
     showConfirmDelete.value = false;
     selectedAdminId.value = null;
     alert("ลบผู้ดูแลสำเร็จ");
@@ -171,42 +154,32 @@ const deleteAdmin = () => {
   }
 };
 
-// ฟังก์ชันแก้ไขผู้ดูแล
-const editAdmin = (admin: Admin) => {
-  if (admin) {
-    selectedAdmin.value = { ...admin };
-    toggleModal("edit", true);
-  } else {
-    alert("ไม่พบข้อมูลผู้ดูแลที่ต้องการแก้ไข");
-  }
+const confirmDelete = (id: string) => {
+  showConfirmDelete.value = true;
+  selectedAdminId.value = id;
 };
 
-// ฟังก์ชันเพิ่มผู้ดูแล
+const editAdmin = (admin: Admin) => {
+  selectedAdmin.value = { ...admin };
+  toggleModal("edit", true);
+};
+
 const addAdmin = (newAdmin: Admin) => {
-  // ไม่ต้องตรวจสอบข้อมูลให้ครบถ้วน
   const nextId = String(
     Math.max(...admins.value.map((admin) => Number(admin.id)), 0) + 1
   );
   newAdmin.id = nextId;
-
   admins.value.push({ ...newAdmin });
   toggleModal("add", false);
-  alert("เพิ่มผู้ดูแลใหม่สำเร็จ");
 };
 
-// ฟังก์ชันอัปเดตผู้ดูแล
 const updateAdmin = (updatedAdmin: Admin) => {
-  // ไม่ต้องตรวจสอบข้อมูลให้ครบถ้วน
   const index = admins.value.findIndex((admin) => admin.id === updatedAdmin.id);
   if (index !== -1) {
     admins.value[index] = { ...updatedAdmin };
     toggleModal("edit", false);
-    alert("อัปเดตข้อมูลผู้ดูแลสำเร็จ");
-  } else {
-    alert("ไม่พบข้อมูลผู้ดูแลที่ต้องการอัปเดต");
   }
 };
-
 </script>
 
 <style scoped>

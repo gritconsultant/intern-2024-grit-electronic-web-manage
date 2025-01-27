@@ -71,11 +71,11 @@
                   route.path === '/refund/report',
               }"
             >
-              <div class="flex gap-2 text-[15px]">
+              <div class="flex gap-2 text-[14px]">
                 <div>
                   <i class="fa-solid fa-arrows-rotate"></i>
                 </div>
-                <span class="ml-[7px]">รายการคืนสินค้า</span>
+                <span class="ml-[8px]">รายการคืนสินค้า</span>
               </div>
             </NuxtLink>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
@@ -115,7 +115,7 @@
                 <div>
                   <i class="fa-solid fa-boxes-stacked"></i>
                 </div>
-                <span class="ml-[6px]">จัดการผลิตภัณฑ์</span>
+                <span class="ml-[5px]">จัดการผลิตภัณฑ์</span>
               </div>
             </div>
             <i class="fa-solid fa-caret-down text-[12px] flex items-center"></i>
@@ -223,7 +223,7 @@
           <div>
             <i class="fa-regular fa-clock"></i>
           </div>
-          <span class="text-[13px] ml-[6px]">การทำงานของระบบ</span>
+          <span class="text-[15px] ml-[6px]">บันทึกของระบบ</span>
         </NuxtLink>
       </div>
     </div>

@@ -51,32 +51,21 @@
         <button
           type="submit"
           class="w-full max-w-[300px] h-[45px] bg-[#EE973C] hover:bg-[#FD8C35]/70 rounded-xl text-white text-lg"
-          @click="redirectToIndex"
+          @click="login"
         >
           เข้าสู่ระบบ
         </button>
-      </div>
-
-      <!-- Divider -->
-      <hr class="border-black/50 my-6" />
-
-      <!-- Register Now -->
-      <div class="flex justify-center text-base">
-        <p>ไม่มีบัญชีผู้ใช้ ?</p>
-        <NuxtLink
-          to="/register"
-          class="hover:text-[#FD8C35] ml-2 font-normal hover:underline"
-        >
-          ลงทะเบียน
-        </NuxtLink>
       </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import type { Login } from "~/models/page.model";
+import service from "~/service";
 import { useIndexStore } from "~/store/main";
+
+const store = useIndexStore();
 
 definePageMeta({
   layout: "auth",
@@ -84,15 +73,36 @@ definePageMeta({
 
 const passwordVisible = ref(false);
 const router = useRouter();
-const store = useIndexStore();
 
 // ซ่อนรหัสผ่าน
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
-const redirectToIndex = () => {
-  router.push("/"); // เปลี่ยนไปหน้า index
+
+const logins = ref<Login>({
+  email: "",
+  password: "",
+});
+
+const login = async () => {
+  await service.login
+    .login(logins.value)
+    .then((resp: any) => {
+      console.log(resp.data);
+      store.$state.token = resp.data.token;
+      // เซ็ต Cookie
+      const reftoken = useStatefulCookie('token');
+      reftoken.value = resp.data.token;
+      if (store.$state.token != null) {
+        router.push("/");
+      }
+    })
+    .catch((err: any) => {
+      console.error(err);
+    })
+    .finally(() => {});
+  // tast
 };
 </script>
 

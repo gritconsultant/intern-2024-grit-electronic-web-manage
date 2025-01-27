@@ -91,6 +91,8 @@ const fileInput = ref<HTMLInputElement | null>(null);
 // สำหรับการตั้งชื่อฟอร์มให้แสดงผลตามสถานะ
 const formTitle = props.category ? 'แก้ไขประเภทสินค้า' : 'เพิ่มประเภทสินค้า';
 
+
+
 // ตรวจสอบการเปลี่ยนแปลงรูปภาพ
 const onFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;

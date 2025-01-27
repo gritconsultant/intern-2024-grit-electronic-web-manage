@@ -15,7 +15,7 @@
           <div
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
           <div
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
           <div
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pl-10 pt-3"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@
             class="w-[50%] flex items-center justify-center text-[60px] font-medium pl-7
              pt-3"
           >
-            15154
+            00000
           </div>
         </div>
       </div>
