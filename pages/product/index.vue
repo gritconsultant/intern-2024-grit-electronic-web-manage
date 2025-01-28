@@ -1,5 +1,5 @@
 <template>
-  <div class="defaultpages flex flex-col gap-3 p-6 bg-gray-50 min-h-screen">
+  <div class="defaultpages flex flex-col gap-3 p-6 bg-gray-50">
     <!-- Header Section -->
     <div
       class="flex justify-between items-center bg-white p-5 rounded-lg shadow-md"
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Search and Filter Section -->
-    <div class="flex justify-between items-center gap-4">
+    <div class="flex justify-between items-center gap-4 mt-2">
       <div class="flex gap-4 flex-1">
         <!-- Search Bar -->
         <div class="relative w-1/2">
@@ -33,14 +33,24 @@
 
         <!-- Filter Dropdown -->
         <div class="relative">
+          <!-- ปุ่ม Filter -->
           <button
-            class="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-full shadow hover:bg-orange-600"
+            @click="toggleDropdown"
+            class="flex items-center gap-2 w-[210px] px-2 h-10 bg-orange-500 text-white rounded-full shadow hover:bg-orange-600"
             type="button"
           >
-            <i class="fa-solid fa-filter"></i> {{ selectedCategory.name }}
+            <div class="mt-[2px] pl-[2px]">
+              <i class="fa-solid fa-filter"></i>
+            </div>
+            <div class="flex justify-start w-full">
+              {{ selectedCategory.name }}
+            </div>
           </button>
+
+          <!-- Dropdown -->
           <div
-            class="absolute mt-2 bg-white rounded-lg shadow-lg border w-48 z-10 hidden group-hover:block"
+            v-if="isDropdownVisible"
+            class="absolute mt-2 bg-white rounded-lg shadow-lg border w-48 z-10"
           >
             <ul class="py-2 text-sm text-gray-700">
               <li
@@ -59,43 +69,44 @@
 
     <!-- Product List -->
     <div
-      class="bg-white flex flex-col justify-between h-[80%] rounded-lg shadow-md p-6"
+      class="bg-white flex flex-col justify-between h-[90%] rounded-lg p-6 w-full dropshadowbox"
     >
-      <table class="w-full text-left">
-        <thead>
-          <tr class="bg-orange-100 text-gray-800">
-            <th class="px-4 py-2 bg-slate-500">สินค้า</th>
-            <th class="px-4 py-2 bg-slate-500">ประเภท</th>
-            <th class="px-4 py-2 bg-slate-500">ราคา</th>
-            <th class="px-4 py-2 bg-slate-500">จำนวน</th>
-            <th class="px-4 py-2 bg-slate-500">สถานะสินค้า</th>
-            <th class="px-4 py-2 bg-slate-500">การจัดการ</th>
+      <table class="w-full text-left h-[90%]">
+        <thead class="w-full">
+          <tr class="bg-orange-100 rounded-t-lg text-gray-800 flex gap-2">
+            <th class="px-4 py-2 w-[25%]">สินค้า</th>
+            <th class="px-4 py-2 w-[15%]">ประเภท</th>
+            <th class="px-4 py-2 w-[15%]">ราคา</th>
+            <th class="px-4 py-2 w-[15%]">จำนวน</th>
+            <th class="px-4 py-2 w-[15%]">สถานะสินค้า</th>
+            <th class="px-4 py-2 w-[15%]">การจัดการ</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="w-full">
           <tr
             v-for="(product, index) in paginatedProduct"
             :key="index"
-            class="border-b w-[100%] hover:bg-gray-50"
+            class="border-b flex gap-2 hover:bg-gray-50"
           >
-            <td class="flex items-center gap-4 px-4 py-2 bg-slate-500 w-[90%]">
+            <td class="flex items-center gap-4 px-4 py-2 w-[25%]">
               <img
                 src=""
                 alt="Product"
                 class="w-16 h-16 object-cover rounded-lg border"
               />
-              <span>{{ product.name }}</span>
+              <span class="w-full truncate">{{ product.name }}</span>
             </td>
-            <td class="px-4 py-2 bg-slate-500">{{ product.category.name }}</td>
-            <td class="px-4 py-2 text-orange-500 font-bold bg-slate-500">
+            <td class="px-4 py-2 w-[15%]">{{ product.category.name }}</td>
+            <td class="px-4 py-2 text-orange-500 font-bold w-[15%]">
               ฿{{ product.price }}
             </td>
-            <td class="px-4 py-2 bg-slate-500">{{ product.stock }}</td>
-            <td class="px-4 py-2 bg-slate-500">
+            <td class="px-4 py-2 w-[15%]">{{ product.stock }}</td>
+            <td class="px-4 py-2 w-[15%]">
               <label class="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   class="sr-only peer"
+                  v-model="product.is_active"
                   :checked="product.is_active"
                   @click="changeProductStatus(product.id)"
                 />
@@ -107,7 +118,7 @@
                 ></div>
               </label>
             </td>
-            <td class="px-4 py-2 bg-slate-500">
+            <td class="px-4 py-2 w-[15%]">
               <div class="relative">
                 <button @click="toggleMenu(product.id)">
                   <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -134,7 +145,7 @@
       </table>
 
       <!-- Pagination -->
-      <div class="flex justify-between items-center mt-4">
+      <div class="flex justify-between items-center mt-5">
         <p class="text-sm text-gray-600">
           สินค้า {{ paginatedProduct.length }} จาก {{ filteredProducts.length }}
         </p>
@@ -161,7 +172,12 @@
 
 <script lang="ts" setup>
 import Swal from "sweetalert2";
-import type { Category, Product } from "~/models/product.model";
+import type {
+  Category,
+  Product,
+  ProductRes,
+  ProductUpdate,
+} from "~/models/product.model";
 import service from "~/service";
 
 // สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
@@ -197,9 +213,18 @@ const categories = ref<Category[]>([
   },
 ]);
 
+// ตัวแปรควบคุมการแสดง dropdown
+const isDropdownVisible = ref(false);
+
+// ฟังก์ชันเปิด/ปิด dropdown
+const toggleDropdown = () => {
+  isDropdownVisible.value = !isDropdownVisible.value;
+};
+
 // ฟังก์ชันเลือกหมวดหมู่
 const selectCategory = (category: Category) => {
   selectedCategory.value = category;
+  isDropdownVisible.value = false; // ปิด dropdown หลังเลือก
 };
 
 const filteredProducts = computed(() => {
@@ -231,7 +256,7 @@ const search = ref<string>("");
 
 // Pagination variables
 const currentPage = ref(1);
-const itemsPerPage = 7; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
+const itemsPerPage = 6; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
 
 // Paginate the filtered orders
 const paginatedProduct = computed(() => {
@@ -287,15 +312,30 @@ const changeProductStatus = (productId: number) => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        product.is_active = newStatus; // Update the status
-        toggleMenu(productId); // Close menu if needed
-        Swal.fire(
-          "สำเร็จ!",
-          `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
-            newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
-          }" แล้ว`,
-          "success"
-        );
+        // Only update the status if confirmed
+        product.is_active = newStatus; // อัปเดตสถานะในข้อมูลท้องถิ่น
+
+        updateProduct(product.id, product)
+          .then(() => {
+            Swal.fire(
+              "สำเร็จ!",
+              `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
+                newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
+              }" แล้ว`,
+              "success"
+            );
+          })
+          .catch((error: any) => {
+            console.error("Error in changeProductStatus:", error);
+            Swal.fire(
+              "เกิดข้อผิดพลาด!",
+              "ไม่สามารถเปลี่ยนสถานะสินค้าได้",
+              "error"
+            );
+          });
+      } else {
+        // Reset the status to the previous value if canceled
+        product.is_active = !newStatus;
       }
     });
   }
@@ -349,6 +389,49 @@ const getProductList = async () => {
     .finally(() => {
       console.log("Finished loading product list.");
     });
+};
+
+const productRes = ref<ProductRes>({
+  id: 0,
+  name: "",
+  price: 0,
+  description: "",
+  stock: 0,
+  category_id: 0,
+  is_active: true,
+  image_product: "",
+});
+
+const updateProduct = async (productId: number, product: any) => {
+  await service.product
+    .updateProduct(productId, product)
+    .then((resp: any) => {
+      const data = resp.data;
+      if (data) {
+        Swal.fire({
+          title: "เพิ่มสินค้าสำเร็จ",
+          text: "เพิ่มสินค้า",
+          icon: "success",
+        });
+      }
+
+      const temp: ProductRes = {
+        id: data.id,
+        name: data.name,
+        price: data.price,
+        description: data.description,
+        stock: data.stock,
+        category_id: data.category,
+        is_active: data.is_active,
+        image_product: data.image_product,
+      };
+      productRes.value = temp;
+    })
+    .catch((error: any) => {
+      console.log(error.response);
+      Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถอัปเดตสินค้าได้", "error");
+    })
+    .finally(() => {});
 };
 
 onMounted(async () => {

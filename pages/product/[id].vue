@@ -98,8 +98,9 @@
                 <label class="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    v-model="product.is_active"
                     class="sr-only peer"
+                    :checked="product.is_active"
+                    @click="confirmStatusChange(product.id, product.is_active)"
                   />
                   <div
                     class="w-16 h-8 bg-orange-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
@@ -143,14 +144,14 @@
       <!-- Customer Reviews -->
       <div class="reviews mt-12 w-full">
         <h3 class="text-2xl font-semibold">รีวิวจากลูกค้า</h3>
-        <div class="reviews-content bg-white p-6 mt-4 rounded-md shadow-md">
+        <!-- <div class="reviews-content bg-white p-6 mt-4 rounded-md shadow-md">
           <div v-if="reviews.id === 0">ไม่มีรีวิว</div>
           <div v-else>
             <div v-for="(review, index) in reviews" :key="index" class="review">
               <div class="rating">⭐ {{ reviews.rating }} / 5</div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -160,6 +161,7 @@
 import { ref } from "vue";
 import Swal from "sweetalert2";
 import type {
+  Product,
   ProductRes,
   ProductReview,
   ProductUpdate,
@@ -167,13 +169,6 @@ import type {
 import service from "~/service";
 
 const route = useRoute();
-
-const reviews = ref<ProductReview>({
-  id: 0,
-  username: "",
-  rating: 0,
-  description: "",
-});
 
 const product = ref<ProductUpdate>({
   id: 0,
@@ -296,6 +291,50 @@ const confirmDelete = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire("ลบสำเร็จ!", "สินค้าของคุณได้ถูกลบแล้ว", "success");
+    }
+  });
+};
+
+const products = ref<Product[]>([]);
+
+// สถานะการแสดงเมนูของสินค้า
+const isMenuVisible = ref<Record<number, boolean>>({});
+
+// ฟังก์ชันสำหรับสลับการแสดงผลของเมนู
+const toggleMenu = (productId: number) => {
+  isMenuVisible.value = {
+    ...isMenuVisible.value,
+    [productId]: !isMenuVisible.value[productId],
+  };
+};
+
+const confirmStatusChange = (productId: number, currentStatus: boolean) => {
+  const newStatus = !currentStatus;
+
+  Swal.fire({
+    title: "ยืนยันการเปลี่ยนสถานะ",
+    text: `คุณต้องการเปลี่ยนสถานะของสินค้าเป็น "${
+      newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
+    }" ใช่หรือไม่?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const product = products.value.find(
+        (product) => product.id === productId
+      );
+      if (product) {
+        product.is_active = newStatus;
+        Swal.fire(
+          "สำเร็จ!",
+          `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
+            newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
+          }" แล้ว`,
+          "success"
+        );
+      }
     }
   });
 };
