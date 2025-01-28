@@ -1,10 +1,12 @@
 <template>
   <div class="defaultpages flex flex-col gap-2">
     <!-- Header -->
-    <div class="flex items-center justify-between h-[8%] mt-5 pl-[35px]">
-      <h1 class="text-[25px] font-bold">รายการคำสั่งซื้อ</h1>
-      <div class="flex justify-end mr-[30px] rounded-[5px] w-[70%]">
-        <div class="flex justify-end gap-5 w-full">
+    <div class="flex flex-col  h-[15%] mt-5 pl-[35px]">
+      <div class="bg-slate-400">
+        <h1 class="text-[25px] font-bold">รายการคำสั่งซื้อ</h1>
+      </div>
+      <div class="flex rounded-[5px] w-[70%]">
+        <div class="flex  gap-5 w-full">
           <!-- Search -->
           <div class="flex items-end w-[50%]">
             <Search v-model="filters.searchTerm" />
@@ -374,6 +376,9 @@ const changePage = (page: number) => {
     currentPage.value = page;
   }
 };
+
+
+
 
 const orders = <Order[]>[
   {

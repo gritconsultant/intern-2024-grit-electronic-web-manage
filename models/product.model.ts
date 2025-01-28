@@ -1,21 +1,39 @@
-
-
-// make test
 export interface Product {
   id: number;
   name: string;
-  detail: string;
   price: number;
-  amount: number;
-  img: string;
-  categoryId: number;
-  status:  boolean;
-} 
+  stock: number;
+  description: string | null; // เผื่อ description อาจว่าง
+  image: ProductImage; // เปลี่ยนให้เป็นเอกพจน์
+  category: ProductCategory;
+  reviews: ProductReview[]; // ใช้ชื่อพหูพจน์เพื่อสื่อว่าเป็น array
+  is_active: boolean;
+  created_at: number; // หรือ string หากใช้ ISO timestamp
+  updated_at: number; // หรือ string หากใช้ ISO timestamp
+}
+
+export interface ProductReview {
+  id: number;
+  rating: number;
+}
+
+export interface ProductCategory {
+  id: number;
+  name: string;
+}
+
+export interface ProductImage {
+  id: number;
+  ref_id: number;
+  type: string;
+  description: string;
+}
+
+////////////////////////////////////////////////////////////////////////
 
 export interface Category {
   id: number;
   name: string;
-  
 }
 
 export interface Listproduct {
@@ -36,8 +54,6 @@ export interface Datum {
   updated_at: number;
 }
 
-
-
 export interface Paginate {
   Page: number;
   Size: number;
@@ -47,22 +63,4 @@ export interface Paginate {
 export interface Status {
   code: number;
   message: string;
-}
-
-
-// make test
-export interface Product {
-  id: number;
-  name: string;
-  detail: string;
-  price: number;
-  amount: number;
-  img: string;
-  categoryId: number;
-  status:  boolean;
-}
-
-export interface Category {
-  id: number;
-  name: string;
 }

@@ -1,82 +1,123 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">Pie Chart Example</h1>
-    <div class="bg-white p-6 shadow-lg rounded-lg">
-      <!-- Canvas สำหรับแสดงกราฟ -->
-      <canvas ref="chartCanvas" class="h-96"></canvas>
+  <div class="defaultpages">
+    <h1>Product List</h1>
+    <!-- ตรวจสอบว่ามีสินค้าใน products หรือไม่ -->
+    <div v-if="products.length">
+      <ul>
+        <li v-for="(product, index) in products" :key="index">
+          <h2>{{ product.name }}</h2>
+          <p>Price: {{ product.price }}</p>
+          <p>Stock: {{ product.stock }}</p>
+          <p>Category: {{ product.category.name }}</p>
+
+          <!-- แสดงรูปภาพ -->
+          <img v-if="product.image" :src="product.image.type + '://' + product.image.ref_id" alt="Product image" />
+
+        </li>
+      </ul>
+    </div>
+    <!-- แสดงข้อความถ้าไม่มีสินค้า -->
+    <div v-else>
+      <p>No products available.</p>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import {
-  Chart as ChartJS,
-  PieController,
-  ArcElement,
-  Tooltip,
-  Legend,
-  type ChartOptions,
-} from "chart.js";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import type { Product } from "~/models/product.model";
+import service from "~/service";
 
-// ลงทะเบียนโมดูลของ Chart.js
-ChartJS.register(PieController, ArcElement, Tooltip, Legend);
+// สร้าง state เก็บข้อมูลสินค้า
+const products = ref<Product[]>([]);
 
-// ใช้ ref สำหรับอ้างถึง <canvas>
-const chartCanvas = ref<HTMLCanvasElement | null>(null);
+const getProductList = async () => {
+  await service.product
+    .getProductList()
+    .then((resp: any) => {
+      const data = resp.data.data;
+      const productlist: Product[] = [];
 
-// ข้อมูลการขาย
-const salesData = {
-  "Product A": 120,
-  "Product B": 80,
-  "Product C": 150,
-  "Product D": 60,
-  "Product E": 90,
-};
-
-// ข้อมูลของ Pie Chart
-const chartData = {
-  labels: Object.keys(salesData), // ใช้ชื่อสินค้าเป็น labels
-  datasets: [
-    {
-      label: "Sales Data",
-      data: Object.values(salesData), // ใช้ยอดขายเป็น data
-      backgroundColor: ["#EF4444", "#3B82F6", "#FBBF24", "#10B981", "#8B5CF6"], // กำหนดสีให้แต่ละส่วน
-      hoverOffset: 10,
-    },
-  ],
-};
-
-// ตัวเลือกเพิ่มเติมสำหรับกราฟ
-const chartOptions: ChartOptions<"pie"> = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "top", // แสดง Legend ด้านบน
-    },
-    tooltip: {
-      enabled: true, // เปิดใช้งาน Tooltip
-    },
-  },
-};
-
-// ฟังก์ชันสร้างกราฟเมื่อ Mounted
-onMounted(() => {
-  if (chartCanvas.value) {
-    new ChartJS(chartCanvas.value, {
-      type: "pie", // ประเภทของกราฟ
-      data: chartData, // ข้อมูลของกราฟ
-      options: chartOptions, // ตัวเลือกที่กำหนดไว้
+      console.log(data); // ตรวจสอบข้อมูลที่ได้รับจาก API
+      for (let i = 0; i < data.length; i++) {
+        const e = data[i];
+        const product: Product = {
+          id: e.id,
+          name: e.name,
+          price: e.price,
+          stock: e.stock,
+          description: e.description ?? null, // รองรับกรณี description เป็น null
+          image: {
+            id: e.image?.id,
+            ref_id: e.image?.ref_id,
+            type: e.image?.type,
+            description: e.image?.description,
+          },
+          category: {
+            id: e.category?.id,
+            name: e.category?.name,
+          },
+          reviews: e.review?.map((r: any) => ({
+            id: r.id,
+            rating: r.rating,
+          })) ?? [], // review ต้องเป็น array
+          is_active: e.is_active,
+          created_at: e.created_at,
+          updated_at: e.updated_at,
+        };
+        productlist.push(product);
+      }
+      products.value = productlist;
+      console.log(products.value); // ตรวจสอบข้อมูลใน products หลังจากอัปเดต
+    })
+    .catch((error: any) => {
+      console.log("Error loading product list:", error.response || error);
+    })
+    .finally(() => {
+      console.log("Finished loading product list.");
     });
-  }
+};
+
+// เรียกใช้ฟังก์ชันเมื่อคอมโพเนนต์โหลด
+onMounted(async () => {
+  await getProductList();
 });
 </script>
 
-<style>
-canvas {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
+<style scoped>
+.defaultpages {
+  padding: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+p {
+  margin: 5px 0;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 </style>
