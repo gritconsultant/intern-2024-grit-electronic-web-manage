@@ -1,117 +1,124 @@
 <template>
-  <div class="defaultpages p-5">
-    <div class="">
-      <div class="h-[5%]">
-        <h1 class="text-[25px] font-bold">Product #{{}}</h1>
+  <div class="defaultpages p-8">
+    <div v-if="product.id != 0">
+      <div class="header mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">
+          สินค้า #{{ product.id }}
+        </h1>
       </div>
-      <div class="flex flex-col gap-10">
-        <div
-          v-for="(product, i) in products"
-          :key="i"
-          class="flex gap-5 mt-[20px]"
-        >
-          <div>
-            <img
-              :src="product.img"
-              alt=""
-              class="h-[350px] W-[350PX] border-2 border-black"
-            />
+
+      <!-- Product List Section -->
+      <div class="flex flex-wrap gap-8 w-full">
+        <div class="flex gap-8 bg-white p-6 rounded-lg shadow-md w-full">
+          <div class="product-image flex-none w-80">
+            <div
+              class="h-80 w-full bg-gray-300 rounded-lg flex items-center justify-center relative"
+            >
+              <img src="" class="object-cover h-full w-full rounded-lg" />
+            </div>
           </div>
-          <div class="flex flex-col justify-between gap-5">
-            <div class="flex flex-col gap-5">
-              <div class="text-[20px] flex flex-col gap-2">
-                <span class="font-semibold">ชื่อ</span>
+
+          <div class="product-info flex flex-col justify-between gap-6 w-full">
+            <div class="product-details flex flex-col gap-6">
+              <div class="product-name text-xl font-semibold">
+                <label class="block">ชื่อ</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
-                  :placeholder="product.name"
-                  class="w-[500px] h-[60px] pl-5 text-wrap placeholder:text-black rounded-[5px]"
+                  v-model="product.name"
+                  placeholder="กรุณากรอกชื่อสินค้า"
+                  class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
-              <div class="text-[20px] font-semibold flex gap-5 justify-between">
-                <div class="flex flex-col gap-2 w-full">
-                  <span>ประเภท</span>
-                  <select name="" id="" class="w-full">
-                    <option value=""></option>
+
+              <div class="product-type-price flex gap-6 justify-between">
+                <div class="product-category w-1/2">
+                  <label class="block">ประเภท</label>
+                  <select
+                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    v-model="product.category_id"
+                  >
+                    <option value="">กรุณาเลือกประเภท</option>
+                    <option value="1">Electronics</option>
+                    <option value="2">Clothing</option>
                   </select>
                 </div>
-                <div class="flex flex-col gap-2 w-full">
-                  <span>ราคา</span>
-                  <div class="bg-white w-full h-full pl-2">
-                    {{ product.price }}
-                  </div>
-                </div>
-              </div>
-              <div class="flex gap-2 text-[20px]">
-                <span class="font-semibold">จำนวนสินค้า</span>
-                <div class="bg-white w-[24%] h-full pl-2">
-                  {{ product.amount }}
-                </div>
-                <!-- ปุ่มเพิ่มจำนวนสินค้า -->
-                <button
-                  class="bg-[#F68D44] text-white p-2 rounded-md"
-                  @click="increaseAmount(i)"
-                >
-                  +
-                </button>
-                <input
-                  type="number"
-                  v-model="inputAmount[i]"
-                  placeholder="เพิ่มจำนวนสินค้า"
-                  class="w-[150px] h-[40px] text-center rounded-md"
-                />
-                <button
-                  class="bg-[#F68D44] text-white p-2 rounded-md"
-                  @click="updateAmount(i)"
-                >
-                  เพิ่ม
-                </button>
-              </div>
-            </div>
-            <div class="flex flex-col gap-5">
-              <div class="flex gap-5">
-                <span class="text-[15px] font-semibold">สร้างเมื่อ</span>
-                <span> asdASD{{}}</span>
-              </div>
-              <div class="flex gap-4">
-                <span class="text-[15px] font-semibold">แก้ไขเมื่อ</span>
-                <span>esfdsafafqf</span>
-              </div>
-            </div>
-          </div>
-          <!-- star -->
-          <div class="bg-yellow-200/50 text-center w-[30%]">star</div>
-          <div class="w-[15%] flex flex-col gap-5">
-            <h4 class="text-[20px] text-center font-semibold">สถานะสินค้า</h4>
-            <div class="flex flex-col gap-10 justify-center items-center">
-              <label class="relative inline-flex items-center cursor-pointer">
-                <!-- Checkbox -->
-                <input
-                  type="checkbox"
-                  id="product-status"
-                  class="sr-only peer"
-                  @change="onStatusChange"
-                />
-                <!-- Toggle Switch Background -->
-                <div
-                  class="w-28 h-12 bg-orange-200 peer-focus:outline-none peer-focus:ring-[1px] peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
-                ></div>
-                <!-- Toggle Knob -->
-                <div
-                  class="absolute w-11 h-11 bg-orange-400 rounded-full left-[2px] top-[2px] peer-checked:translate-x-16 transition-transform"
-                ></div>
-              </label>
 
-              <div class="flex flex-col gap-5">
+                <div class="product-price w-1/2">
+                  <label class="block">ราคา</label>
+                  <input
+                    type="number"
+                    v-model="product.price"
+                    placeholder="กรุณากรอกราคา"
+                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  />
+                </div>
+              </div>
+
+              <div class="product-quantity flex items-center gap-6">
+                <label class="text-xl font-semibold">จำนวนสินค้า</label>
+                <div class="flex items-center gap-4">
+                  <div
+                    class="quantity-display bg-gray-100 p-3 rounded-md w-1/3"
+                  >
+                    {{ product.stock }}
+                  </div>
+                  <!-- Add "-" button for decreasing stock -->
+                  <button
+                    class="bg-orange-500 text-white px-4 py-2 rounded-md"
+                    @click="decreaseAmount"
+                  >
+                    -
+                  </button>
+                  <!-- Add "+" button for increasing stock -->
+                  <button
+                    class="bg-orange-500 text-white px-4 py-2 rounded-md"
+                    @click="increaseAmount"
+                  >
+                    +
+                  </button>
+                  <input
+                    type="number"
+                    v-model="inputAmount"
+                    placeholder="เพิ่มจำนวนสินค้า"
+                    class="w-24 p-3 text-center border border-gray-300 rounded-md"
+                  />
+                  <button
+                    class="bg-orange-500 text-white px-4 py-2 rounded-md"
+                    @click="updateAmount"
+                  >
+                    เพิ่ม
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-status flex justify-between items-center">
+              <div class="status flex gap-4">
+                <span class="text-lg font-semibold">สถานะสินค้า</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    v-model="product.is_active"
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="w-16 h-8 bg-orange-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
+                  ></div>
+                  <div
+                    class="absolute w-7 h-7 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-8 transition-transform"
+                  ></div>
+                </label>
+              </div>
+
+              <div class="actions flex gap-6">
                 <button
-                  class="bg-[#F68D44] w-[100px] h-[40px] rounded-[5px] hover:bg-yellow-500 text-[18px] font-semibold dropshadowbutton"
+                  class="bg-orange-500 w-24 py-2 text-white rounded-md hover:bg-yellow-500 font-semibold"
                   @click="confirmSave"
                 >
                   บันทึก
                 </button>
                 <button
-                  class="bg-[#F68D44] w-[100px] h-[40px] rounded-[5px] hover:bg-red-500 text-[18px] font-semibold dropshadowbutton"
+                  class="bg-orange-500 w-24 py-2 text-white rounded-md hover:bg-red-500 font-semibold"
                   @click="confirmDelete"
                 >
                   ลบสินค้า
@@ -120,56 +127,147 @@
             </div>
           </div>
         </div>
-        <!-- รายละเอียดสินค้า -->
-        <div>
-          <h3 class="text-[22px] font-semibold">รายละเอียด</h3>
-          <textarea class="rounded-[5px] w-[100%] p-5"></textarea>
-        </div>
       </div>
-      <!-- รีวิว -->
-      <div class="mt-10 h-fi;">
-        <h3 class="text-[22px] font-semibold">รีวิวจากลูกค้า</h3>
-        <div class="bg-white h-full w-full">das</div>
+
+      <!-- Product Description -->
+      <div class="product-description mt-12 w-full">
+        <h3 class="text-2xl font-semibold">รายละเอียด</h3>
+        <textarea
+          class="w-full p-5 mt-2 border border-gray-300 rounded-md"
+          rows="6"
+          v-model="product.description"
+          placeholder="กรุณากรอกรายละเอียดสินค้า"
+        ></textarea>
+      </div>
+
+      <!-- Customer Reviews -->
+      <div class="reviews mt-12 w-full">
+        <h3 class="text-2xl font-semibold">รีวิวจากลูกค้า</h3>
+        <div class="reviews-content bg-white p-6 mt-4 rounded-md shadow-md">
+          <div v-if="reviews.id === 0">ไม่มีรีวิว</div>
+          <div v-else>
+            <div v-for="(review, index) in reviews" :key="index" class="review">
+              <div class="rating">⭐ {{ reviews.rating }} / 5</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { Product } from "~/models/product.model";
+import { ref } from "vue";
 import Swal from "sweetalert2";
+import type {
+  ProductRes,
+  ProductReview,
+  ProductUpdate,
+} from "~/models/product.model";
+import service from "~/service";
 
-const router = useRouter();
+const route = useRoute();
 
-const products = ref<Product[]>([
-  {
-    id: 1,
-    name: "มะขาม 4 รส",
-    detail: "มะขาม 4 รส มะขามคลุก (บ้านมะขาม) โดยบริษัทสวนผึ้ง จำกัด",
-    price: 62,
-    amount: 10,
-    img: "https://th-test-11.slatic.net/p/2b0d5f80a00b77d2c6490b09a053a1c0.png",
-    categoryId: 1,
-    status: true,
-  },
-]);
+const reviews = ref<ProductReview>({
+  id: 0,
+  username: "",
+  rating: 0,
+  description: "",
+});
 
-// ใช้เก็บค่าจำนวนที่กรอกใน input
-const inputAmount = ref<number[]>([]);
+const product = ref<ProductUpdate>({
+  id: 0,
+  name: "",
+  price: 0,
+  description: "",
+  stock: 0,
+  category_id: 0,
+  is_active: true,
+  image_product: "",
+});
 
-// ฟังก์ชันเพิ่มจำนวนสินค้า
-const increaseAmount = (index: number) => {
-  products.value[index].amount += 1; // เพิ่มจำนวนสินค้า 1
+const productRes = ref<ProductRes>({
+  id: 0,
+  name: "",
+  price: 0,
+  description: "",
+  stock: 0,
+  category_id: 0,
+  is_active: true,
+  image_product: "",
+});
+
+const getProductById = async () => {
+  await service.product
+    .getProductById(route.params.id)
+    .then((resp: any) => {
+      const data = resp.data.data;
+      const temp: ProductUpdate = {
+        id: data.id,
+        name: data.name,
+        price: data.price,
+        description: data.description,
+        stock: data.stock,
+        category_id: data.category.id,
+        is_active: data.is_active,
+        image_product: data.Image.description,
+      };
+      product.value = temp;
+    })
+    .catch((erorr: any) => {
+      console.log(erorr.respontse);
+    })
+    .finally(() => {});
 };
 
-// ฟังก์ชันอัปเดตจำนวนสินค้า
-const updateAmount = (index: number) => {
-  const newAmount = inputAmount.value[index] || 0; // หากไม่มีค่าใน input ให้ใช้ 0
-  products.value[index].amount += newAmount; // รวมจำนวนเดิมกับค่าที่กรอก
-  inputAmount.value[index] = 0; // รีเซ็ตค่า input หลังจากการอัปเดต
+const updateProduct = async () => {
+  await service.product
+    .updateProduct(route.params.id, product.value)
+    .then((resp: any) => {
+      const data = resp.data;
+      if (data) {
+        Swal.fire({
+          title: "เพิ่มสินค้าสำเร็จ",
+          text: "เพิ่มสินค้า",
+          icon: "success",
+        });
+      }
+
+      const temp: ProductRes = {
+        id: data.id,
+        name: data.name,
+        price: data.price,
+        description: data.description,
+        stock: data.stock,
+        category_id: data.category,
+        is_active: data.is_active,
+        image_product: data.image_product,
+      };
+      productRes.value = temp;
+    })
+    .catch((erorr: any) => {
+      console.log(erorr.respontse);
+    })
+    .finally(() => {});
 };
 
-// SweetAlert Confirmation - Save
+// Methods
+const inputAmount = ref<number>(0);
+
+const increaseAmount = () => {
+  product.value.stock += 1;
+};
+
+const decreaseAmount = () => {
+  if (product.value.stock > 0) {
+    product.value.stock -= 1;
+  }
+};
+
+const updateAmount = () => {
+  product.value.stock += inputAmount.value;
+};
+
 const confirmSave = () => {
   Swal.fire({
     title: "คุณแน่ใจหรือไม่?",
@@ -180,16 +278,13 @@ const confirmSave = () => {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire("สำเร็จ!", "สินค้าของคุณได้ถูกบันทึกแล้ว", "success").then(
-        () => {
-          router.push("/product"); // เปลี่ยนเส้นทางไปที่หน้า product โดยไม่โหลดหน้าใหม่
-        }
-      );
+      updateProduct().then(() => {
+        Swal.fire("สำเร็จ!", "สินค้าของคุณได้ถูกบันทึกแล้ว", "success");
+      });
     }
   });
 };
 
-// SweetAlert Confirmation - Delete
 const confirmDelete = () => {
   Swal.fire({
     title: "คุณแน่ใจหรือไม่?",
@@ -198,42 +293,21 @@ const confirmDelete = () => {
     showCancelButton: true,
     confirmButtonText: "ยืนยัน",
     cancelButtonText: "ยกเลิก",
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#aaa",
   }).then((result) => {
     if (result.isConfirmed) {
-      // หากลบสำเร็จ ให้แสดงข้อความและกลับไปที่หน้า product
-      Swal.fire("ลบสำเร็จ!", "สินค้าของคุณได้ถูกลบแล้ว", "success").then(() => {
-        router.push("/product"); // เปลี่ยนเส้นทางไปที่หน้า product
-      });
+      Swal.fire("ลบสำเร็จ!", "สินค้าของคุณได้ถูกลบแล้ว", "success");
     }
   });
 };
 
-const onStatusChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const newStatus = target.checked ? "ใช้งาน" : "ไม่ใช้งาน";
+onMounted(() => {
+  // use function
+  getProductById();
+});
 
-  Swal.fire({
-    title: "คุณแน่ใจหรือไม่?",
-    text: `คุณต้องการเปลี่ยนสถานะเป็น "${newStatus}" หรือไม่?`,
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire(
-        "สำเร็จ!",
-        `สถานะสินค้าได้ถูกเปลี่ยนเป็น "${newStatus}" แล้ว`,
-        "success"
-      );
-    } else {
-      // หากผู้ใช้ยกเลิก ให้รีเซ็ตสถานะกลับไปเป็นเดิม
-      target.checked = !target.checked;
-    }
-  });
-};
+console.log("Updating product:", route.params.id, product.value);
 </script>
 
-<style></style>
+<style scoped>
+/* Add custom styles if needed */
+</style>

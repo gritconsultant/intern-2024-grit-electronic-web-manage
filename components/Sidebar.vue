@@ -103,11 +103,11 @@
                   สินค้า
                 </li>
               </NuxtLink>
-              <NuxtLink to="/prrduct/category">
+              <NuxtLink to="/product/category">
                 <li
                   class="block px-4 py-2 text-[15px] hover:bg-gray-100"
                   :class="{
-                    'text-orange-500': route.path === '/prrduct/category',
+                    'text-orange-500': route.path === '/product/category',
                   }"
                 >
                   ประเภทสินค้า
@@ -253,8 +253,8 @@
             </div>
             <i
               :class="{
-                'fa-solid fa-caret-down': dropdownState === 'dropdown2',
-                'fa-solid fa-caret-right': dropdownState !== 'dropdown2',
+                'fa-solid fa-caret-down': dropdownState === 'dropdown4',
+                'fa-solid fa-caret-right': dropdownState !== 'dropdown4',
               }"
               class="text-[12px] flex items-center ml-[48.5px]"
             ></i>

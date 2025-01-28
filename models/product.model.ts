@@ -14,7 +14,9 @@ export interface Product {
 
 export interface ProductReview {
   id: number;
+  username: string,
   rating: number;
+   description: string;
 }
 
 export interface ProductCategory {
@@ -29,6 +31,44 @@ export interface ProductImage {
   description: string;
 }
 
+export interface Paginate {
+  Page: number;
+  Size: number;
+  Total: number;
+}
+
+export interface ProductCreate {
+  name: string;
+  price: number;
+  description: string;
+  stock: number;
+  category_id: number;
+  is_active: boolean;
+  image_product: string;
+}
+
+export interface ProductRes {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  stock: number;
+  category_id: number;
+  is_active: boolean;
+  image_product: string;
+}
+
+export interface ProductUpdate {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  stock: number;
+  category_id: number;
+  is_active: boolean;
+  image_product: string
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 export interface Category {
@@ -36,29 +76,6 @@ export interface Category {
   name: string;
 }
 
-export interface Listproduct {
-  status: Status;
-  data: Datum[];
-  paginate: Paginate;
-}
-
-export interface Datum {
-  id: number;
-  name: string;
-  price: number;
-  detail: string;
-  stock: number;
-  image: string;
-  category: Category;
-  created_at: number;
-  updated_at: number;
-}
-
-export interface Paginate {
-  Page: number;
-  Size: number;
-  Total: number;
-}
 
 export interface Status {
   code: number;

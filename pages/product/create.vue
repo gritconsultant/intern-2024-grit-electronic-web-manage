@@ -1,157 +1,165 @@
 <template>
-  <div class="defaultpages">
-    <div class="flex items-center justify-between h-[5%] my-5 pl-[35px]">
-      <h1 class="text-[36px] font-bold text-gray-800">เพิ่มสินค้า</h1>
+  <div class="defaultpages px-8 py-10">
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">เพิ่มสินค้า</h1>
     </div>
-    <div class="mx-[80px] mr-[20%] flex flex-col gap-8 h-full">
+
+    <div class="grid gap-8">
       <!-- Product Name -->
-      <div class="text-[22px] font-semibold flex gap-10">
-        <label for="product-name" class="text-gray-600">ชื่อสินค้า</label>
+      <div>
+        <label
+          for="product-name"
+          class="block text-lg font-medium text-gray-700"
+          >ชื่อสินค้า</label
+        >
         <input
           type="text"
           id="product-name"
-          class="rounded-[8px] w-[87%] ml-[20px] p-[10px] border-2 border-gray-300 focus:outline-none focus:border-orange-400"
+          placeholder="กรอกชื่อสินค้า"
+          class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+          v-model="product.name"
         />
       </div>
 
       <!-- Product Category, Price, and Status -->
-      <div class="flex gap-8">
-        <div class="flex gap-[20px] w-[70%]">
-          <div class="flex flex-col gap-5 w-[50%]">
-            <label
-              for="product-category"
-              class="text-[22px] font-semibold text-gray-600"
-              >ประเภทสินค้า</label
-            >
-            <label
-              for="product-price"
-              class="text-[22px] font-semibold text-gray-600"
-              >ราคา</label
-            >
-          </div>
-          <div class="flex flex-col gap-6 w-full">
-            <select
-              id="product-category"
-              class="w-[95%] h-[45px] rounded-[8px] p-[10px] border-2 border-gray-300 focus:outline-none focus:border-orange-400"
-            >
-              <option value="">เลือกประเภท</option>
-              <!-- Add options here -->
-            </select>
-            <input
-              type="text"
-              id="product-price"
-              class="w-[95%] h-[45px] rounded-[8px] p-[10px] border-2 border-gray-300 focus:outline-none focus:border-orange-400"
-            />
-          </div>
+      <div class="grid grid-cols-2 gap-8">
+        <!-- Left Column -->
+        <div>
+          <label
+            for="product-category"
+            class="block text-lg font-medium text-gray-700"
+            >ประเภทสินค้า</label
+          >
+          <select
+            v-model="product.category_id"
+            id="product-category"
+            class="w-full mt-2 rounded-lg p-4 pr-5 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+          >
+            <option value="1">อาหาร</option>
+            <!-- เลขแทนค่าประเภทสินค้า -->
+            <option value="2">เสื้อผ้า</option>
+            <!-- เพิ่มตัวเลือกอื่น ๆ ตามต้องการ -->
+          </select>
         </div>
+        <div>
+          <label
+            for="product-price"
+            class="block text-lg font-medium text-gray-700"
+            >ราคา</label
+          >
+          <input
+            type="number"
+            id="product-price"
+            placeholder="กรอกราคา"
+            class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+            v-model="product.price"
+          />
+        </div>
+      </div>
 
-        <!-- Product Status and Quantity -->
-        <div class="flex gap-[20px] w-[70%]">
-          <div class="flex flex-col gap-5 w-[50%]">
-            <label
-              for="product-status"
-              class="text-[22px] font-semibold text-gray-600"
-              >สถานะสินค้า</label
-            >
-            <label
-              for="product-quantity"
-              class="text-[22px] font-semibold text-gray-600"
-              >จำนวน</label
-            >
-          </div>
-          <div class="flex flex-col gap-6 w-full">
-            <label class="relative inline-flex items-center cursor-pointer">
-              <!-- Checkbox -->
-              <input
-                type="checkbox"
-                id="product-status"
-                class="sr-only peer"
-                @change="onStatusChange"
-              />
-              <!-- Toggle Switch Background -->
-              <div
-                class="w-[30%] h-[40px] bg-orange-200 peer-focus:outline-none peer-focus:ring-[1px] peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
-              ></div>
-              <!-- Toggle Knob -->
-              <div
-                class="absolute w-[9%] h-[36px] bg-orange-400 rounded-full left-[2px] top-[2px] peer-checked:translate-x-[82px] transition-transform"
-              ></div>
-            </label>
-
+      <!-- Product Status and Quantity -->
+      <div class="grid grid-cols-2 gap-8">
+        <div>
+          <label
+            for="product-status"
+            class="block text-lg font-medium text-gray-700"
+            >สถานะสินค้า</label
+          >
+          <label class="relative inline-flex items-center mt-2">
             <input
-              type="text"
-              id="product-quantity"
-              class="w-[95%] h-[45px] rounded-[8px] p-[10px] border-2 border-gray-300 focus:outline-none focus:border-orange-400"
+              type="checkbox"
+              id="product-status"
+              v-model="product.is_active"
+              class="sr-only peer"
+              @change="onStatusChange"
             />
-          </div>
+            <div
+              class="w-14 h-8 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 transition-colors"
+            ></div>
+            <div
+              class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md peer-checked:translate-x-6 transition-transform"
+            ></div>
+          </label>
+        </div>
+        <div>
+          <label
+            for="product-quantity"
+            class="block text-lg font-medium text-gray-700"
+            >จำนวน</label
+          >
+          <input
+            type="number"
+            id="product-quantity"
+            placeholder="กรอกจำนวน"
+            class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+            v-model="product.stock"
+          />
         </div>
       </div>
 
       <!-- Product Details -->
-      <div class="flex gap-[30px]">
-        <h3 class="text-[22px] font-semibold text-gray-600">รายละเอียด</h3>
+      <div>
+        <label
+          for="product-details"
+          class="block text-lg font-medium text-gray-700"
+          >รายละเอียด</label
+        >
         <textarea
-          class="rounded-[8px] w-[87%] p-[10px] border-2 border-gray-300 focus:outline-none focus:border-orange-400"
+          id="product-details"
+          rows="4"
           placeholder="ระบุรายละเอียดสินค้า"
+          class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+          v-model="product.description"
         ></textarea>
       </div>
 
       <!-- Product Image -->
-      <div class="flex flex-col gap-5">
-        <h3 class="text-[22px] font-semibold">รูปสินค้า</h3>
-        <!-- Preview image -->
+      <div>
+        <h3 class="text-lg font-medium text-gray-700">รูปสินค้า</h3>
         <div
-          class="flex justify-center items-center w-full h-[90%] bg-slate-50"
+          class="flex items-center justify-center mt-4 rounded-lg border border-dashed border-gray-300 p-6 bg-gray-50"
         >
-          <!-- กรอบแสดงรูป -->
           <div
-            class="bg-slate-50 dropshadowbottomsub w-[400px] h-[400px] rounded-[5px] flex justify-center items-center"
+            class="w-48 h-48 flex items-center justify-center rounded-lg shadow-md bg-white"
           >
             <img
               v-if="imageUrl"
               :src="imageUrl"
               alt="Preview"
-              class="w-[400px] h-[400px] rounded-[5px] object-cover"
+              class="w-full h-full object-cover rounded-lg"
             />
             <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
           </div>
-          <!-- Input file -->
-          <div class="flex items-end h-full">
-            <div class="flex flex-col pl-8">
-              <!-- ปุ่มรีเซ็ตรูป -->
-              <button
-                v-if="imageUrl"
-                @click="clearImage"
-                class="mb-2 px-4 py-2 w-[100px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
-              >
-                ลบรูปภาพ
-              </button>
-              <input
-                type="file"
-                ref="fileInput"
-                @change="onFileChange"
-                accept="image/*"
-              />
-            </div>
+          <div class="ml-8">
+            <input
+              type="file"
+              ref="fileInput"
+              @change="onFileChange"
+              accept="image/*"
+              class="mt-4"
+            />
+            <button
+              v-if="imageUrl"
+              @click="clearImage"
+              class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+            >
+              ลบรูปภาพ
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex justify-center gap-16 mt-8">
-        <!-- ปุ่มยกเลิก -->
+      <div class="flex justify-center gap-8 mt-8">
         <button
-          to="/product"
           @click.prevent="confirmCancel"
-          class="border-2 p-3 rounded-[8px] bg-red-600 text-white hover:bg-red-700 transition-colors"
+          class="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
         >
           ยกเลิก
         </button>
-
-        <!-- ปุ่มยืนยัน -->
         <button
           @click="confirmSubmit"
-          class="border-2 p-3 rounded-[8px] bg-green-600 text-white hover:bg-green-700 transition-colors"
+          class="px-6 py-3 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors"
         >
           ยืนยัน
         </button>
@@ -161,61 +169,32 @@
 </template>
 
 <script setup lang="ts">
-import Swal from "sweetalert2"; // เพิ่มการนำเข้า SweetAlert2
+import Swal from "sweetalert2"; // SweetAlert2 for popups
+import type { ProductCreate, ProductRes } from "~/models/product.model";
+import service from "~/service";
 
-// ใช้ ref เพื่อเก็บ URL ของรูปภาพ
-const imageUrl = ref<string | null>(null);
+const product = ref<ProductCreate>({
+  name: "",
+  price: 0,
+  description: "",
+  stock: 0,
+  category_id: 0,
+  is_active: true,
+  image_product: "",
+});
 
-// ใช้ ref สำหรับ input file
-const fileInput = ref<HTMLInputElement | null>(null);
+const productRes = ref<ProductRes>({
+  id: 0,
+  name: "",
+  price: 0,
+  description: "",
+  stock: 0,
+  category_id: 0,
+  is_active: true,
+  image_product: "",
+});
 
-// ฟังก์ชันจัดการเมื่อมีการเลือกไฟล์
-const onFileChange = (event: Event) => {
-  // ตรวจสอบว่า target เป็น HTMLInputElement
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0]; // รับไฟล์ที่เลือก (ตรวจสอบว่า files ไม่ใช่ null)
-
-  if (file) {
-    const reader = new FileReader();
-
-    // อ่านไฟล์และแปลงเป็น Data URL
-    reader.onload = (e) => {
-      imageUrl.value = e.target?.result as string; // แปลงผลลัพธ์เป็น string
-    };
-
-    reader.readAsDataURL(file); // อ่านไฟล์
-  }
-};
-
-// ฟังก์ชันลบรูปภาพ
-const clearImage = () => {
-  imageUrl.value = null; // รีเซ็ต URL ของรูปภาพ
-
-  // รีเซ็ต input file
-  if (fileInput.value) {
-    fileInput.value.value = ""; // รีเซ็ตค่า value ของ input
-  }
-};
-
-const router = useRouter();
-
-// ฟังก์ชันยืนยันการยกเลิก
-const confirmCancel = () => {
-  Swal.fire({
-    title: "คุณแน่ใจหรือไม่?",
-    text: "คุณต้องการยกเลิกการเพิ่มสินค้านี้หรือไม่?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // หากผู้ใช้กดยืนยัน ให้ทำการเปลี่ยนเส้นทางไปที่หน้า product
-      router.push("/product"); // ใช้ Vue Router เพื่อเปลี่ยนเส้นทาง
-    }
-  });
-};
-
+// Submit the product
 const confirmSubmit = () => {
   Swal.fire({
     title: "คุณแน่ใจหรือไม่?",
@@ -226,19 +205,117 @@ const confirmSubmit = () => {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
-      // หากผู้ใช้กดยืนยัน ให้ดำเนินการบันทึกข้อมูล
-      Swal.fire("สำเร็จ!", "สินค้าของคุณได้ถูกบันทึกแล้ว", "success").then(
-        () => {
-          router.push("/product"); // เปลี่ยนเส้นทางไปที่หน้า product โดยไม่โหลดหน้าใหม่
-        }
-      );
+      addProduct(); // Create product
     }
   });
 };
 
-const onStatusChange = (event: Event) => {
+// Add product to the server
+const addProduct = async () => {
+  // แปลง category_id เป็นตัวเลข
+  product.value.category_id = parseInt(
+    product.value.category_id.toString(),
+    10
+  );
+
+  // ตรวจสอบว่า category_id เป็นตัวเลขที่ถูกต้องหรือไม่
+  if (isNaN(product.value.category_id)) {
+    Swal.fire({
+      title: "ข้อผิดพลาด",
+      text: "กรุณาเลือกประเภทสินค้าให้ถูกต้อง",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+    return;
+  }
+
+  // แปลง product.price เป็นตัวเลขเพื่อให้แน่ใจว่าเป็น float64
+  product.value.price = parseFloat(product.value.price.toString());
+
+  // ตรวจสอบว่าราคาที่แปลงแล้วเป็นตัวเลขที่ถูกต้องหรือไม่
+  if (isNaN(product.value.price)) {
+    Swal.fire({
+      title: "ข้อผิดพลาด",
+      text: "กรุณากรอกราคาให้ถูกต้อง",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+    return;
+  }
+
+  // ส่งข้อมูล API
+  try {
+    const resp = await service.product.createProduct(product.value);
+    const data = resp.data;
+
+    if (data) {
+      Swal.fire({
+        title: "สำเร็จ!",
+        text: "เพิ่มสินค้าเรียบร้อย",
+        icon: "success",
+        confirmButtonText: "ตกลง",
+      }).then(() => {
+        router.push(`/product`);
+      });
+
+      productRes.value = { ...data }; // Update product response data
+    }
+  } catch (err) {
+    Swal.fire({
+      title: "เกิดข้อผิดพลาด",
+      text: "ไม่สามารถเพิ่มสินค้าได้ กรุณาลองใหม่อีกครั้ง",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+  }
+};
+
+// Handle file input change (image)
+const imageUrl = ref<string | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
+
+const onFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const newStatus = target.checked ? "ใช้งาน" : "ไม่ใช้งาน";
+  const file = target.files?.[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imageUrl.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+// Clear image
+const clearImage = () => {
+  imageUrl.value = null;
+  if (fileInput.value) {
+    fileInput.value.value = "";
+  }
+};
+
+const router = useRouter();
+
+// Confirm cancellation
+const confirmCancel = () => {
+  Swal.fire({
+    title: "คุณแน่ใจหรือไม่?",
+    text: "คุณต้องการยกเลิกการเพิ่มสินค้านี้หรือไม่?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      router.push("/product");
+    }
+  });
+};
+
+// Handle product status change
+const onStatusChange = () => {
+  const newStatus = product.value.is_active ? "ใช้งาน" : "ไม่ใช้งาน";
 
   Swal.fire({
     title: "คุณแน่ใจหรือไม่?",
@@ -248,20 +325,24 @@ const onStatusChange = (event: Event) => {
     confirmButtonText: "ยืนยัน",
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
-    if (result.isConfirmed) {
+    if (!result.isConfirmed) {
+      product.value.is_active = !product.value.is_active; // Reset status if canceled
+    } else {
       Swal.fire(
         "สำเร็จ!",
-        `สถานะสินค้าได้ถูกเปลี่ยนเป็น "${newStatus}" แล้ว`,
+        `สถานะสินค้าได้ถูกเปลี่ยนเป็น "${newStatus}"`,
         "success"
       );
-    } else {
-      // หากผู้ใช้ยกเลิก ให้รีเซ็ตสถานะกลับไปเป็นเดิม
-      target.checked = !target.checked;
     }
   });
 };
 </script>
 
 <style scoped>
-/* Optional Custom Styles */
+button,
+input,
+select,
+textarea {
+  transition: all 0.3s ease-in-out;
+}
 </style>

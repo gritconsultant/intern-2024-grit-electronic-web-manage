@@ -1,265 +1,305 @@
 <template>
-  <div class="defaultpages flex flex-col gap-2">
-    <div class="flex items-center justify-between h-[5%] pl-[35px]">
-      <h1 class="text-[25px] font-bold">รายการสินค้า</h1>
+  <div class="defaultpages flex flex-col gap-3 p-6 bg-gray-50 min-h-screen">
+    <!-- Header Section -->
+    <div
+      class="flex justify-between items-center bg-white p-5 rounded-lg shadow-md"
+    >
+      <h1 class="text-2xl font-bold text-gray-800">รายการสินค้า</h1>
+      <NuxtLink to="/product/create">
+        <button
+          class="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow hover:bg-orange-600"
+        >
+          <i class="fa-solid fa-plus"></i> เพิ่มสินค้า
+        </button>
+      </NuxtLink>
     </div>
-    <div class="flex justify-between px-[25px]">
-      <div class="flex gap-2 w-[80%]">
-        <div class="w-[40%]">
-          <!-- <Search v-model="filters.searchTerm" /> -->
+
+    <!-- Search and Filter Section -->
+    <div class="flex justify-between items-center gap-4">
+      <div class="flex gap-4 flex-1">
+        <!-- Search Bar -->
+        <div class="relative w-1/2">
+          <input
+            type="search"
+            class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
+            placeholder="ค้นหาสินค้า"
+            v-model="search"
+            @keyup.enter="getProductList"
+          />
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-2 text-gray-500 text-lg"
+          ></i>
         </div>
-        <!-- filter category -->
-        <div class=" ">
-          <div class="relative group h-full">
-            <div
-              class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
-            >
-              <button
-                class="bg-[#F68D44] rounded-full flex justify-center items-center pt-[3px] w-[35px] h-full cursor-pointer"
-                type="button"
-              >
-                <i class="fa-solid fa-filter text-[20px]"></i>
-              </button>
-              <div
-                class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[]"
-              ></div>
-            </div>
-            <!-- Dropdown manu -->
-            <div
-              class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
-            >
-              <ul class="py-2 text-sm text-gray-700">
-                <li class="block px-4 py-2 hover:bg-gray-100"></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="pr-[50px]">
-        <NuxtLink to="/product/create">
-          <div
-            class="flex items-center justify-center border-[1px] border-[#FFD652]/50 bg-[#F68D44] text-[20px] font-semibold rounded-[5px] h-full px-3 cursor-pointer dropshadowbutton"
+
+        <!-- Filter Dropdown -->
+        <div class="relative">
+          <button
+            class="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-full shadow hover:bg-orange-600"
+            type="button"
           >
-            เพิ่มสินค้า
+            <i class="fa-solid fa-filter"></i> {{ selectedCategory.name }}
+          </button>
+          <div
+            class="absolute mt-2 bg-white rounded-lg shadow-lg border w-48 z-10 hidden group-hover:block"
+          >
+            <ul class="py-2 text-sm text-gray-700">
+              <li
+                v-for="(category, i) in categories"
+                :key="i"
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                @click="selectCategory(category)"
+              >
+                {{ category.name }}
+              </li>
+            </ul>
           </div>
-        </NuxtLink>
+        </div>
       </div>
     </div>
-    <div class="w-full h-[90%] mt-2 pt-2 bg-white">
-      <table class="flex flex-col px-8 gap-2 w-ful">
-        <thead class="w-full">
-          <tr class="flex gap-2">
-            <th class="w-[40%]">สินค้า</th>
-            <th class="w-[15%]">ประเภท</th>
-            <th class="w-[15%]">ราคา</th>
-            <th class="w-[15%]">จำนวน</th>
-            <th class="w-[15%]">สถานะสินค้า</th>
-            <th class="w-[5%]"></th>
+
+    <!-- Product List -->
+    <div
+      class="bg-white flex flex-col justify-between h-[80%] rounded-lg shadow-md p-6"
+    >
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-orange-100 text-gray-800">
+            <th class="px-4 py-2 bg-slate-500">สินค้า</th>
+            <th class="px-4 py-2 bg-slate-500">ประเภท</th>
+            <th class="px-4 py-2 bg-slate-500">ราคา</th>
+            <th class="px-4 py-2 bg-slate-500">จำนวน</th>
+            <th class="px-4 py-2 bg-slate-500">สถานะสินค้า</th>
+            <th class="px-4 py-2 bg-slate-500">การจัดการ</th>
           </tr>
         </thead>
-        <tbody class="w-full">
+        <tbody>
           <tr
-            class="flex gap-2 py-2 border-b-[1px]"
-            v-for="(product, index) in products"
+            v-for="(product, index) in paginatedProduct"
             :key="index"
+            class="border-b w-[100%] hover:bg-gray-50"
           >
-            <th
-              class="w-[40%] truncate flex gap-2 justify-between border-r-[2px]"
-            >
-              <div class="w-full flex justify-center">
-                <img
-                  src=""
-                  alt=""
-                  class="w-[80px] h-[80px] object-cover border-2 border-black rounded-[5px]"
-                />
-              </div>
-              <div class="w-full flex justify-start">{{ product.name }}</div>
-            </th>
-            <th class="w-[15%] truncate border-r-[2px]">
-              {{ product.category.name }}
-            </th>
-            <th class="w-[15%] truncate border-r-[2px]">{{ product.price }}</th>
-            <th class="w-[15%] truncate border-r-[2px]">{{ product.stock }}</th>
-            <th
-              class="w-[15%] flex items-center justify-center truncate border-r-[2px]"
-            >
+            <td class="flex items-center gap-4 px-4 py-2 bg-slate-500 w-[90%]">
+              <img
+                src=""
+                alt="Product"
+                class="w-16 h-16 object-cover rounded-lg border"
+              />
+              <span>{{ product.name }}</span>
+            </td>
+            <td class="px-4 py-2 bg-slate-500">{{ product.category.name }}</td>
+            <td class="px-4 py-2 text-orange-500 font-bold bg-slate-500">
+              ฿{{ product.price }}
+            </td>
+            <td class="px-4 py-2 bg-slate-500">{{ product.stock }}</td>
+            <td class="px-4 py-2 bg-slate-500">
               <label class="relative inline-flex items-center cursor-pointer">
-                <!-- Checkbox -->
-                <input type="checkbox" class="sr-only peer" />
-                <!-- Toggle Switch Background -->
+                <input
+                  type="checkbox"
+                  class="sr-only peer"
+                  :checked="product.is_active"
+                  @click="changeProductStatus(product.id)"
+                />
                 <div
-                  class="w-11 h-6 bg-orange-200 peer-focus:outline-none peer-focus:ring-[1px] peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
+                  class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-orange-500 transition-colors"
                 ></div>
-                <!-- Toggle Knob -->
                 <div
-                  class="absolute w-5 h-5 bg-orange-400 rounded-full left-[2px] top-[2px] peer-checked:translate-x-5 transition-transform"
+                  class="absolute w-5 h-5 bg-white rounded-full peer-checked:translate-x-5 transition-transform"
                 ></div>
               </label>
-            </th>
-            <th class="w-[5%] flex items-center justify-center">
-              <div class="flex flex-col justify-center">
-                <button>
-                  <i class="fa-solid fa-bars"></i>
+            </td>
+            <td class="px-4 py-2 bg-slate-500">
+              <div class="relative">
+                <button @click="toggleMenu(product.id)">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
                 </button>
-                <div>
-                  <!-- <ul
-                    class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[80px] -translate-x-[90px]"
+                <ul
+                  v-if="isMenuVisible[product.id]"
+                  class="absolute right-0 bg-white border rounded-lg shadow-lg mt-2"
+                >
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <NuxtLink :to="`/product/${product.id}`">
+                      รายละเอียดสินค้า
+                    </NuxtLink>
+                  </li>
+                  <li
+                    class="px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer"
                   >
-                    <li
-                      class="h-[50%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
-                    >
-                      <NuxtLink to="/product/[id]"> รายะเอียดสินค้า </NuxtLink>
-                    </li>
-                    <li
-                      class="h-[50%] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
-                    >
-                      ลบสินค้า
-                    </li>
-                  </ul> -->
-                </div>
+                    ลบสินค้า
+                  </li>
+                </ul>
               </div>
-            </th>
+            </td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-4">
+        <p class="text-sm text-gray-600">
+          สินค้า {{ paginatedProduct.length }} จาก {{ filteredProducts.length }}
+        </p>
+        <div class="flex gap-2">
+          <button
+            :disabled="currentPage === 1"
+            @click="changePage(currentPage - 1)"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ก่อนหน้า
+          </button>
+          <button
+            :disabled="currentPage === totalPages"
+            @click="changePage(currentPage + 1)"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ถัดไป
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { Product } from "~/models/product.model";
-
+import Swal from "sweetalert2";
+import type { Category, Product } from "~/models/product.model";
 import service from "~/service";
 
-// const filters = ref({
-//   searchTerm: "", // คำค้นหา
-// });
+// สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
+const selectedCategory = ref<Category>({
+  id: 1,
+  name: "ทั้งหมด",
+});
 
-// // สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
-// const selectedCategory = ref<Category>({
-//   id: 1,
-//   name: "ทั้งหมด",
-// });
+const categories = ref<Category[]>([
+  {
+    id: 1,
+    name: "ทั้งหมด",
+  },
+  {
+    id: 2,
+    name: "อาหาร",
+  },
+  {
+    id: 3,
+    name: "เครื่องดื่ม",
+  },
+  {
+    id: 4,
+    name: "สมุนไพร",
+  },
+  {
+    id: 5,
+    name: "ผ้าและเครื่องดื่ม",
+  },
+  {
+    id: 6,
+    name: "ของใช้และของตกแต่ง",
+  },
+]);
 
-// const categories = ref<Category[]>([
-//   {
-//     id: 1,
-//     name: "ทั้งหมด",
-//   },
-//   {
-//     id: 2,
-//     name: "อาหาร",
-//   },
-//   {
-//     id: 3,
-//     name: "เครื่องดื่ม",
-//   },
-//   {
-//     id: 4,
-//     name: "สมุนไพร",
-//   },
-//   {
-//     id: 5,
-//     name: "ผ้าและเครื่องดื่ม",
-//   },
-//   {
-//     id: 6,
-//     name: "ของใช้และของตกแต่ง",
-//   },
-// ]);
-// // ฟังก์ชันเลือกหมวดหมู่
-// const selectCategory = (category: Category) => {
-//   selectedCategory.value = category;
-// };
+// ฟังก์ชันเลือกหมวดหมู่
+const selectCategory = (category: Category) => {
+  selectedCategory.value = category;
+};
 
-// // const filteredProducts = computed(() => {
-// //   let result = products.value;
+const filteredProducts = computed(() => {
+  let result = products.value;
 
-// //   // ฟิลเตอร์ตามคำค้นหา
-// //   if (filters.value.searchTerm) {
-// //     const term = filters.value.searchTerm.toLowerCase();
-// //     result = result.filter((product) => {
-// //       return (
-// //         product.name.toLowerCase().includes(term) || // ตรวจสอบชื่อสินค้า
-// //         product.categoryId.toString().includes(term) || // ตรวจสอบหมวดหมู่
-// //         product.price.toString().includes(term) // ตรวจสอบราคา
-// //       );
-// //     });
-// //   }
+  if (search.value) {
+    const term = search.value.toLowerCase();
+    result = result.filter((product) => {
+      return (
+        product.name.toLowerCase().includes(term) ||
+        product.category.name.toLowerCase().includes(term) ||
+        product.price.toString().includes(term)
+      );
+    });
+  }
 
-// //   // ฟิลเตอร์ตามหมวดหมู่ที่เลือก
-// //   if (selectedCategory.value.id !== 1) {
-// //     result = result.filter(
-// //       (product) => product.categoryId === selectedCategory.value.id // ตรวจสอบหมวดหมู่ที่เลือก
-// //     );
-// //   }
+  if (selectedCategory.value.id !== 1) {
+    result = result.filter(
+      (product) => product.category.id === selectedCategory.value.id
+    );
+  }
+  result = result.sort((a, b) => (b.is_active ? 1 : 0) - (a.is_active ? 1 : 0));
 
-// //   return result;
-// // });
+  console.log("Filtered products:", result); // ดูค่าของ filteredProducts
+  return result;
+});
 
-// // สถานะการแสดงเมนูของสินค้า
-// const isMenuVisible = ref<Record<number, boolean>>({});
+const search = ref<string>("");
 
-// // ฟังก์ชันสำหรับสลับการแสดงผลของเมนู
-// const toggleMenu = (productId: number) => {
-//   isMenuVisible.value = {
-//     ...isMenuVisible.value,
-//     [productId]: !isMenuVisible.value[productId],
-//   };
-// };
+// Pagination variables
+const currentPage = ref(1);
+const itemsPerPage = 7; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
 
-// const changeProductStatus = (productId: number) => {
-//   // Find the product by ID
-//   const product = products.value.find((product) => product.id === productId);
+// Paginate the filtered orders
+const paginatedProduct = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = currentPage.value * itemsPerPage;
+  console.log("Paginated products:", filteredProducts.value.slice(start, end));
+  return filteredProducts.value.slice(start, end);
+});
 
-//   if (product) {
-//     // Toggle the status (true becomes false, and false becomes true)
-//     const newStatus = !product.status;
+// Calculate total pages
+const totalPages = computed(() => {
+  return Math.ceil(filteredProducts.value.length / itemsPerPage);
+});
 
-//     Swal.fire({
-//       title: "ยืนยันการเปลี่ยนสถานะ",
-//       text: `คุณต้องการเปลี่ยนสถานะของสินค้าเป็น "${
-//         newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
-//       }" ใช่หรือไม่?`,
-//       icon: "warning",
-//       showCancelButton: true,
-//       confirmButtonText: "ยืนยัน",
-//       cancelButtonText: "ยกเลิก",
-//     }).then((result) => {
-//       if (result.isConfirmed) {
-//         product.status = newStatus; // Update the status
-//         toggleMenu(productId); // Close menu if needed
-//         Swal.fire(
-//           "สำเร็จ!",
-//           `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
-//             newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
-//           }" แล้ว`,
-//           "success"
-//         );
-//       }
-//     });
-//   }
-// };
+// Change the current page
+const changePage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page; // Updates the current page
+  }
+};
 
-// const deleteProduct = (productId: number) => {
-//   Swal.fire({
-//     title: "คุณแน่ใจหรือไม่?",
-//     text: "คุณต้องการลบสินค้านี้หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้.",
-//     icon: "warning",
-//     showCancelButton: true,
-//     confirmButtonText: "ยืนยัน",
-//     cancelButtonText: "ยกเลิก",
-//   }).then((result) => {
-//     if (result.isConfirmed) {
-//       // ลบสินค้าออกจากรายการ
-//       products.value = products.value.filter(
-//         (product) => product.id !== productId
-//       );
+watch([search, selectedCategory], () => {
+  currentPage.value = 1; // รีเซ็ตหน้าเมื่อมีการค้นหาหรือเลือกหมวดหมู่ใหม่
+});
 
-//       Swal.fire("สำเร็จ!", "สินค้าถูกลบออกจากรายการแล้ว.", "success");
-//     }
-//   });
-// };
+// สถานะการแสดงเมนูของสินค้า
+const isMenuVisible = ref<Record<number, boolean>>({});
+
+// ฟังก์ชันสำหรับสลับการแสดงผลของเมนู
+const toggleMenu = (productId: number) => {
+  isMenuVisible.value = {
+    ...isMenuVisible.value,
+    [productId]: !isMenuVisible.value[productId],
+  };
+};
+
+const changeProductStatus = (productId: number) => {
+  // Find the product by ID
+  const product = products.value.find((product) => product.id === productId);
+
+  if (product) {
+    // Toggle the status (true becomes false, and false becomes true)
+    const newStatus = !product.is_active;
+
+    Swal.fire({
+      title: "ยืนยันการเปลี่ยนสถานะ",
+      text: `คุณต้องการเปลี่ยนสถานะของสินค้าเป็น "${
+        newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
+      }" ใช่หรือไม่?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        product.is_active = newStatus; // Update the status
+        toggleMenu(productId); // Close menu if needed
+        Swal.fire(
+          "สำเร็จ!",
+          `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
+            newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
+          }" แล้ว`,
+          "success"
+        );
+      }
+    });
+  }
+};
 
 const products = ref<Product[]>([]);
 
