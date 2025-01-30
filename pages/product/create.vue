@@ -35,10 +35,13 @@
             id="product-category"
             class="w-full mt-2 rounded-lg p-4 pr-5 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
           >
-            <option value="1">อาหาร</option>
-            <!-- เลขแทนค่าประเภทสินค้า -->
-            <option value="2">เสื้อผ้า</option>
-            <!-- เพิ่มตัวเลือกอื่น ๆ ตามต้องการ -->
+            <option
+              v-for="(category, index) in categories"
+              :key="index"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
           </select>
         </div>
         <div>
@@ -170,7 +173,11 @@
 
 <script setup lang="ts">
 import Swal from "sweetalert2"; // SweetAlert2 for popups
-import type { ProductCreate, ProductRes } from "~/models/product.model";
+import type {
+  Category,
+  ProductCreate,
+  ProductRes,
+} from "~/models/product.model";
 import service from "~/service";
 
 const product = ref<ProductCreate>({
@@ -270,6 +277,33 @@ const addProduct = async () => {
   }
 };
 
+const categories = ref<Category[]>([]);
+const getCategorylist = async () => {
+  await service.product
+    .getCategoryList()
+    .then((resp: any) => {
+      const data = resp.data.data;
+      const categoryList: Category[] = [];
+
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const c = data[i];
+        const category: Category = {
+          id: c.id,
+          name: c.name,
+          is_active: c.is_active,
+          imageCategory: c.imageCategory,
+        };
+        categoryList.push(category);
+      }
+      categories.value = categoryList;
+    })
+    .catch((error: any) => {
+      console.log("Error loading product list:", error.response || error);
+    })
+    .finally(() => {});
+};
+
 // Handle file input change (image)
 const imageUrl = ref<string | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -336,6 +370,10 @@ const onStatusChange = () => {
     }
   });
 };
+
+onMounted(async () => {
+  await getCategorylist();
+});
 </script>
 
 <style scoped>

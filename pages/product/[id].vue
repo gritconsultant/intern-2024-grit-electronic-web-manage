@@ -36,10 +36,14 @@
                   <select
                     class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
                     v-model="product.category_id"
+                    @change="product.category_id = Number(product.category_id)"
                   >
                     <option value="">กรุณาเลือกประเภท</option>
-                    <option value="1">Electronics</option>
-                    <option value="2">Clothing</option>
+                    <option value="3">อาหาร</option>
+                    <option value="4">เครื่องดื่ม</option>
+                    <option value="5">สมุนไพร</option>
+                    <option value="6">ผ้าและเครื่องแต่งกาย</option>
+                    <option value="7">ของใช้ ของตกแต่ง</option>
                   </select>
                 </div>
 
@@ -69,24 +73,18 @@
                   >
                     -
                   </button>
-                  <!-- Add "+" button for increasing stock -->
-                  <button
-                    class="bg-orange-500 text-white px-4 py-2 rounded-md"
-                    @click="increaseAmount"
-                  >
-                    +
-                  </button>
                   <input
                     type="number"
                     v-model="inputAmount"
                     placeholder="เพิ่มจำนวนสินค้า"
                     class="w-24 p-3 text-center border border-gray-300 rounded-md"
                   />
+                  <!-- Add "+" button for increasing stock -->
                   <button
                     class="bg-orange-500 text-white px-4 py-2 rounded-md"
-                    @click="updateAmount"
+                    @click="increaseAmount"
                   >
-                    เพิ่ม
+                    +
                   </button>
                 </div>
               </div>
@@ -117,12 +115,6 @@
                   @click="confirmSave"
                 >
                   บันทึก
-                </button>
-                <button
-                  class="bg-orange-500 w-24 py-2 text-white rounded-md hover:bg-red-500 font-semibold"
-                  @click="confirmDelete"
-                >
-                  ลบสินค้า
                 </button>
               </div>
             </div>
@@ -163,7 +155,6 @@ import Swal from "sweetalert2";
 import type {
   Product,
   ProductRes,
-  ProductReview,
   ProductUpdate,
 } from "~/models/product.model";
 import service from "~/service";
@@ -197,25 +188,26 @@ const getProductById = async () => {
     .getProductById(route.params.id)
     .then((resp: any) => {
       const data = resp.data.data;
-      const temp: ProductUpdate = {
+      product.value = {
         id: data.id,
         name: data.name,
         price: data.price,
         description: data.description,
         stock: data.stock,
-        category_id: data.category.id,
+        category_id: Number(data.category.id), // แปลงเป็นตัวเลข
         is_active: data.is_active,
         image_product: data.Image.description,
       };
-      product.value = temp;
     })
-    .catch((erorr: any) => {
-      console.log(erorr.respontse);
-    })
-    .finally(() => {});
+    .catch((error: any) => {
+      console.error(error.response);
+    });
 };
 
 const updateProduct = async () => {
+  product.value.category_id = Number(product.value.category_id);
+  // เพิ่ม inputAmount เข้าไปใน stock
+  product.value.stock += inputAmount.value;
   await service.product
     .updateProduct(route.params.id, product.value)
     .then((resp: any) => {
@@ -247,20 +239,16 @@ const updateProduct = async () => {
 };
 
 // Methods
-const inputAmount = ref<number>(0);
+const inputAmount = ref<number>(0); // ค่าที่จะเพิ่ม/ลด
 
 const increaseAmount = () => {
-  product.value.stock += 1;
+  inputAmount.value += 1;
 };
 
 const decreaseAmount = () => {
-  if (product.value.stock > 0) {
-    product.value.stock -= 1;
+  if (inputAmount.value > 1) {
+    inputAmount.value -= 1;
   }
-};
-
-const updateAmount = () => {
-  product.value.stock += inputAmount.value;
 };
 
 const confirmSave = () => {
@@ -275,6 +263,8 @@ const confirmSave = () => {
     if (result.isConfirmed) {
       updateProduct().then(() => {
         Swal.fire("สำเร็จ!", "สินค้าของคุณได้ถูกบันทึกแล้ว", "success");
+        // รีเซ็ตค่า inputAmount เป็น 0 หลังจากบันทึกสำเร็จ
+        inputAmount.value = 0;
       });
     }
   });

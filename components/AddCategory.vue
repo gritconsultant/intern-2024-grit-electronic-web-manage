@@ -14,7 +14,7 @@
         <input
           type="text"
           id="category-name"
-          v-model="categoryName"
+          v-model="category.name"
           class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full p-3 text-gray-700"
           placeholder="กรอกชื่อประเภทสินค้า"
         />
@@ -49,8 +49,8 @@
           class="flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
         >
           <img
-            v-if="imageUrl"
-            :src="imageUrl"
+            v-if="category.imageCategory"
+            :src="category.imageCategory"
             alt="Preview"
             class="w-[400px] h-[400px] rounded-[5px] object-cover"
           />
@@ -78,35 +78,104 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineEmits } from "vue";
 import Swal from "sweetalert2";
+import type { CategoryCreate, CategoryRes } from "~/models/product.model";
+import service from "~/service";
 
-// เพิ่มอีเวนต์ emit
+const category = ref<CategoryCreate>({
+  name: "",
+  is_active: true,
+  imageCategory: "",
+});
+
+const categoryRes = ref<CategoryRes>({
+  id: 0,
+  name: "",
+  is_active: true,
+  imageCategory: "",
+});
+
+const addCategory = async () => {
+  await service.product
+    .createCategory(category.value)
+    .then((resp: any) => {
+      console.log(resp.data);
+      const data = resp.data;
+      if (data) {
+        Swal.fire({
+          title: "เพิ่มสินค้าสำเร็จ",
+          text: "เพิ่มสินค้า",
+          icon: "success",
+        }).then(() => {
+          emit("close"); // ปิดฟอร์มหลังจากแสดงสำเร็จ
+        });
+      }
+
+      const category: CategoryRes = {
+        id: data.id,
+        name: data.name,
+        is_active: data.is_active,
+        imageCategory: data.imageCategory,
+      };
+      categoryRes.value = category;
+    })
+    .catch((err: any) => {
+      if (err.response?.data?.message === "category already exists") {
+        Swal.fire({
+          title: "ข้อผิดพลาด",
+          text: "ชื่อประเภทสินค้านี้มีอยู่แล้ว กรุณาใช้ชื่ออื่น",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
+      } else {
+        console.error(err);
+        Swal.fire({
+          title: "เกิดข้อผิดพลาด",
+          text: "ไม่สามารถเพิ่มประเภทสินค้าได้",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
+      }
+    })
+    .finally(() => {});
+};
+
+const confirm = () => {
+  if (category.value.name.trim() === "") {
+    Swal.fire({
+      title: "ข้อผิดพลาด",
+      text: "กรุณากรอกชื่อประเภทสินค้า",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+    return;
+  }
+  if (!category.value.imageCategory) {
+    Swal.fire({
+      title: "ข้อผิดพลาด",
+      text: "กรุณาอัพโหลดรูปภาพ",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+    return;
+  }
+
+  Swal.fire({
+    title: "คุณยืนยันการเพิ่มประเภทหรือไม่?",
+    text: "คุณต้องการยืนยันการเพิ่มประเภทสินค้านี้หรือไม่?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await addCategory();
+    }
+  });
+  emit("close");
+};
+
 const emit = defineEmits(["close", "addCategory"]);
-
-const imageUrl = ref<string | null>(null);
-const categoryName = ref<string>("");
-
-const fileInput = ref<HTMLInputElement | null>(null);
-
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      imageUrl.value = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
-};
-
-const clearImage = () => {
-  imageUrl.value = null;
-  if (fileInput.value) {
-    fileInput.value.value = "";
-  }
-};
 
 const confirmCancel = () => {
   Swal.fire({
@@ -118,49 +187,40 @@ const confirmCancel = () => {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
-      emit("close"); // ส่งอีเวนต์ปิดฟอร์ม
+      console.log("Emit close");
+      emit("close"); // ส่งอีเวนต์เพื่อปิดฟอร์ม
     }
   });
 };
 
-const confirm = () => {
-  if (categoryName.value.trim() === "") {
-    Swal.fire({
-      title: "ข้อผิดพลาด",
-      text: "กรุณากรอกชื่อประเภทสินค้า",
-      icon: "error",
-      confirmButtonText: "ตกลง",
-    });
-    return;
-  }
-  if (!imageUrl.value) {
-    Swal.fire({
-      title: "ข้อผิดพลาด",
-      text: "กรุณาอัพโหลดรูปภาพ",
-      icon: "error",
-      confirmButtonText: "ตกลง",
-    });
-    return;
-  }
+// เพิ่มอีเวนต์ emit
 
-  Swal.fire({
-    title: "คุณแน่ใจหรือไม่?",
-    text: "คุณต้องการยืนยันการเพิ่มประเภทสินค้านี้หรือไม่?",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // เพิ่ม console.log เพื่อดูว่าข้อมูลถูกต้องหรือไม่
-      console.log("ส่งข้อมูลประเภทสินค้าไปยัง parent:", {
-        name: categoryName.value,
-        image: imageUrl.value,
-      });
-      emit("addCategory", { name: categoryName.value, image: imageUrl.value }); // ส่งข้อมูลประเภทสินค้า
-      emit("close"); // ปิดฟอร์ม
-    }
-  });
+const imageUrl = ref<string | null>(null);
+
+const fileInput = ref<HTMLInputElement | null>(null);
+
+const onFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // เก็บ URL ของภาพลงใน category.value.imageCategory
+      category.value.imageCategory = e.target?.result as string;
+      // ตั้งค่า imageUrl ด้วย URL ของไฟล์
+      imageUrl.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const clearImage = () => {
+  // ตั้งค่า imageUrl และ imageCategory ให้เป็น null หรือค่าว่าง
+  imageUrl.value = null;
+  category.value.imageCategory = ""; // ทำให้ตัวแปร imageCategory เป็นค่าว่าง
+  if (fileInput.value) {
+    fileInput.value.value = ""; // เคลียร์ค่าของ input file
+  }
 };
 </script>
 

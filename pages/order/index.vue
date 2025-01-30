@@ -1,89 +1,97 @@
 <template>
-  <div class="defaultpages flex flex-col gap-2">
-    <!-- Header -->
-    <div class="flex flex-col  h-[15%] mt-5 pl-[35px]">
-      <div class="bg-slate-400">
-        <h1 class="text-[25px] font-bold">รายการคำสั่งซื้อ</h1>
-      </div>
-      <div class="flex rounded-[5px] w-[70%]">
-        <div class="flex  gap-5 w-full">
-          <!-- Search -->
-          <div class="flex items-end w-[50%]">
-            <Search v-model="filters.searchTerm" />
+  <div class="defaultpages flex flex-col gap-3 p-6 bg-gray-50">
+    <!-- Header Section -->
+    <div
+      class="flex justify-between items-center bg-white p-5 rounded-lg shadow-md"
+    >
+      <h1 class="text-2xl font-bold text-gray-800">รายการคำสั่งซื้อ</h1>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="flex justify-between items-center gap-4 mt-2  ">
+      <div class="flex gap-4 flex-1 items-end  h-full ">
+        <!-- Search Bar -->
+        <div class="relative w-[30%]">
+          <input
+            type="search"
+            class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
+            placeholder="ค้นหาคำสั่งซื้อ"
+            v-model="filters.searchTerm"
+          />
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-2 text-gray-500 text-lg"
+          ></i>
+        </div>
+
+        <!-- Date Filters -->
+        <div class="flex items-center space-x-4">
+          <div>
+            <label
+              for="startDate"
+              class="block text-sm font-medium text-black mb-1"
+              >วันที่เริ่มต้น</label
+            >
+            <input
+              type="date"
+              id="startDate"
+              v-model="filters.startDate"
+              class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
+            />
+          </div>
+          <div>
+            <label
+              for="endDate"
+              class="block text-sm font-medium text-black mb-1"
+              >วันที่สิ้นสุด</label
+            >
+            <input
+              type="date"
+              id="endDate"
+              v-model="filters.endDate"
+              class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
+            />
+          </div>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="relative group h-10  ">
+          <div
+            class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
+          >
+            <button
+              class="bg-[#F68D44] rounded-full flex justify-center items-center pt-[3px] w-[35px] h-full cursor-pointer"
+              type="button"
+            >
+              <i class="fa-solid fa-filter text-[20px]"></i>
+            </button>
+            <div
+              class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[10px]"
+            >
+              {{ selectedStatusOrder.status }}
+            </div>
           </div>
 
-          <!-- Date Filters -->
-          <div class="flex items-center space-x-4">
-            <div>
-              <label
-                for="startDate"
-                class="block text-sm font-medium text-black mb-1"
-                >วันที่เริ่มต้น</label
+          <!-- Dropdown Menu -->
+          <div
+            class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
+          >
+            <ul class="py-2 text-sm text-gray-700">
+              <li
+                v-for="(statusorder, i) in Statusorders"
+                :key="i"
+                class="block px-4 py-2 hover:bg-gray-100"
+                @click="selectStatusOrder(statusorder)"
               >
-              <input
-                type="date"
-                id="startDate"
-                v-model="filters.startDate"
-                class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
-              />
-            </div>
-            <div>
-              <label
-                for="endDate"
-                class="block text-sm font-medium text-black mb-1"
-                >วันที่สิ้นสุด</label
-              >
-              <input
-                type="date"
-                id="endDate"
-                v-model="filters.endDate"
-                class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
-              />
-            </div>
-          </div>
-
-          <!-- Status Filter -->
-          <div class="flex items-end">
-            <div class="relative group h-[70%]">
-              <div
-                class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
-              >
-                <button
-                  class="bg-[#F68D44] rounded-full flex justify-center items-center pt-[3px] w-[35px] h-full cursor-pointer"
-                  type="button"
-                >
-                  <i class="fa-solid fa-filter text-[20px]"></i>
-                </button>
-                <div
-                  class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[10px]"
-                >
-                  {{ selectedStatusOrder.status }}
-                </div>
-              </div>
-
-              <!-- Dropdown Menu -->
-              <div
-                class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
-              >
-                <ul class="py-2 text-sm text-gray-700">
-                  <li
-                    v-for="(statusorder, i) in Statusorders"
-                    :key="i"
-                    class="block px-4 py-2 hover:bg-gray-100"
-                    @click="selectStatusOrder(statusorder)"
-                  >
-                    {{ statusorder.status }}
-                  </li>
-                </ul>
-              </div>
-            </div>
+                {{ statusorder.status }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Order Table -->
-    <div class="w-full h-[90%] pt-2 bg-white dropshadowtop">
+    <div class="flex flex-col justify-between w-full h-[90%] pt-2 bg-white rounded-lg py-2 dropshadowbox">
       <table class="flex flex-col px-8 gap-2 w-full">
         <thead class="w-full">
           <tr
@@ -100,7 +108,7 @@
           </tr>
         </thead>
         <tbody
-          class="w-full"
+          class="w-full py-[4px]"
           v-for="(order, index) in paginatedOrders"
           :key="index"
         >
@@ -195,8 +203,7 @@
           </tr>
         </tbody>
       </table>
-    </div>
-
+      
     <!-- Pagination -->
     <div class="flex justify-between items-center px-8">
       <p class="text-sm text-gray-700">
@@ -220,6 +227,8 @@
         </button>
       </div>
     </div>
+    </div>
+
   </div>
 </template>
 
@@ -356,7 +365,7 @@ const filteredOrder = computed(() => {
 
 // Pagination variables
 const currentPage = ref(1);
-const itemsPerPage = 15; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
+const itemsPerPage = 10; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
 
 // Paginate the filtered orders
 const paginatedOrders = computed(() => {
@@ -376,9 +385,6 @@ const changePage = (page: number) => {
     currentPage.value = page;
   }
 };
-
-
-
 
 const orders = <Order[]>[
   {

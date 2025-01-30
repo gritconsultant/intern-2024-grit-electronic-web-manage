@@ -1,175 +1,192 @@
 <template>
-  <div class="defaultpages flex flex-col gap-2">
-    <!-- ส่วนหัว -->
-    <div class="flex items-center justify-between h-[5%] pl-[35px]">
-      <h1 class="text-[25px] font-bold">ประเภทสินค้า</h1>
-    </div>
-
-    <!-- ส่วนค้นหาและปุ่มเพิ่ม -->
-    <div class="flex justify-between px-[25px]">
-      <div class="flex gap-2 w-[80%]">
-        <div class="w-[40%]">
-          <Search v-model="searchQuery" />
-        </div>
-      </div>
-      <div class="pr-[50px]">
-        <div
-          @click="showAddCategory = true"
-          class="flex items-center justify-center border-[1px] border-[#FFD652]/50 bg-[#F68D44] text-[20px] font-semibold rounded-[5px] h-full px-3 cursor-pointer dropshadowbutton"
-        >
-          เพิ่มประเภทสินค้า
-        </div>
+  <div class="defaultpages flex flex-col gap-3 p-6 bg-gray-50">
+    <!-- Header Section -->
+    <div
+      class="flex justify-between items-center bg-white p-5 rounded-lg shadow-md"
+    >
+      <h1 class="text-2xl font-bold text-gray-800">ประเภทสินค้า</h1>
+      <div
+        @click="showAddCategory = true"
+        class="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow cursor-pointer hover:bg-orange-600"
+      >
+        <i class="fa-solid fa-plus"></i> เพิ่มประเภทสินค้า
       </div>
     </div>
 
-    <!-- ตาราง -->
-    <div class="w-full h-[90%] mt-2 pt-2 bg-white">
-      <table class="flex flex-col px-8 gap-2 w-ful">
-        <thead class="w-full">
+    <!-- Search and Filter Section -->
+    <div class="flex justify-between items-center gap-4 mt-2">
+      <div class="flex gap-4 flex-1">
+        <!-- Search Bar -->
+        <div class="relative w-1/2">
+          <input
+            type="search"
+            class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
+            placeholder="ค้นหาประเภทสินค้า"
+          />
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-2 text-gray-500 text-lg"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div
+      class="bg-white flex flex-col justify-between h-[90%] rounded-lg p-6 w-full dropshadowbox"
+    >
+      <table class="w-full text-left h-[90%]">
+        <thead class="w-full bg-orange-100 rounded-t-lg text-gray-800">
           <tr class="flex gap-2">
-            <th class="w-[30%] text-end pr-[70px]">หมายเลขประเภท</th>
-            <th class="w-[15%]">ชื่อประเภท</th>
-            <th class="w-[15%]">จำนวน</th>
-            <th class="w-[35%]"></th>
+            <th class="px-4 py-2 w-[30%]">หมายเลขประเภท</th>
+            <th class="px-4 py-2 w-[15%]">ชื่อประเภท</th>
+            <th class="px-4 py-2 w-[15%]">จำนวน</th>
+            <th class="px-4 py-2 w-[35%]">การจัดการ</th>
           </tr>
         </thead>
         <tbody class="w-full">
           <tr
-            v-for="(category, index) in filteredCategories"
+            v-for="(category, index) in categories"
             :key="index"
-            class="flex gap-2 py-2 border-b-[1px]"
+            class="border-b flex gap-2 hover:bg-gray-50"
           >
-            <!-- หมายเลขประเภท -->
-            <th class="w-[30%] truncate flex gap-5">
-              <div class="w-full flex justify-center">
-                <img
-                  :src="category.image"
-                  alt="รูปประเภท"
-                  class="border-[1px] border-black w-[80px] h-[80px] rounded-full"
-                />
-              </div>
-              <div class="w-full">{{ index + 1 }}</div>
-            </th>
-
-            <!-- ชื่อประเภท -->
-            <th class="w-[15%] truncate">{{ category.name }}</th>
-
-            <!-- จำนวน (mock data, ปรับได้ตามต้องการ) -->
-            <th class="w-[15%] truncate">-</th>
-
-            <!-- ปุ่มแก้ไขและลบประเภท -->
-            <th class="w-[35%] flex gap-5 items-center justify-end truncate">
-              <!-- ปุ่มแก้ไข -->
-              <button @click="editCategory(index)" class="">
+            <td class="flex items-center gap-4 px-4 py-2 w-[30%]">
+              <img
+                src=""
+                alt="รูปประเภท"
+                class="w-16 h-16 object-cover rounded-lg border"
+              />
+            </td>
+            <td class="px-4 py-2 w-[15%]">{{ category.name }}</td>
+            <td class="px-4 py-2 text-orange-500 font-bold w-[15%]">-</td>
+            <td class="px-4 py-2 w-[35%] flex gap-4 items-center justify-end">
+              <button>
                 <i
-                  class="fa-solid fa-pen-to-square text-[30px] text-orange-400"
+                  @click="openEditCategory(category.id)"
+                  class="fa-solid fa-pen-to-square text-orange-400 text-xl"
                 ></i>
               </button>
-
-              <!-- ปุ่มลบประเภท -->
-              <button @click="removeCategory(index)" class=" ">
-                <i class="fa-solid fa-trash text-[30px] text-red-600"></i>
+              <button>
+                <i
+                @click="confirmDeleteCategory(category.id)"
+                 class="fa-solid fa-trash text-red-600 text-xl"></i>
               </button>
-            </th>
+            </td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination -->
     </div>
 
-    <!-- เรียกใช้ AddCategory -->
+    <!-- AddCategory Component -->
     <AddCategory
       v-if="showAddCategory"
       @close="closeForm"
-      @addCategory="addCategory"
       class="absolute top-[200px] left-[700px]"
     />
-
-    <!-- เรียกใช้ EditCategory -->
-    <!-- <EditCategory
-      v-if="isValidEditCategory()"
-      :category="categories[editIndex]"
+    <EditCategory
+      v-if="showEditCategory"
+      :categoryId="selectedCategoryId"
       @close="closeForm"
-      @updateCategory="updateCategory"
-    /> -->
+      class="absolute top-[200px] left-[700px]"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import Swal from "sweetalert2";
+import type { Category } from "~/models/product.model";
+import service from "~/service";
+
+const categories = ref<Category[]>([]);
+const getCategorylist = async () => {
+  await service.product
+    .getCategoryList()
+    .then((resp: any) => {
+      const data = resp.data.data;
+      const categoryList: Category[] = [];
+
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const c = data[i];
+        const category: Category = {
+          id: c.id,
+          name: c.name,
+          is_active: c.is_active,
+          imageCategory: c.imageCategory,
+        };
+        categoryList.push(category);
+      }
+      categories.value = categoryList;
+    })
+    .catch((error: any) => {
+      console.log("Error loading product list:", error.response || error);
+    })
+    .finally(() => {});
+};
+
+const deleteCategory = async (id: number) => {
+  await service.product
+    .deleteCategory(id)
+    .then((resp: any) => {
+      const data = resp.data;
+      console.log(data);
+    })
+    .catch((erorr: any) => {
+      console.log(erorr.respontse);
+    })
+    .finally(() => {});
+};
 
 // ตัวแปร state
 const showAddCategory = ref(false);
-const searchQuery = ref<string>(""); // ตัวแปรสำหรับเก็บคำค้นหา
+const showEditCategory = ref(false);
+
+const selectedCategoryId = ref<number | null>(null);
+
+const openEditCategory = (id: number) => {
+  if (id) {
+    selectedCategoryId.value = id;
+  } else {
+    console.error("ID is not valid", id); // ตรวจสอบกรณีที่ id ไม่ถูกต้อง
+  }
+  showEditCategory.value = true;
+};
 
 const closeForm = () => {
+  console.log("Form closed");
   showAddCategory.value = false;
-  editMode.value = false;
-  editIndex.value = null;
+  showEditCategory.value = false;
 };
 
-const isValidEditCategory = () => {
-  return (
-    editMode.value &&
-    editIndex.value !== null &&
-    editIndex.value >= 0 &&
-    editIndex.value < categories.value.length &&
-    categories.value[editIndex.value]
-  );
-};
+const confirmDeleteCategory = async (id: number) => {
+  // Show the confirmation dialog
+  const result = await Swal.fire({
+    title: "คุณแน่ใจหรือไม่?",  // ข้อความในกล่องยืนยัน
+    text: "คุณต้องการลบประเภทสินค้านี้หรือไม่?",  // ข้อความเสริมในกล่อง
+    icon: "warning",  // ไอคอนเตือน
+    showCancelButton: true,  // แสดงปุ่มยกเลิก
+    confirmButtonText: "ยืนยัน",  // ข้อความปุ่มยืนยัน
+    cancelButtonText: "ยกเลิก",  // ข้อความปุ่มยกเลิก
+  });
 
-const categories = ref([
-  {
-    name: "อาหาร",
-    image:
-      "https://www.themercuryville.com/wp-content/uploads/2024/07/%E0%B8%AA%E0%B9%89%E0%B8%A1%E0%B8%95%E0%B8%B3-%E0%B8%AB%E0%B8%99%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B9%83%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%97%E0%B8%A2%E0%B8%A2%E0%B8%AD%E0%B8%94%E0%B8%99%E0%B8%B4%E0%B8%A2%E0%B8%A1.jpg",
-  },
-]);
+  // If the user confirms the deletion
+  if (result.isConfirmed) {
+    try {
+      // Call the deleteCategory function to delete the category
+      await deleteCategory(id);
 
-// ฟังก์ชันเพิ่มประเภทสินค้า
-const addCategory = (category: { name: string; image: string }) => {
-  categories.value.push(category);
-  closeForm();
-};
-
-// ฟังก์ชันลบประเภทสินค้า
-const removeCategory = (index: number) => {
-  categories.value.splice(index, 1);
-};
-
-const editMode = ref(false);
-const editIndex = ref<number | null>(null);
-
-// ฟังก์ชันแก้ไขประเภทสินค้า
-const editCategory = (index: number) => {
-  if (index >= 0 && index < categories.value.length) {
-    editMode.value = true;
-    editIndex.value = index;
-  } else {
-    console.error("Invalid index for editing:", index);
-    console.error("Categories:", categories.value);
+      // Show success message after deletion
+      Swal.fire("ลบสำเร็จ!", "ประเภทสินค้าของคุณได้ถูกลบแล้ว", "success");
+    } catch (error) {
+      // If an error occurs during deletion, show error message
+      Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถลบประเภทสินค้านี้ได้", "error");
+    }
   }
 };
 
-// ฟังก์ชันอัปเดตประเภทสินค้า
-const updateCategory = (updatedCategory: { name: string; image: string }) => {
-  if (
-    editIndex.value !== null &&
-    editIndex.value >= 0 &&
-    editIndex.value < categories.value.length
-  ) {
-    categories.value[editIndex.value] = updatedCategory;
-    closeForm();
-  } else {
-    console.error("Invalid editIndex:", editIndex.value);
-  }
-};
-
-// Computed property สำหรับกรองประเภทสินค้า
-const filteredCategories = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase();
-  return categories.value.filter((category) =>
-    category.name.toLowerCase().includes(query)
-  );
+onMounted(async () => {
+  await getCategorylist();
 });
 </script>
 

@@ -1,19 +1,20 @@
 <template>
   <div
-    v-if="props.showAddCategory"
     class="bg-white shadow-md rounded-lg p-8 h-[650px] max-w-3xl mx-auto dropshadowboxabsolute"
   >
     <div class="flex items-center justify-between mb-10">
-      <h1 class="text-4xl font-bold text-gray-800">{{ formTitle }}</h1>
+      <h1 class="text-4xl font-bold text-gray-800">แก้ไขประเภทสินค้า</h1>
     </div>
     <div class="flex flex-col gap-6">
       <!-- ชื่อประเภทสินค้า -->
       <div class="flex flex-col gap-2">
-        <label for="category-name" class="text-lg font-medium text-gray-700">ชื่อประเภทสินค้า</label>
+        <label for="category-name" class="text-lg font-medium text-gray-700">
+          ชื่อประเภทสินค้า
+        </label>
         <input
           type="text"
           id="category-name"
-          v-model="categoryName"
+          v-model="category.name"
           class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full p-3 text-gray-700"
           placeholder="กรอกชื่อประเภทสินค้า"
         />
@@ -22,26 +23,34 @@
       <!-- อัพโหลดไฟล์และแสดงภาพ -->
       <div class="flex flex-col gap-4 md:flex-row items-center justify-between">
         <div class="flex flex-col items-start gap-2">
-          <label for="upload-file" class="text-lg font-medium text-gray-700">อัพโหลดรูปภาพ</label>
-          <input
-            type="file"
-            ref="fileInput"
-            @change="onFileChange"
-            accept="image/*"
-            class="w-full md:w-64 file:rounded-md file:border-0 file:bg-blue-500 file:text-white file:px-4 file:py-2 file:cursor-pointer"
-          />
-          <button
-            v-if="imageUrl"
-            @click="clearImage"
-            class="mb-2 px-4 py-2 w-[100px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
-          >
-            ลบรูปภาพ
-          </button>
+          <label for="upload-file" class="text-lg font-medium text-gray-700">
+            อัพโหลดรูปภาพ
+          </label>
+          <div class="flex items-end h-full">
+            <div class="flex flex-col gap-5 pl-8">
+              <input
+                type="file"
+                ref="fileInput"
+                @change="onFileChange"
+                accept="image/*"
+                class="w-full md:w-64 file:rounded-md file:border-0 file:bg-blue-500 file:text-white file:px-4 file:py-2 file:cursor-pointer"
+              />
+              <button
+                v-if="category.imageCategory"
+                @click="clearImage"
+                class="mb-2 px-4 py-2 w-[100px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
+              >
+                ลบรูปภาพ
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden">
+        <div
+          class="flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
+        >
           <img
-            v-if="imageUrl && imageUrl !== ''"
-            :src="imageUrl"
+            v-if="category.imageCategory"
+            :src="category.imageCategory"
             alt="Preview"
             class="w-[400px] h-[400px] rounded-[5px] object-cover"
           />
@@ -58,10 +67,10 @@
           ยกเลิก
         </button>
         <button
-          @click="confirmUpdate"
+          @click="confirm"
           class="px-6 py-3 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition"
         >
-          ยืนยัน
+          บันทึก
         </button>
       </div>
     </div>
@@ -69,70 +78,85 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineEmits, defineProps, watch } from 'vue';
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import type { CategoryUpdate, CategoryRes } from "~/models/product.model";
+import service from "~/service";
 
-// รับค่า props จาก parent
-const props = defineProps({
-  showAddCategory: { type: Boolean, required: true },
-  category: {
-    type: Object as () => { name: string; image: string } | null,
-    default: null,
-  },
+const route = useRoute();
+
+const category = ref<CategoryUpdate>({
+  id: 0,
+  name: "",
+  is_active: true,
+  imageCategory: "",
 });
 
-const emit = defineEmits(["close", "updateCategory"]);
-
-// สถานะต่างๆ ที่ใช้ในการเพิ่มและแก้ไข
-const categoryName = ref<string>(props.category?.name || "");
-const imageUrl = ref<string>(props.category?.image || "");
-const fileInput = ref<HTMLInputElement | null>(null);
-
-// สำหรับการตั้งชื่อฟอร์มให้แสดงผลตามสถานะ
-const formTitle = props.category ? 'แก้ไขประเภทสินค้า' : 'เพิ่มประเภทสินค้า';
+const categoryRes = ref<CategoryRes>({
+  id: 0,
+  name: "",
+  is_active: true,
+  imageCategory: "",
+});
 
 
 
-// ตรวจสอบการเปลี่ยนแปลงรูปภาพ
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      imageUrl.value = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
+const emit = defineEmits(["close", "addCategory"]);
+
+const getCategoryById = async () => {
+  console.log("Route Params ID:", route.params.id);
+  await service.product
+    .getCategoryById(route.params.id)
+    .then((resp: any) => {
+      console.log(resp.data);
+      const data = resp.data;
+      if (data) {
+        const temp: CategoryUpdate = {
+          id: data.id,
+          name: data.name,
+          is_active: data.is_active,
+          imageCategory: data.imageCategory,
+        };
+        category.value = temp;
+      }
+    })
+    .catch((err: any) => {
+      console.log(err.response);
+    })
+    .finally(() => {});
 };
 
-// ลบรูปภาพ
-const clearImage = () => {
-  imageUrl.value = ""; // เปลี่ยนจาก null เป็นค่าว่าง
-  if (fileInput.value) {
-    fileInput.value.value = ""; // รีเซ็ต input file
-  }
+const updateCategory = async () => {
+  await service.product
+    .updateCategory(route.params.id, category.value)
+    .then((resp: any) => {
+      console.log(resp.data);
+      const data = resp.data;
+      if (data) {
+        Swal.fire({
+          title: "เพิ่มสินค้าสำเร็จ",
+          text: "เพิ่มสินค้า",
+          icon: "success",
+        }).then(() => {
+          emit("close"); // ปิดฟอร์มหลังจากแสดงสำเร็จ
+        });
+      }
+
+      const temp: CategoryRes = {
+        id: data.id,
+        name: data.name,
+        is_active: data.is_active,
+        imageCategory: data.imageCategory,
+      };
+      categoryRes.value = temp;
+    })
+    .catch((err: any) => {
+      console.log(err.response);
+    })
+    .finally(() => {});
 };
 
-// ฟังก์ชันยืนยันการยกเลิก
-const confirmCancel = () => {
-  Swal.fire({
-    title: "คุณแน่ใจหรือไม่?",
-    text: "คุณต้องการยกเลิกการเพิ่ม/แก้ไขประเภทสินค้านี้หรือไม่?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      emit("close");
-    }
-  });
-};
-
-// ฟังก์ชันยืนยันการอัปเดต
-const confirmUpdate = () => {
-  if (!categoryName.value.trim()) {
+const confirm = () => {
+  if (category.value.name.trim() === "") {
     Swal.fire({
       title: "ข้อผิดพลาด",
       text: "กรุณากรอกชื่อประเภทสินค้า",
@@ -141,8 +165,7 @@ const confirmUpdate = () => {
     });
     return;
   }
-
-  if (!imageUrl.value || imageUrl.value.trim() === "") {
+  if (!category.value.imageCategory) {
     Swal.fire({
       title: "ข้อผิดพลาด",
       text: "กรุณาอัพโหลดรูปภาพ",
@@ -153,32 +176,65 @@ const confirmUpdate = () => {
   }
 
   Swal.fire({
-    title: props.category ? "ยืนยันการแก้ไขประเภทสินค้า?" : "ยืนยันการเพิ่มประเภทสินค้า?",
-    text: props.category ? "คุณต้องการอัปเดตข้อมูลประเภทสินค้านี้หรือไม่?" : "คุณต้องการเพิ่มข้อมูลประเภทสินค้านี้หรือไม่?",
+    title: "คุณยืนยันการแก้ไขข้อมูลประเภทนี้หรือไม่?",
+    text: "คุณต้องการยืนยันการเพิ่มประเภทสินค้านี้หรือไม่?",
     icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await updateCategory();
+    }
+  });
+  emit("close");
+};
+
+const confirmCancel = () => {
+  Swal.fire({
+    title: "คุณแน่ใจหรือไม่?",
+    text: "คุณต้องการยกเลิกการเพิ่มประเภทสินค้านี้หรือไม่?",
+    icon: "warning",
     showCancelButton: true,
     confirmButtonText: "ยืนยัน",
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
-      emit("updateCategory", {
-        name: categoryName.value,
-        image: imageUrl.value,
-      });
+      // Emit close หลังจากกดยืนยัน
       emit("close");
     }
   });
 };
 
-// ตรวจสอบการเปลี่ยนแปลงของ props หากเป็นการแก้ไข
-watch(() => props.category, (newCategory) => {
-  if (newCategory) {
-    categoryName.value = newCategory.name;
-    imageUrl.value = newCategory.image;
+const imageUrl = ref<string | null>(null);
+
+const fileInput = ref<HTMLInputElement | null>(null);
+
+const onFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      category.value.imageCategory = e.target?.result as string;
+      imageUrl.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   }
+};
+
+const clearImage = () => {
+  imageUrl.value = null;
+  category.value.imageCategory = ""; // ลบค่าของ imageCategory
+  if (fileInput.value) {
+    fileInput.value.value = ""; // ลบค่าใน input file
+  }
+};
+
+
+
+onMounted(() => {
+  // use function
+  getCategoryById();
 });
 </script>
-
-<style scoped>
-/* Add styles if necessary */
-</style>

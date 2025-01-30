@@ -97,7 +97,8 @@
                 <li
                   class="block px-4 py-2 text-[15px] hover:bg-gray-100"
                   :class="{
-                    'text-orange-500': route.path === '/product',
+                    'text-orange-500': route.path === '/product'||
+                    route.path === '/product/create'||  route.path === '/product/id',
                   }"
                 >
                   สินค้า

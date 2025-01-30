@@ -1,87 +1,104 @@
 <template>
-  <div class="defaultpages flex flex-col gap-2">
-    <div class="flex items-center justify-between h-[8%] pl-[35px]">
-      <h1 class="text-[25px] font-bold">รายการคำร้องขอคืนสินค้า</h1>
-      <div class="flex justify-end mr-[30px] rounded-[5px] w-[70%]">
-        <div class="flex justify-end gap-5 w-full">
-          <div class="flex items-end w-[50%]">
-            <Search v-model="filters.searchTerm" />
-          </div>
-          <!-- ส่วนตัวกรอง -->
-          <div class="flex items-center space-x-4">
-            <!-- วันที่เริ่มต้น -->
-            <div>
-              <label
-                for="startDate"
-                class="block text-sm font-medium text-black mb-1"
-                >วันที่เริ่มต้น</label
-              >
-              <input
-                type="date"
-                id="startDate"
-                v-model="filters.startDate"
-                class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
-              />
-            </div>
+  <div class="defaultpages flex flex-col gap-3 p-6 bg-gray-50">
+    <!-- Header Section -->
+    <div
+      class="flex justify-between items-center bg-white p-5 rounded-lg shadow-md"
+    >
+      <h1 class="text-2xl font-bold text-gray-800">รายการคำร้องขอคืนสินค้า</h1>
+    </div>
 
-            <!-- วันที่สิ้นสุด -->
-            <div>
-              <label
-                for="endDate"
-                class="block text-sm font-medium text-black mb-1"
-                >วันที่สิ้นสุด</label
-              >
-              <input
-                type="date"
-                id="endDate"
-                v-model="filters.endDate"
-                class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
-              />
+    <!-- Search and Filter Section -->
+    <div class="flex justify-between items-center gap-4 mt-2">
+      <div class="flex gap-4 flex-1 items-end h-full">
+        <!-- Search Bar -->
+        <div class="relative w-[30%]">
+          <input
+            type="search"
+            class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
+            placeholder="ค้นหาคำร้องขอคืนสินค้า"
+            v-model="filters.searchTerm"
+          />
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-2 text-gray-500 text-lg"
+          ></i>
+        </div>
+
+        <!-- Date Filters -->
+        <div class="flex items-center space-x-4">
+          <div>
+            <label
+              for="startDate"
+              class="block text-sm font-medium text-black mb-1"
+              >วันที่เริ่มต้น</label
+            >
+            <input
+              type="date"
+              id="startDate"
+              v-model="filters.startDate"
+              class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
+            />
+          </div>
+          <div>
+            <label
+              for="endDate"
+              class="block text-sm font-medium text-black mb-1"
+              >วันที่สิ้นสุด</label
+            >
+            <input
+              type="date"
+              id="endDate"
+              v-model="filters.endDate"
+              class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
+            />
+          </div>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="relative group h-10">
+          <div
+            class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
+          >
+            <button
+              class="bg-[#F68D44] rounded-full flex justify-center items-center pt-[3px] w-[35px] h-full cursor-pointer"
+              type="button"
+            >
+              <i class="fa-solid fa-filter text-[20px]"></i>
+            </button>
+            <div
+              class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[10px]"
+            >
+              {{ selectedStatusRefund.status }}
             </div>
           </div>
-          <div class="flex items-end">
-            <!-- filter order -->
-            <div class="relative group h-[70%]">
-              <div
-                class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
+
+          <!-- Dropdown Menu -->
+          <div
+            class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
+          >
+            <ul class="py-2 text-sm text-gray-700">
+              <li
+                v-for="(statusrefund, i) in Statusrefund"
+                :key="i"
+                class="block px-4 py-2 hover:bg-gray-100"
+                @click="selectStatusRefund(statusrefund)"
               >
-                <button
-                  class="bg-[#F68D44] rounded-full flex justify-center items-center pt-[3px] w-[35px] h-full cursor-pointer"
-                  type="button"
-                >
-                  <i class="fa-solid fa-filter text-[20px]"></i>
-                </button>
-                <div
-                  class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[10px]"
-                >
-                  {{ selectedStatusRefund.status }}
-                </div>
-              </div>
-              <!-- Dropdown manu -->
-              <div
-                class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
-              >
-                <ul class="py-2 text-sm text-gray-700">
-                  <li
-                    class="block px-4 py-2 hover:bg-gray-100"
-                    v-for="(statusrefund, i) in Statusrefund"
-                    :key="i"
-                    @click="selectStatusRefund(statusrefund)"
-                  >
-                    {{ statusrefund.status }}
-                  </li>
-                </ul>
-              </div>
-            </div>
+                {{ statusrefund.status }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="w-full h-[90%] pt-2 bg-white dropshadowtop">
+    <!-- Order Table -->
+    <div
+      class="flex flex-col justify-between w-full h-[90%] pt-2 bg-white rounded-lg py-2 dropshadowbox"
+    >
       <table class="flex flex-col px-8 gap-2 w-full">
-        <thead class="w-full border-b-[2px] pb-[4px] pt-[8px] border-gray-400">
-          <tr class="flex gap-2">
+        <thead class="w-full">
+          <tr
+            class="flex gap-5 border-b-[2px] pb-[4px] pt-[8px] border-gray-400"
+          >
             <th class="w-[10%] text-start pl-2">หมายเลขคำร้อง</th>
             <th class="w-[10%] text-start pl-2">หมายเลขคำสั่งซื้อ</th>
             <th class="w-[15%] text-start pl-2">วัน/เวลา</th>
@@ -97,19 +114,19 @@
           v-for="(order, index) in paginatedOrders"
           :key="index"
         >
-          <tr class="flex gap-2 pb-[6px] border-b-[1px]">
+          <tr class="flex gap-5 pb-2 border-b-[1px]">
             <th
-              class="w-[10%] text-start text-[15px] font-medium pl-2 truncate"
+              class="w-[10%] text-start pl-2 text-[15px] font-medium truncate"
             >
               {{ order.order_id }}
             </th>
             <th
-              class="w-[10%] text-start text-[15px] font-medium pl-2 truncate"
+              class="w-[10%] text-start pl-2 text-[15px] font-medium truncate"
             >
               {{ order.order_id }}
             </th>
             <th
-              class="w-[15%] text-start text-[15px] font-medium pl-2 truncate"
+              class="w-[15%] text-start pl-2 text-[15px] font-medium truncate"
             >
               {{ order.created_at }}
             </th>
@@ -141,7 +158,6 @@
                       :class="{
                         'bg-gray-200': order.status === 'รอการตรวจสอบ',
                       }"
-                      :disabled="order.status === 'รอการตรวจสอบ'"
                     >
                       รอการตรวจสอบ
                     </li>
@@ -153,7 +169,6 @@
                       :class="{
                         'bg-gray-200': order.status === 'อนุมัติการคืนสินค้า',
                       }"
-                      :disabled="order.status === 'อนุมัติการคืนสินค้า'"
                     >
                       อนุมัติการคืนสินค้า
                     </li>
@@ -165,7 +180,6 @@
                       :class="{
                         'bg-gray-200': order.status === 'การคืนเงินเสร็จสิ้น',
                       }"
-                      :disabled="order.status === 'การคืนเงินเสร็จสิ้น'"
                     >
                       การคืนเงินเสร็จสิ้น
                     </li>
@@ -178,7 +192,6 @@
                         'bg-gray-200':
                           order.status === 'ไม่อนุมัติการคืนสินค้า',
                       }"
-                      :disabled="order.status === 'ไม่อนุมัติการคืนสินค้า'"
                     >
                       ไม่อนุมัติการคืนสินค้า
                     </li>
@@ -197,29 +210,29 @@
           </tr>
         </tbody>
       </table>
-    </div>
 
-    <!-- Pagination -->
-    <div class="flex justify-between items-center px-8">
-      <p class="text-sm text-gray-700">
-        คำสั่งซื้อ {{ paginatedOrders.length }} จาก
-        {{ filteredOrders.length }} คำสั่งซื้อ
-      </p>
-      <div class="flex gap-4">
-        <button
-          :disabled="currentPage === 1"
-          @click="changePage(currentPage - 1)"
-          class="px-4 py-2 border rounded-md flex items-center justify-center"
-        >
-          <i class="fa-solid fa-circle-left text-[25px] text-orange-500"></i>
-        </button>
-        <button
-          :disabled="currentPage === totalPages"
-          @click="changePage(currentPage + 1)"
-          class="px-4 py-2 border rounded-md flex items-center justify-center"
-        >
-          <i class="fa-solid fa-circle-right text-[25px] text-orange-500"></i>
-        </button>
+      <!-- Pagination -->
+      <div class="flex justify-between items-center px-8">
+        <p class="text-sm text-gray-700">
+          คำสั่งซื้อ {{ paginatedOrders.length }} จาก
+          {{ filteredOrders.length }} คำสั่งซื้อ
+        </p>
+        <div class="flex gap-4">
+          <button
+            :disabled="currentPage === 1"
+            @click="changePage(currentPage - 1)"
+            class="px-4 py-2 border rounded-md flex items-center justify-center"
+          >
+            <i class="fa-solid fa-circle-left text-[25px] text-orange-500"></i>
+          </button>
+          <button
+            :disabled="currentPage === totalPages"
+            @click="changePage(currentPage + 1)"
+            class="px-4 py-2 border rounded-md flex items-center justify-center"
+          >
+            <i class="fa-solid fa-circle-right text-[25px] text-orange-500"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

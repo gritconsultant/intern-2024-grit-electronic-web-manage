@@ -1,6 +1,5 @@
 export interface Order {
     order_id:       number;
-    customer:       Customer;
     total_amount:   number;
     currency:       string;
     status:         string;
@@ -9,13 +8,6 @@ export interface Order {
     items:          Item[];
 }
 
-export interface Customer {
-    user_id:  number;
-    username: string;
-    email:    string;
-    address: string
-    phonnumber: number;
-}
 
 export interface Item {
     product_id:   number;

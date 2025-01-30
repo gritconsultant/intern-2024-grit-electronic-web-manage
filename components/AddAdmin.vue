@@ -11,7 +11,7 @@
         <div class="mb-4">
           <label for="name" class="block text-[15px]">ชื่อ</label>
           <input
-            v-model="newAdmin.name"
+            v-model="admin.name"
             type="text"
             id="name"
             class="w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -23,7 +23,7 @@
         <div class="mb-4">
           <label for="email" class="block text-[15px]">อีเมล</label>
           <input
-            v-model="newAdmin.email"
+            v-model="admin.email"
             type="email"
             id="email"
             class="w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -35,7 +35,7 @@
         <div class="mb-4">
           <label for="password" class="block text-[15px]">รหัสผ่าน</label>
           <input
-            v-model="newAdmin.password"
+            v-model="admin.password"
             type="password"
             id="password"
             class="w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -71,8 +71,8 @@
 
         <!-- Display Admin Details before Confirm -->
         <div v-if="isConfirming" class="mb-4">
-          <p><strong>ชื่อ:</strong> {{ newAdmin.name }}</p>
-          <p><strong>อีเมล:</strong> {{ newAdmin.email }}</p>
+          <p><strong>ชื่อ:</strong> {{ admin.name }}</p>
+          <p><strong>อีเมล:</strong> {{ admin.email }}</p>
           <p><strong>รหัสผ่าน:</strong> **********</p>
         </div>
 
@@ -108,7 +108,73 @@
 </template>
 
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid"; // เพิ่มการใช้งาน uuid เพื่อสร้าง id ที่ไม่ซ้ำ
+import Swal from "sweetalert2";
+import type { AdminCreate, AdminRes } from "~/models/user.model";
+import service from "~/service";
+
+const admin = ref<AdminCreate>({
+  name: "",
+  email: " ",
+  password: "",
+  role_id: 2,
+  is_active: true,
+});
+
+const adminRes = ref<AdminRes>({
+  id: 0,
+  name: "",
+  email: " ",
+  password: "",
+  role_id: 0,
+  is_active: true,
+});
+
+const addAdmin = async () => {
+  await service.user
+    .createAdmin(admin.value)
+    .then((resp: any) => {
+      console.log(resp.data);
+      const data = resp.data;
+      if (data) {
+        Swal.fire({
+          title: "เพิ่มผู้ดูแลสำเร็จ",
+          text: "เพิ่มผู้ดูแล",
+          icon: "success",
+        }).then(() => {
+          emit("close"); // ปิดฟอร์มหลังจากแสดงสำเร็จ
+        });
+      }
+
+      const admin: AdminRes = {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        role_id: data.role_id,
+        is_active: data.is_active,
+      };
+      adminRes.value = admin;
+    })
+    .catch((err: any) => {
+      if (err.response?.data?.message === "admin already exists") {
+        Swal.fire({
+          title: "ข้อผิดพลาด",
+          text: "ชื่อนี้มีอยู่แล้ว กรุณาใช้ชื่ออื่น",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
+      } else {
+        console.error(err);
+        Swal.fire({
+          title: "เกิดข้อผิดพลาด",
+          text: "ไม่สามารถเพิ่มผู้ดูแลได้",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
+      }
+    })
+    .finally(() => {});
+};
 
 // Props to control modal visibility
 const props = defineProps({
@@ -118,29 +184,24 @@ const props = defineProps({
 // Emits for communication
 const emit = defineEmits(["close", "addAdmin"]);
 
-// Admin data model
-const newAdmin = ref({
-  name: "",
-  email: "",
-  password: "",
-});
+
 
 // Confirm password model
 const confirmPassword = ref("");
 
 // Check if passwords match
 const passwordMismatch = computed(() => {
-  return newAdmin.value.password !== confirmPassword.value;
+  return admin.value.password !== confirmPassword.value;
 });
 
 // Check if password is long enough
 const passwordTooShort = computed(() => {
-  return newAdmin.value.password.length < 10;
+  return admin.value.password.length < 10;
 });
 
 // Calculate how many characters are missing for the password to be 10 characters long
 const missingChars = computed(() => {
-  return Math.max(0, 10 - newAdmin.value.password.length);
+  return Math.max(0, 10 - admin.value.password.length);
 });
 
 // Track if the form is in the confirmation state
@@ -158,28 +219,21 @@ const askForConfirmation = () => {
 // Method to close the modal
 const closeModal = () => {
   emit("close");
-  resetForm();
+  // resetForm();
 };
 
 // Reset the form fields
-const resetForm = () => {
-  newAdmin.value = { name: "", email: "", password: "" };
-  confirmPassword.value = "";
-  isConfirming.value = false;
-};
+// const resetForm = () => {
+//   admin.value = { name: "", email: "", password: "" };
+//   confirmPassword.value = "";
+//   isConfirming.value = false;
+// };
 
 // Method to handle form submission
 const submitForm = () => {
   if (!passwordMismatch.value && !passwordTooShort.value) {
     isConfirming.value = true; // Switch to confirmation view
   }
-};
-
-// Method to add admin after confirmation
-const addAdmin = () => {
-  const newAdminWithId = { ...newAdmin.value, id: uuidv4() }; // สร้าง id ใหม่ให้ผู้ดูแล
-  emit("addAdmin", newAdminWithId); // ส่งข้อมูลผู้ดูแลที่มี id กลับไปยัง parent
-  resetForm(); // รีเซ็ตฟอร์ม
 };
 
 // Computed property for controlling modal visibility

@@ -43,7 +43,7 @@
               <i class="fa-solid fa-filter"></i>
             </div>
             <div class="flex justify-start w-full">
-              {{ selectedCategory.name }}
+              <!-- {{ selectedCategory.name }} -->
             </div>
           </button>
 
@@ -53,14 +53,14 @@
             class="absolute mt-2 bg-white rounded-lg shadow-lg border w-48 z-10"
           >
             <ul class="py-2 text-sm text-gray-700">
-              <li
+              <!-- <li
                 v-for="(category, i) in categories"
                 :key="i"
                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 @click="selectCategory(category)"
               >
                 {{ category.name }}
-              </li>
+              </li> -->
             </ul>
           </div>
         </div>
@@ -84,7 +84,7 @@
         </thead>
         <tbody class="w-full">
           <tr
-            v-for="(product, index) in paginatedProduct"
+            v-for="(product, index) in products"
             :key="index"
             class="border-b flex gap-2 hover:bg-gray-50"
           >
@@ -118,34 +118,26 @@
                 ></div>
               </label>
             </td>
-            <td class="px-4 py-2 w-[15%]">
-              <div class="relative">
-                <button @click="toggleMenu(product.id)">
-                  <i class="fa-solid fa-ellipsis-vertical"></i>
-                </button>
-                <ul
-                  v-if="isMenuVisible[product.id]"
-                  class="absolute right-0 bg-white border rounded-lg shadow-lg mt-2"
-                >
-                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    <NuxtLink :to="`/product/${product.id}`">
-                      รายละเอียดสินค้า
-                    </NuxtLink>
-                  </li>
-                  <li
-                    class="px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer"
-                  >
-                    ลบสินค้า
-                  </li>
-                </ul>
-              </div>
+            <td class="flex items-center gap-4 px-4 py-2 w-[15%]">
+              <button>
+                <NuxtLink :to="`/product/${product.id}`">
+                  <i
+                    class="fa-solid fa-pen-to-square text-orange-400 text-xl"
+                  ></i>
+                </NuxtLink>
+              </button>
+              <button>
+                <i
+                @click="confirmDeleteProduct(product.id)"
+                class="fa-solid fa-trash text-red-600 text-xl"></i>
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
 
       <!-- Pagination -->
-      <div class="flex justify-between items-center mt-5">
+      <!-- <div class="flex justify-between items-center mt-5">
         <p class="text-sm text-gray-600">
           สินค้า {{ paginatedProduct.length }} จาก {{ filteredProducts.length }}
         </p>
@@ -165,53 +157,17 @@
             ถัดไป
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import Swal from "sweetalert2";
-import type {
-  Category,
-  Product,
-  ProductRes,
-  ProductUpdate,
-} from "~/models/product.model";
+import type { Category, Product, ProductRes } from "~/models/product.model";
 import service from "~/service";
 
 // สร้างตัวแปรสำหรับหมวดหมู่ที่เลือก
-const selectedCategory = ref<Category>({
-  id: 1,
-  name: "ทั้งหมด",
-});
-
-const categories = ref<Category[]>([
-  {
-    id: 1,
-    name: "ทั้งหมด",
-  },
-  {
-    id: 2,
-    name: "อาหาร",
-  },
-  {
-    id: 3,
-    name: "เครื่องดื่ม",
-  },
-  {
-    id: 4,
-    name: "สมุนไพร",
-  },
-  {
-    id: 5,
-    name: "ผ้าและเครื่องดื่ม",
-  },
-  {
-    id: 6,
-    name: "ของใช้และของตกแต่ง",
-  },
-]);
 
 // ตัวแปรควบคุมการแสดง dropdown
 const isDropdownVisible = ref(false);
@@ -222,65 +178,64 @@ const toggleDropdown = () => {
 };
 
 // ฟังก์ชันเลือกหมวดหมู่
-const selectCategory = (category: Category) => {
-  selectedCategory.value = category;
-  isDropdownVisible.value = false; // ปิด dropdown หลังเลือก
-};
+// const selectCategory = (category: Category) => {
+//   selectedCategory.value = category;
+//   isDropdownVisible.value = false; // ปิด dropdown หลังเลือก
+// };
 
-const filteredProducts = computed(() => {
-  let result = products.value;
+// const filteredProducts = computed(() => {
+//   let result = products.value;
 
-  if (search.value) {
-    const term = search.value.toLowerCase();
-    result = result.filter((product) => {
-      return (
-        product.name.toLowerCase().includes(term) ||
-        product.category.name.toLowerCase().includes(term) ||
-        product.price.toString().includes(term)
-      );
-    });
-  }
+//   if (search.value) {
+//     const term = search.value.toLowerCase();
+//     result = result.filter((product) => {
+//       return (
+//         product.name.toLowerCase().includes(term) ||
+//         product.category.name.toLowerCase().includes(term) ||
+//         product.price.toString().includes(term)
+//       );
+//     });
+//   }
 
-  if (selectedCategory.value.id !== 1) {
-    result = result.filter(
-      (product) => product.category.id === selectedCategory.value.id
-    );
-  }
-  result = result.sort((a, b) => (b.is_active ? 1 : 0) - (a.is_active ? 1 : 0));
+//   if (selectedCategory.value.id !== 1) {
+//     result = result.filter(
+//       (product) => product.category.id === selectedCategory.value.id
+//     );
+//   }
+  // result = result.sort((a, b) => (b.is_active ? 1 : 0) - (a.is_active ? 1 : 0));
 
-  console.log("Filtered products:", result); // ดูค่าของ filteredProducts
-  return result;
-});
+  // console.log("Filtered products:", result); // ดูค่าของ filteredProducts
+//   return result;
+// });
 
-const search = ref<string>("");
 
 // Pagination variables
 const currentPage = ref(1);
 const itemsPerPage = 6; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
 
 // Paginate the filtered orders
-const paginatedProduct = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  const end = currentPage.value * itemsPerPage;
-  console.log("Paginated products:", filteredProducts.value.slice(start, end));
-  return filteredProducts.value.slice(start, end);
-});
+// const paginatedProduct = computed(() => {
+//   const start = (currentPage.value - 1) * itemsPerPage;
+//   const end = currentPage.value * itemsPerPage;
+//   console.log("Paginated products:", filteredProducts.value.slice(start, end));
+//   return filteredProducts.value.slice(start, end);
+// });
 
 // Calculate total pages
-const totalPages = computed(() => {
-  return Math.ceil(filteredProducts.value.length / itemsPerPage);
-});
+// const totalPages = computed(() => {
+//   return Math.ceil(filteredProducts.value.length / itemsPerPage);
+// });
 
 // Change the current page
-const changePage = (page: number) => {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page; // Updates the current page
-  }
-};
+// const changePage = (page: number) => {
+//   if (page >= 1 && page <= totalPages.value) {
+//     currentPage.value = page; // Updates the current page
+//   }
+// };
 
-watch([search, selectedCategory], () => {
-  currentPage.value = 1; // รีเซ็ตหน้าเมื่อมีการค้นหาหรือเลือกหมวดหมู่ใหม่
-});
+// watch([search, selectedCategory], () => {
+//   currentPage.value = 1; // รีเซ็ตหน้าเมื่อมีการค้นหาหรือเลือกหมวดหมู่ใหม่
+// });
 
 // สถานะการแสดงเมนูของสินค้า
 const isMenuVisible = ref<Record<number, boolean>>({});
@@ -340,8 +295,10 @@ const changeProductStatus = (productId: number) => {
     });
   }
 };
-
-const products = ref<Product[]>([]);
+const search = ref<string>("");
+const products = ref<Product[]>([
+  
+]);
 
 const getProductList = async () => {
   await service.product
@@ -433,6 +390,46 @@ const updateProduct = async (productId: number, product: any) => {
     })
     .finally(() => {});
 };
+
+const deleteProduct = async (id: number) => {
+  await service.product
+    .deleteProduct(id)
+    .then((resp: any) => {
+      const data = resp.data;
+      console.log(data);
+    })
+    .catch((erorr: any) => {
+      console.log(erorr.respontse);
+    })
+    .finally(() => {});
+};
+
+const confirmDeleteProduct = async (id: number) => {
+  // Show the confirmation dialog
+  const result = await Swal.fire({
+    title: "คุณแน่ใจหรือไม่?",  // ข้อความในกล่องยืนยัน
+    text: "คุณต้องการลบสินค้านี้หรือไม่?",  // ข้อความเสริมในกล่อง
+    icon: "warning",  // ไอคอนเตือน
+    showCancelButton: true,  // แสดงปุ่มยกเลิก
+    confirmButtonText: "ยืนยัน",  // ข้อความปุ่มยืนยัน
+    cancelButtonText: "ยกเลิก",  // ข้อความปุ่มยกเลิก
+  });
+
+  // If the user confirms the deletion
+  if (result.isConfirmed) {
+    try {
+      // Call the deleteCategory function to delete the category
+      await deleteProduct(id);
+
+      // Show success message after deletion
+      Swal.fire("ลบสำเร็จ!", "สินค้าของคุณได้ถูกลบแล้ว", "success");
+    } catch (error) {
+      // If an error occurs during deletion, show error message
+      Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถลบสินค้านี้ได้", "error");
+    }
+  }
+};
+
 
 onMounted(async () => {
   await getProductList();

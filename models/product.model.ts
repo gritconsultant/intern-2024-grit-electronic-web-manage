@@ -14,9 +14,9 @@ export interface Product {
 
 export interface ProductReview {
   id: number;
-  username: string,
+  username: string;
   rating: number;
-   description: string;
+  description: string;
 }
 
 export interface ProductCategory {
@@ -66,7 +66,7 @@ export interface ProductUpdate {
   stock: number;
   category_id: number;
   is_active: boolean;
-  image_product: string
+  image_product: string;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -74,8 +74,35 @@ export interface ProductUpdate {
 export interface Category {
   id: number;
   name: string;
+  is_active: boolean;
+  imageCategory: ImageCategories[];
 }
 
+export interface ImageCategories {
+  id: number;
+  ref_id: number;
+  description: string;
+}
+
+export interface CategoryRes {
+  id: number;
+  name: string;
+  is_active: boolean;
+  imageCategory: string;
+}
+
+export interface CategoryCreate {
+  name: string;
+  is_active: boolean;
+  imageCategory: string;
+}
+
+export interface CategoryUpdate {
+  id: number;
+  name: string;
+  is_active: boolean;
+  imageCategory: string;
+}
 
 export interface Status {
   code: number;
