@@ -125,55 +125,12 @@
           </div>
         </div>
       </div>
-
-      <div
-        class="bg-white h-[90%] p-5 w-[70%] rounded-[5px] dropshadowbottomsub"
-      >
-        <h2 class="text-[20px] font-semibold">รายการคำสั่งซื้อ</h2>
-        <div class="h-[90%] mt-[8px] ">
-          <table class="flex flex-col px-8 gap-2 w-full h-full">
-            <thead class="w-full h-[5%]">
-              <tr class="flex gap-2 border-y-[1px] p-[2px]">
-                <th class="w-[15%] text-start">หมายเลขคำสั่งซื้อ</th>
-                <th class="w-[15%]">ราคารวม</th>
-                <th class="w-[30%]">สถานะคำสั่งซื้อ</th>
-                <th class="w-[15%]">เวลา</th>
-                <th class="w-[20%]"></th>
-              </tr>
-            </thead>
-            <tbody class="w-full h-[90%] text-[15px] overflow-auto">
-              <tr
-                v-for="order in orders"
-                :key="order.id"
-                class="flex gap-2 py-[1px] border-b-[1px] "
-              >
-                <th class="w-[15%] font-medium truncate">{{ order.id }}</th>
-                <th class="w-[15%] font-medium truncate">{{ order.totalPrice }} ฿</th>
-                <th class="w-[30%] font-medium truncate">{{ order.status }}</th>
-                <th class="w-[15%] font-medium truncate">{{ order.orderTime }}</th>
-                <th class="w-[20%] flex justify-end truncate">
-                  <NuxtLink to="/order/[id]">
-                    <i class="fa-regular fa-eye text-[20px]"></i>
-                  </NuxtLink>
-                </th>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="flex justify-between text-[20px] font-semibold">
-          <span>รวมทั้งหมด</span>
-          <div class="flex gap-5 pr-[3  0px]" >
-            <span>{{ orders.length }} คำสั่งซื้อ</span>
-            <span> จำนวน {{ totalAmount }} บาท</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 // ข้อมูลลูกค้า
 const email = ref("john_Do@gamil.com");
@@ -183,164 +140,7 @@ const showResetForm = ref(false);
 const showConfirmDialog = ref(false);
 
 // ข้อมูลคำสั่งซื้อ
-const orders = ref([
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-  {
-    id: 123,
-    totalPrice: 2500,
-    status: "กำลังจัดส่ง",
-    orderTime: "2025-01-23 12:00",
-  },
-  {
-    id: 124,
-    totalPrice: 1500,
-    status: "รอการชำระเงิน",
-    orderTime: "2025-01-22 10:30",
-  },
-]);
+
 
 // ฟังก์ชันยืนยันการเปลี่ยนรหัสผ่าน
 const handleConfirm = () => {
@@ -368,17 +168,8 @@ const fetchCustomerId = async () => {
 // คำนวณจำนวนเงินรวมทั้งหมด
 const totalAmount = ref(0);
 
-const calculateTotalAmount = () => {
-  totalAmount.value = orders.value.reduce(
-    (sum, order) => sum + order.totalPrice,
-    0
-  );
-};
 
-// เรียกฟังก์ชันเมื่อคำสั่งซื้อเปลี่ยนแปลง
-onMounted(() => {
-  calculateTotalAmount();
-});
+
 </script>
 
 <style scoped>

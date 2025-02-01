@@ -67,8 +67,9 @@
               </button>
               <button>
                 <i
-                @click="confirmDeleteCategory(category.id)"
-                 class="fa-solid fa-trash text-red-600 text-xl"></i>
+                  @click="confirmDeleteCategory(category.id)"
+                  class="fa-solid fa-trash text-red-600 text-xl"
+                ></i>
               </button>
             </td>
           </tr>
@@ -85,8 +86,9 @@
       class="absolute top-[200px] left-[700px]"
     />
     <EditCategory
-      v-if="showEditCategory"
+      v-if="showEditCategory && selectedCategoryId !== null"
       :categoryId="selectedCategoryId"
+      @categoryUpdated="handleCategoryUpdate"
       @close="closeForm"
       class="absolute top-[200px] left-[700px]"
     />
@@ -99,6 +101,18 @@ import type { Category } from "~/models/product.model";
 import service from "~/service";
 
 const categories = ref<Category[]>([]);
+
+// ฟังก์ชันอัปเดตข้อมูลประเภทสินค้าที่ถูกแก้ไข
+const categoryUpdated = (updatedCategory: Category) => {
+  // ค้นหาประเภทสินค้าที่มี id ตรงกับข้อมูลที่อัปเดต
+  const index = categories.value.findIndex(
+    (category) => category.id === updatedCategory.id
+  );
+  if (index !== -1) {
+    categories.value[index] = updatedCategory; // แทนที่ข้อมูลประเภทสินค้าตัวเก่าด้วยข้อมูลที่อัปเดต
+  }
+};
+
 const getCategorylist = async () => {
   await service.product
     .getCategoryList()
@@ -144,12 +158,12 @@ const showEditCategory = ref(false);
 
 const selectedCategoryId = ref<number | null>(null);
 
-const openEditCategory = (id: number) => {
-  if (id) {
-    selectedCategoryId.value = id;
-  } else {
-    console.error("ID is not valid", id); // ตรวจสอบกรณีที่ id ไม่ถูกต้อง
+const openEditCategory = (id: number | null) => {
+  if (!id) {
+    console.error("Error: No category ID provided.");
+    return;
   }
+  selectedCategoryId.value = id;
   showEditCategory.value = true;
 };
 
@@ -159,15 +173,20 @@ const closeForm = () => {
   showEditCategory.value = false;
 };
 
+// เมื่อมีการอัปเดตประเภทสินค้า จะเรียกฟังก์ชัน categoryUpdated
+const handleCategoryUpdate = (updatedCategory: Category) => {
+  categoryUpdated(updatedCategory);
+};
+
 const confirmDeleteCategory = async (id: number) => {
   // Show the confirmation dialog
   const result = await Swal.fire({
-    title: "คุณแน่ใจหรือไม่?",  // ข้อความในกล่องยืนยัน
-    text: "คุณต้องการลบประเภทสินค้านี้หรือไม่?",  // ข้อความเสริมในกล่อง
-    icon: "warning",  // ไอคอนเตือน
-    showCancelButton: true,  // แสดงปุ่มยกเลิก
-    confirmButtonText: "ยืนยัน",  // ข้อความปุ่มยืนยัน
-    cancelButtonText: "ยกเลิก",  // ข้อความปุ่มยกเลิก
+    title: "คุณแน่ใจหรือไม่?", // ข้อความในกล่องยืนยัน
+    text: "คุณต้องการลบประเภทสินค้านี้หรือไม่?", // ข้อความเสริมในกล่อง
+    icon: "warning", // ไอคอนเตือน
+    showCancelButton: true, // แสดงปุ่มยกเลิก
+    confirmButtonText: "ยืนยัน", // ข้อความปุ่มยืนยัน
+    cancelButtonText: "ยกเลิก", // ข้อความปุ่มยกเลิก
   });
 
   // If the user confirms the deletion

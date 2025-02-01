@@ -43,7 +43,7 @@
               <i class="fa-solid fa-filter"></i>
             </div>
             <div class="flex justify-start w-full">
-              <!-- {{ selectedCategory.name }} -->
+              {{ selectedCategory ? selectedCategory.name : "เลือกหมวดหมู่" }}
             </div>
           </button>
 
@@ -53,14 +53,20 @@
             class="absolute mt-2 bg-white rounded-lg shadow-lg border w-48 z-10"
           >
             <ul class="py-2 text-sm text-gray-700">
-              <!-- <li
+              <li
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                @click="selectCategory(null)"
+              >
+                All
+              </li>
+              <li
                 v-for="(category, i) in categories"
                 :key="i"
                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 @click="selectCategory(category)"
               >
                 {{ category.name }}
-              </li> -->
+              </li>
             </ul>
           </div>
         </div>
@@ -84,7 +90,7 @@
         </thead>
         <tbody class="w-full">
           <tr
-            v-for="(product, index) in products"
+            v-for="(product, index) in filteredProducts"
             :key="index"
             class="border-b flex gap-2 hover:bg-gray-50"
           >
@@ -128,8 +134,9 @@
               </button>
               <button>
                 <i
-                @click="confirmDeleteProduct(product.id)"
-                class="fa-solid fa-trash text-red-600 text-xl"></i>
+                  @click="confirmDeleteProduct(product.id)"
+                  class="fa-solid fa-trash text-red-600 text-xl"
+                ></i>
               </button>
             </td>
           </tr>
@@ -137,33 +144,42 @@
       </table>
 
       <!-- Pagination -->
-      <!-- <div class="flex justify-between items-center mt-5">
-        <p class="text-sm text-gray-600">
-          สินค้า {{ paginatedProduct.length }} จาก {{ filteredProducts.length }}
-        </p>
+      <div class="flex justify-between items-center mt-5">
+        <div class="text-sm text-gray-600">
+          <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
+          แสดง {{ (page - 1) * size + 1 }} ถึง
+          {{ Math.min(page * size, filteredProducts.length) }}
+          จากทั้งหมด {{ paginate.Total }} รายการ
+        </div>
         <div class="flex gap-2">
+          <!-- ปุ่มก่อนหน้า -->
           <button
-            :disabled="currentPage === 1"
             @click="changePage(currentPage - 1)"
+            :disabled="currentPage === 1"
             class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
             ก่อนหน้า
           </button>
+
+          <span class="flex items-center px-2">หน้า {{ currentPage }}</span>
+
+          <!-- ปุ่มถัดไป -->
           <button
-            :disabled="currentPage === totalPages"
             @click="changePage(currentPage + 1)"
+            :disabled="currentPage * size >= paginate.Total"
             class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
             ถัดไป
           </button>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import Swal from "sweetalert2";
+import type { Params } from "~/models/client.model";
 import type { Category, Product, ProductRes } from "~/models/product.model";
 import service from "~/service";
 
@@ -176,66 +192,6 @@ const isDropdownVisible = ref(false);
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
 };
-
-// ฟังก์ชันเลือกหมวดหมู่
-// const selectCategory = (category: Category) => {
-//   selectedCategory.value = category;
-//   isDropdownVisible.value = false; // ปิด dropdown หลังเลือก
-// };
-
-// const filteredProducts = computed(() => {
-//   let result = products.value;
-
-//   if (search.value) {
-//     const term = search.value.toLowerCase();
-//     result = result.filter((product) => {
-//       return (
-//         product.name.toLowerCase().includes(term) ||
-//         product.category.name.toLowerCase().includes(term) ||
-//         product.price.toString().includes(term)
-//       );
-//     });
-//   }
-
-//   if (selectedCategory.value.id !== 1) {
-//     result = result.filter(
-//       (product) => product.category.id === selectedCategory.value.id
-//     );
-//   }
-  // result = result.sort((a, b) => (b.is_active ? 1 : 0) - (a.is_active ? 1 : 0));
-
-  // console.log("Filtered products:", result); // ดูค่าของ filteredProducts
-//   return result;
-// });
-
-
-// Pagination variables
-const currentPage = ref(1);
-const itemsPerPage = 6; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
-
-// Paginate the filtered orders
-// const paginatedProduct = computed(() => {
-//   const start = (currentPage.value - 1) * itemsPerPage;
-//   const end = currentPage.value * itemsPerPage;
-//   console.log("Paginated products:", filteredProducts.value.slice(start, end));
-//   return filteredProducts.value.slice(start, end);
-// });
-
-// Calculate total pages
-// const totalPages = computed(() => {
-//   return Math.ceil(filteredProducts.value.length / itemsPerPage);
-// });
-
-// Change the current page
-// const changePage = (page: number) => {
-//   if (page >= 1 && page <= totalPages.value) {
-//     currentPage.value = page; // Updates the current page
-//   }
-// };
-
-// watch([search, selectedCategory], () => {
-//   currentPage.value = 1; // รีเซ็ตหน้าเมื่อมีการค้นหาหรือเลือกหมวดหมู่ใหม่
-// });
 
 // สถานะการแสดงเมนูของสินค้า
 const isMenuVisible = ref<Record<number, boolean>>({});
@@ -295,16 +251,60 @@ const changeProductStatus = (productId: number) => {
     });
   }
 };
-const search = ref<string>("");
-const products = ref<Product[]>([
-  
-]);
 
-const getProductList = async () => {
+const selectedCategory = ref<Category | null>(null);
+const selectCategory = (category: Category | null) => {
+  selectedCategory.value = category;
+  isDropdownVisible.value = false; // ปิด dropdown
+};
+
+const categories = ref<Category[]>([]);
+
+const getCategorylist = async () => {
   await service.product
-    .getProductList()
+    .getCategoryList()
     .then((resp: any) => {
       const data = resp.data.data;
+      const categoryList: Category[] = [];
+
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const c = data[i];
+        const category: Category = {
+          id: c.id,
+          name: c.name,
+          is_active: c.is_active,
+          imageCategory: c.imageCategory,
+        };
+        categoryList.push(category);
+      }
+      categories.value = categoryList;
+    })
+    .catch((error: any) => {
+      console.log("Error loading product list:", error.response || error);
+    })
+    .finally(() => {});
+};
+
+const search = ref<string>("");
+const page = ref(1); // ทำให้เป็น ref
+const size = ref(6); // ทำให้เป็น ref
+const products = ref<Product[]>([]);
+const paginate = ref<{ Total: number }>({ Total: 0 });
+
+const getProductList = async () => {
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+  };
+
+  console.log("Sending param:", param); // ตรวจส
+  await service.product
+    .getProductList(param)
+    .then((resp: any) => {
+      const data = resp.data.data;
+      paginate.value = resp.data.paginate;
       const productlist: Product[] = [];
 
       console.log(data);
@@ -315,26 +315,30 @@ const getProductList = async () => {
           name: e.name,
           price: e.price,
           stock: e.stock,
-          description: e.description ?? null, // รองรับกรณี description เป็น null
-          image: {
-            id: e.image?.id,
-            ref_id: e.image?.ref_id,
-            type: e.image?.type,
-            description: e.image?.description,
-          }, // ใช้ image ให้ตรงกับ interface
+          description: e.description ?? null, // Handle null or undefined description
+          Image: {
+            id: e.Image?.id ?? 0, // Default to 0 if Image is null or undefined
+            ref_id: e.Image?.ref_id ?? 0, // Default to 0 if ref_id is missing
+            type: e.Image?.type ?? "", // Default to empty string if type is missing
+            description: e.Image?.description ?? "", // Default to empty string if description is missing
+          },
           category: {
-            id: e.category?.id,
-            name: e.category?.name,
-          }, // category ต้องเป็น object
-          reviews:
-            e.review?.map((r: any) => ({
+            id: e.category?.id ?? 0, // Default to 0 if category is missing
+            name: e.category?.name ?? "",
+            is_active: e.category?.is_active ?? true,
+            imageCategory: e.category?.imageCategory ?? [], // Default to empty string if category name is missing
+          },
+          Review:
+            e.Review?.map((r: any) => ({
               id: r.id,
               rating: r.rating,
-            })) ?? [], // review ต้องเป็น array
+            })) ?? [], // Ensure Review is always an array
           is_active: e.is_active,
           created_at: e.created_at,
           updated_at: e.updated_at,
+          deleted_at: e.deleted_at,
         };
+
         productlist.push(product);
       }
       products.value = productlist;
@@ -346,6 +350,15 @@ const getProductList = async () => {
     .finally(() => {
       console.log("Finished loading product list.");
     });
+};
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+
+// คำนวณจำนวนหน้า
+
+// ฟังก์ชันที่ใช้ในการเปลี่ยนหน้า
+const changePage = (page: number) => {
+  currentPage.value = page;
+  getProductList(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
 };
 
 const productRes = ref<ProductRes>({
@@ -407,12 +420,12 @@ const deleteProduct = async (id: number) => {
 const confirmDeleteProduct = async (id: number) => {
   // Show the confirmation dialog
   const result = await Swal.fire({
-    title: "คุณแน่ใจหรือไม่?",  // ข้อความในกล่องยืนยัน
-    text: "คุณต้องการลบสินค้านี้หรือไม่?",  // ข้อความเสริมในกล่อง
-    icon: "warning",  // ไอคอนเตือน
-    showCancelButton: true,  // แสดงปุ่มยกเลิก
-    confirmButtonText: "ยืนยัน",  // ข้อความปุ่มยืนยัน
-    cancelButtonText: "ยกเลิก",  // ข้อความปุ่มยกเลิก
+    title: "คุณแน่ใจหรือไม่?", // ข้อความในกล่องยืนยัน
+    text: "คุณต้องการลบสินค้านี้หรือไม่?", // ข้อความเสริมในกล่อง
+    icon: "warning", // ไอคอนเตือน
+    showCancelButton: true, // แสดงปุ่มยกเลิก
+    confirmButtonText: "ยืนยัน", // ข้อความปุ่มยืนยัน
+    cancelButtonText: "ยกเลิก", // ข้อความปุ่มยกเลิก
   });
 
   // If the user confirms the deletion
@@ -430,9 +443,67 @@ const confirmDeleteProduct = async (id: number) => {
   }
 };
 
+const filteredProducts = computed(() => {
+  let activeProducts = products.value.filter(
+    (product) => product.is_active === true
+  );
+  let inactiveProducts = products.value.filter(
+    (product) => product.is_active === false
+  );
 
+  // ถ้าเลือก "ทั้งหมด" (selectedCategory เป็น null)
+  if (selectedCategory.value) {
+    activeProducts = activeProducts.filter(
+      (product) => product.category.id === selectedCategory.value?.id
+    );
+    inactiveProducts = inactiveProducts.filter(
+      (product) => product.category.id === selectedCategory.value?.id
+    );
+  }
+
+  // เรียงลำดับสินค้า active ก่อน
+  activeProducts = activeProducts.sort((a, b) => (a.is_active ? -1 : 1));
+  inactiveProducts = inactiveProducts.sort((a, b) => (a.is_active ? 1 : -1));
+
+  // ใช้ตัวกรองค้นหาสินค้า
+  if (search.value) {
+    const term = search.value.toLowerCase();
+    activeProducts = activeProducts.filter((product) => {
+      return (
+        product.name.toLowerCase().includes(term) ||
+        product.category.name.toLowerCase().includes(term) ||
+        product.price.toString().includes(term)
+      );
+    });
+    inactiveProducts = inactiveProducts.filter((product) => {
+      return (
+        product.name.toLowerCase().includes(term) ||
+        product.category.name.toLowerCase().includes(term) ||
+        product.price.toString().includes(term)
+      );
+    });
+  }
+
+  // รวมสินค้า active และ inactive และแสดงสินค้า active ก่อน
+  const totalProducts = [...activeProducts, ...inactiveProducts];
+
+  // การแบ่งหน้า (pagination)
+  const startIndex = (page.value - 1) * size.value;
+  const endIndex = Math.min(startIndex + size.value, totalProducts.length);
+  const result = totalProducts.slice(startIndex, endIndex);
+
+  return result;
+});
+
+watch(
+  () => [size.value],
+  async () => {
+    await getProductList();
+  }
+);
 onMounted(async () => {
   await getProductList();
+  await getCategorylist();
 });
 </script>
 

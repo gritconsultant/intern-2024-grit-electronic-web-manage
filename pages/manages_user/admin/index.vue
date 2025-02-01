@@ -61,9 +61,10 @@
             <th class="w-[30%] truncate border-r-[2px]">{{ admin.email }}</th>
             <th class="w-[38%] flex justify-end gap-5 truncate">
               <i
-                @click="toggleModal('edit')"
+                @click="selectAdmin(admin)"
                 class="fa-solid fa-pen-to-square text-[20px] text-orange-400 cursor-pointer"
-              ></i>
+              >
+              </i>
               <i
                 @click="confirmDeleteAdmin(admin.id)"
                 class="fa-solid fa-trash cursor-pointer text-red-600 text-[20px]"
@@ -81,7 +82,7 @@
     <EditAdmin
       :show="showEditAdmin"
       @close="toggleModal('edit', false)"
-      :admin="selectedAdmin"
+      :admin="selectedAdmin ? selectedAdmin : null"
     />
   </div>
 </template>
@@ -181,8 +182,13 @@ const toggleModal = (type: "add" | "edit", state = true) => {
     showEditAdmin.value = state;
   }
 };
-
 const selectedAdmin = ref<Admin | null>(null);
+const selectAdmin = (admin: Admin) => {
+  if (admin) {
+    selectedAdmin.value = admin; // ตรวจสอบให้มั่นใจว่า selectedAdmin ถูกกำหนด
+    toggleModal("edit"); // เปิด modal สำหรับแก้ไข
+  }
+};
 
 onMounted(async () => {
   await getAdminlist();

@@ -31,3 +31,45 @@ export interface StatusRefund {
     status: string;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface Bank {
+    id: number;
+    bank_name: string;
+    account_name: string;
+    account_number: string;
+    description: string;
+    image_system_bank: ImageSystemBank;
+    is_active: boolean;
+    created_at: number;
+    updated_at: number;
+}
+
+
+export interface ImageSystemBank {
+    id: number;
+    ref_id: number;
+    type: string;
+    description: string;
+}
+
+export interface BankUpdate {
+    id: number;
+    bank_name: string;
+    account_name: string;
+    account_number: string;
+    description: string;
+    image_system_bank: ImageSystemBank;
+    is_active: boolean;
+}
+
+export interface BankRes {
+    id: number;
+    bank_name: string;
+    account_name: string;
+    account_number: string;
+    description: string;
+    image_system_bank: ImageSystemBank;
+    is_active: boolean;
+}

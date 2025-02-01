@@ -49,8 +49,8 @@
           class="flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
         >
           <img
-            v-if="category.imageCategory"
-            :src="category.imageCategory"
+            v-if="imageUrl"
+            :src="imageUrl"
             alt="Preview"
             class="w-[400px] h-[400px] rounded-[5px] object-cover"
           />
@@ -98,25 +98,38 @@ const categoryRes = ref<CategoryRes>({
   imageCategory: "",
 });
 
-
-
 const emit = defineEmits(["close", "addCategory"]);
 
+const props = defineProps({
+  categoryId: {
+    type: Number,
+    required: true,
+  },
+});
+
 const getCategoryById = async () => {
+  console.log("categoryId from prop:", props.categoryId);
   console.log("Route Params ID:", route.params.id);
+  const categoryId = props.categoryId || route.params.id;
+  if (!categoryId) {
+    console.error("Error: No category ID provided.");
+    return;
+  }
   await service.product
-    .getCategoryById(route.params.id)
+    .getCategoryById(categoryId)
     .then((resp: any) => {
       console.log(resp.data);
-      const data = resp.data;
+      const data = resp.data.data;
       if (data) {
-        const temp: CategoryUpdate = {
+        category.value = {
           id: data.id,
           name: data.name,
           is_active: data.is_active,
-          imageCategory: data.imageCategory,
+          imageCategory: data.imageCategory?.description || "",
         };
-        category.value = temp;
+        if (category.value.imageCategory) {
+          imageUrl.value = category.value.imageCategory;
+        }
       }
     })
     .catch((err: any) => {
@@ -126,15 +139,16 @@ const getCategoryById = async () => {
 };
 
 const updateCategory = async () => {
+  console.log("Category data before update:", category.value);
   await service.product
-    .updateCategory(route.params.id, category.value)
+    .updateCategory(props.categoryId, category.value)
     .then((resp: any) => {
       console.log(resp.data);
       const data = resp.data;
       if (data) {
         Swal.fire({
-          title: "เพิ่มสินค้าสำเร็จ",
-          text: "เพิ่มสินค้า",
+          title: "แก้ไขประเภทสินค้าสำเร็จ",
+          text: "ข้อมูลประเภทสินค้าของคุณถูกอัปเดตแล้ว",
           icon: "success",
         }).then(() => {
           emit("close"); // ปิดฟอร์มหลังจากแสดงสำเร็จ
@@ -156,28 +170,9 @@ const updateCategory = async () => {
 };
 
 const confirm = () => {
-  if (category.value.name.trim() === "") {
-    Swal.fire({
-      title: "ข้อผิดพลาด",
-      text: "กรุณากรอกชื่อประเภทสินค้า",
-      icon: "error",
-      confirmButtonText: "ตกลง",
-    });
-    return;
-  }
-  if (!category.value.imageCategory) {
-    Swal.fire({
-      title: "ข้อผิดพลาด",
-      text: "กรุณาอัพโหลดรูปภาพ",
-      icon: "error",
-      confirmButtonText: "ตกลง",
-    });
-    return;
-  }
-
   Swal.fire({
     title: "คุณยืนยันการแก้ไขข้อมูลประเภทนี้หรือไม่?",
-    text: "คุณต้องการยืนยันการเพิ่มประเภทสินค้านี้หรือไม่?",
+    text: "คุณต้องการยืนยันการแก้ไขข้อมูลประเภทสินค้านี้หรือไม่?",
     icon: "question",
     showCancelButton: true,
     confirmButtonText: "ยืนยัน",
@@ -191,6 +186,7 @@ const confirm = () => {
 };
 
 const confirmCancel = () => {
+  console.log("Data to be sent for update:", category.value);
   Swal.fire({
     title: "คุณแน่ใจหรือไม่?",
     text: "คุณต้องการยกเลิกการเพิ่มประเภทสินค้านี้หรือไม่?",
@@ -232,9 +228,9 @@ const clearImage = () => {
 };
 
 
-
 onMounted(() => {
-  // use function
+  // ดึงข้อมูลเมื่อ component ถูกโหลด
+  console.log("Route Params ID at mounted:", route.params.id);
   getCategoryById();
 });
 </script>

@@ -132,10 +132,19 @@ const adminRes = ref<AdminRes>({
 });
 
 const getAdminById = async () => {
+  const adminId = route.params.id; // ดึงค่า adminId จาก route.params.id
+  console.log("Admin ID from route:", adminId); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า
+
+  // ตรวจสอบว่า adminId มีค่าหรือไม่
+  if (!adminId || typeof adminId !== "string") {
+    console.error("Admin ID is missing or invalid");
+    return; // หากไม่มี ID หรือ ID ไม่ถูกต้อง
+  }
+
   await service.user
-    .getAdminById(route.params.id)
+    .getAdminById(adminId)
     .then((resp: any) => {
-      const data = resp.data;
+      const data = resp.data.data;
       admin.value = {
         id: data.id,
         name: data.name,
@@ -180,7 +189,6 @@ const updateProduct = async () => {
     .finally(() => {});
 };
 
-
 // Emits for communication
 const emit = defineEmits(["close", "addAdmin"]);
 
@@ -218,21 +226,34 @@ const closeModal = () => {
   emit("close"); // This will trigger the parent component to close the modal
 };
 
-
-const isModalVisible = ref(false);
+const props = defineProps({
+  show: Boolean, // เพื่อควบคุมการแสดงผลของ modal
+  admin: Object as PropType<AdminUpdate | null>, // ข้อมูลของ admin ที่จะทำการแก้ไข
+});
 
 // Method to handle form submission
 const submitForm = () => {
-  if (!passwordMismatch.value && !passwordTooShort.value) {
-    isConfirming.value = true; // Switch to confirmation view
+  if (
+    !passwordMismatch.value &&
+    !passwordTooShort.value &&
+    !isConfirming.value
+  ) {
+    isConfirming.value = true; // เปลี่ยนไปยังสถานะการยืนยัน
   }
 };
-
 // Computed property for controlling modal visibility
 
 onMounted(() => {
-  // use function
-  getAdminById();
+  const adminId = route.params.id;
+
+  // ตรวจสอบว่า adminId มีค่าหรือไม่
+  console.log("adminId:", adminId); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า
+
+  if (adminId && typeof adminId === "string") {
+    getAdminById(); // เรียกใช้ getAdminById
+  } else {
+    console.error("Admin ID is missing or invalid"); // ถ้าไม่มีค่าให้แสดงข้อความผิดพลาด
+  }
 });
 </script>
 

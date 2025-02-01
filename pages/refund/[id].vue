@@ -1,7 +1,77 @@
 <template>
   <div class="defaultpages p-5 ml-5">
     <div class="h-[10%]">
-      <h1 class="text-[28px] font-bold">คำร้องขอ # {{}}</h1>
+      <div class="bg-slate-500 w-full flex gap-2">
+        <h1 class="text-[28px] font-bold">คืนสินค้า #</h1>
+        <span class="bg-slate-100 w-[180px]">{{}}</span>
+        <div class="flex items-end">
+          <div
+            class="flex flex-col items-center cursor-pointer"
+            v-for="(order, index) in orders"
+            :key="index"
+          >
+            <!-- ส่วนแสดงสถานะ -->
+            <div
+              class="text-center w-[150px] p-[1px] px-2 border-[1px] rounded-[5px]"
+              @click="toggleMenu(order.order_id)"
+            >
+              {{ order.status }}
+            </div>
+
+            <!-- เมนูเลือกสถานะ -->
+            <div>
+              <ul
+                class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px] z-10"
+                v-show="isMenuVisible[order.order_id]"
+              >
+                <!-- ตรวจสอบว่าไม่ใช่สถานะปัจจุบัน -->
+                <li
+                  class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
+                  @click="changeStatus(order.order_id, '  รอการตรวจสอบ')"
+                  :class="{
+                    'bg-gray-200': order.status === '  รอการตรวจสอบ',
+                  }"
+                  :disabled="order.status === '  รอการตรวจสอบ'"
+                >
+                  รอการตรวจสอบ
+                </li>
+                <li
+                  class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
+                  @click="changeStatus(order.order_id, 'อนุมัติการคืนสินค้า')"
+                  :class="{
+                    'bg-gray-200': order.status === 'อนุมัติการคืนสินค้า',
+                  }"
+                  :disabled="order.status === 'อนุมัติการคืนสินค้า'"
+                >
+                  อนุมัติการคืนสินค้า
+                </li>
+                <li
+                  class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
+                  @click="changeStatus(order.order_id, 'การคืนเงินเสร็จสิ้น')"
+                  :class="{
+                    'bg-gray-200': order.status === 'การคืนเงินเสร็จสิ้น',
+                  }"
+                  :disabled="order.status === 'การคืนเงินเสร็จสิ้น'"
+                >
+                  การคืนเงินเสร็จสิ้น
+                </li>
+                <li
+                  class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
+                  @click="
+                    changeStatus(order.order_id, 'ไม่อนุมัติการคืนสินค้า')
+                  "
+                  :class="{
+                    'bg-gray-200': order.status === 'ไม่อนุมัติการคืนสินค้า',
+                  }"
+                  :disabled="order.status === 'ไม่อนุมัติการคืนสินค้า'"
+                >
+                  ไม่อนุมัติการคืนสินค้า
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="flex justify-between gap- w-[30%]">
         <h5 class="w-[40%]">หมายเลขคำสั่งซื้อ :</h5>
         <h5 class="w-[60%]">หมายเลขผู้ใช้งาน :</h5>
@@ -99,90 +169,11 @@
         <!-- หลักฐานการชำระ -->
         <div
           class="flex flex-col gap-5 items-center py-5 w-[90%] h-[60%] bg-white rounded-[5px] dropshadowbottomsub"
-        >
-          <!-- slip -->
-          <img
-            class="w-[300px] h-[360px] flex items-center justify-center place-content-center object-fill border-[1px] border-black rounded-[5px]"
-            src="https://s359.kapook.com/pagebuilder/ba154685-db18-4ac7-b318-a4a2b15b9d4c.jpg"
-            alt=""
-          />
-          <div class="flex flex-col gap-2 items-center">
-            <h3 class="font-semibold">วัน/เวลา</h3>
-            <span class=" ">--/--/---- --/--</span>
-          </div>
-        </div>
+        ></div>
         <!-- สถานะคำสั่งซื้อ -->
         <div
           class="flex flex-col gap-2 p-5 w-[90%] h-[30%] bg-white rounded-[5px] dropshadowbottomsub"
         >
-          <h3 class="text-[20px] font-bold">สถานะคำร้อง</h3>
-          <div class="flex flex-col gap-5">
-            <div
-              class="flex flex-col items-center cursor-pointer"
-              v-for="(order, index) in orders"
-              :key="index"
-            >
-              <!-- ส่วนแสดงสถานะ -->
-              <div
-                class="text-center w-[150px] p-[1px] px-2 border-[1px] rounded-[5px]"
-                @click="toggleMenu(order.order_id)"
-              >
-                {{ order.status }}
-              </div>
-
-              <!-- เมนูเลือกสถานะ -->
-              <div>
-                <ul
-                  class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
-                  v-show="isMenuVisible[order.order_id]"
-                >
-                  <!-- ตรวจสอบว่าไม่ใช่สถานะปัจจุบัน -->
-                  <li
-                    class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
-                    @click="changeStatus(order.order_id, '  รอการตรวจสอบ')"
-                    :class="{
-                      'bg-gray-200': order.status === '  รอการตรวจสอบ',
-                    }"
-                    :disabled="order.status === '  รอการตรวจสอบ'"
-                  >
-                    รอการตรวจสอบ
-                  </li>
-                  <li
-                    class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
-                    @click="changeStatus(order.order_id, 'อนุมัติการคืนสินค้า')"
-                    :class="{
-                      'bg-gray-200': order.status === 'อนุมัติการคืนสินค้า',
-                    }"
-                    :disabled="order.status === 'อนุมัติการคืนสินค้า'"
-                  >
-                    อนุมัติการคืนสินค้า
-                  </li>
-                  <li
-                    class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
-                    @click="changeStatus(order.order_id, 'การคืนเงินเสร็จสิ้น')"
-                    :class="{
-                      'bg-gray-200': order.status === 'การคืนเงินเสร็จสิ้น',
-                    }"
-                    :disabled="order.status === 'การคืนเงินเสร็จสิ้น'"
-                  >
-                    การคืนเงินเสร็จสิ้น
-                  </li>
-                  <li
-                    class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
-                    @click="
-                      changeStatus(order.order_id, 'ไม่อนุมัติการคืนสินค้า')
-                    "
-                    :class="{
-                      'bg-gray-200': order.status === 'ไม่อนุมัติการคืนสินค้า',
-                    }"
-                    :disabled="order.status === 'ไม่อนุมัติการคืนสินค้า'"
-                  >
-                    ไม่อนุมัติการคืนสินค้า
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

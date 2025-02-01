@@ -1,31 +1,34 @@
 <template>
-  <div class="defaultpages flex flex-col gap-3 p-3">
-    <div class="flex items-center justify-between h-[5%] pl-[35px]">
-      <h1 class="text-[25px] font-bold">ธนาคาร</h1>
+  <div class="defaultpages flex flex-col gap-6 p-6">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between h-[5%] pl-8">
+      <h1 class="text-[26px] font-bold text-gray-800">ธนาคาร</h1>
     </div>
+
+    <!-- Main Content -->
     <div class="flex justify-center h-full">
       <div
-        class="w-[70%] h-full flex flex-col justify-center rounded-[5px] bg-white dropshadowbox p-5"
+        class="w-[75%] h-full flex flex-col justify-center rounded-[10px] bg-white shadow-lg p-8"
       >
-        <!-- Preview image -->
-        <div class="flex justify-center items-center w-full h-[50%] mt-5">
+        <!-- Preview Image Section -->
+        <div class="flex justify-center items-center w-full h-[45%] mb-6">
           <div
-            class="bg-slate-50 dropshadowbottomsub w-[400px] h-[400px] rounded-[5px] flex justify-center items-center"
+            class="bg-slate-50 shadow-md w-[380px] h-[380px] rounded-[10px] flex justify-center items-center"
           >
             <img
               v-if="imageUrl"
               :src="imageUrl"
               alt="Preview"
-              class="w-[400px] h-[400px] rounded-[5px] object-cover"
+              class="w-[380px] h-[380px] rounded-[10px] object-cover"
             />
             <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
           </div>
-          <div class="flex items-end h-full">
-            <div class="flex flex-col pl-8">
+          <div class="flex flex-col items-end ml-4">
+            <div class="flex gap-2 mb-4">
               <button
                 v-if="imageUrl"
                 @click="clearImage"
-                class="mb-2 px-4 py-2 w-[100px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
+                class="px-4 py-2 w-[110px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
               >
                 ลบรูปภาพ
               </button>
@@ -34,74 +37,94 @@
                 ref="fileInput"
                 @change="onFileChange"
                 accept="image/*"
+                class="mt-2"
               />
             </div>
           </div>
         </div>
-        <div class="text-[20px] font-bold mt-3 flex justify-center pr-[330px]">
-          คิวอาร์โค้ด
-        </div>
-        <div
-          class="w-full h-[45%] p-8 px-[100px] flex flex-col justify-between items-center"
-        >
-          <div class="flex flex-col gap-5 w-[70%] h-[70%] mr-[80px]">
-            <div class="flex flex-col gap-2">
-              <div class="flex gap-3">
-                <span class="text-[20px] font-bold">ชื่อธนาคาร:</span>
-                <div class="flex items-end">{{ selectedBank }}</div>
+
+        <!-- QR Code Section -->
+        <div class="text-[20px] font-bold text-center mb-6">คิวอาร์โค้ด</div>
+
+        <!-- Bank Information Section -->
+        <div class="w-full h-[45%] flex flex-col justify-between items-center">
+          <div class="w-[90%] flex flex-col gap-6">
+            <div class="flex justify-between items-center gap-6">
+              <div class="flex gap-4">
+                <span class="text-[18px] font-semibold">ชื่อธนาคาร:</span>
+                <div class="w-[230px] text-gray-700">{{ bank.bank_name }}</div>
               </div>
               <select
                 v-model="selectedBank"
                 @change="onBankChange"
-                class="bg-orange-100 rounded-[5px] w-[400px] text-center"
+                class="bg-orange-100 rounded-[5px] w-[200px] text-center py-2"
               >
-                <option v-for="bank in banks" :key="bank" :value="bank">
+                <option v-for="bank in namebanks" :key="bank" :value="bank">
                   {{ bank }}
                 </option>
                 <option value="อื่นๆ">อื่นๆ</option>
               </select>
-              <div v-if="selectedBank === 'อื่นๆ'" class="flex gap-2">
+              <div
+                v-if="selectedBank === 'อื่นๆ'"
+                class="flex flex-col gap-4 absolute right-[80px]"
+              >
                 <input
                   type="text"
                   v-model="otherBank"
                   placeholder="กรอกชื่อธนาคาร"
-                  class="bg-white dropshadowbottomsub w-[350px] rounded-[5px] px-2"
+                  class="bg-white shadow-md w-[200px] rounded-[5px] px-2"
                 />
                 <button
                   @click="confirmBank"
-                  class="h-[30px] w-[100px] bg-green-500 text-white rounded-[5px] hover:bg-green-600"
+                  class="h-[35px] w-[100px] bg-green-500 text-white rounded-[5px] hover:bg-green-600"
                 >
                   ยืนยัน
                 </button>
               </div>
             </div>
 
-            <!-- Dynamically show Bank Number label based on selected bank -->
-            <div class="flex h-[30px] gap-2">
-              <span class="w-[25%] bg-slate-50 text-[20px] font-bold"
-                >หมายเลขธนาคาร</span
+            <!-- Bank Account Number Section -->
+            <div class="flex items-center gap-4">
+              <span class="w-[25%] text-[18px] font-semibold text-gray-700"
+                >เลขบัญชี:</span
               >
-              <!-- Bind dynamic bank number -->
               <input
                 v-model="bankNumber"
                 type="text"
-                class="bg-gray-200 dropshadowbottomsub w-[230px] rounded-[5px] px-2"
+                class="bg-gray-200 shadow-md w-[230px] rounded-[5px] px-2"
               />
             </div>
-            <div class="flex h-[30px] gap-2">
-              <span class="w-[25%] text-[20px] font-bold">ชื่อบัญชี</span>
-              <!-- Bind dynamic account name -->
+
+            <!-- Branch Name Section -->
+            <div class="flex items-center gap-4">
+              <span class="w-[25%] text-[18px] font-semibold text-gray-700"
+                >สาขาธนาคาร:</span
+              >
+              <input
+                v-model="bankNumber"
+                type="text"
+                class="bg-gray-200 shadow-md w-[230px] rounded-[5px] px-2"
+              />
+            </div>
+
+            <!-- Account Name Section -->
+            <div class="flex items-center gap-4">
+              <span class="w-[25%] text-[18px] font-semibold text-gray-700"
+                >ชื่อบัญชี:</span
+              >
               <input
                 v-model="accountName"
                 type="text"
-                class="bg-gray-200 dropshadowbottomsub w-[230px] rounded-[5px] px-2"
+                class="bg-gray-200 shadow-md w-[230px] rounded-[5px] px-2"
               />
             </div>
           </div>
-          <div class="flex justify-center w-[300px] mr-[305px]">
+
+          <!-- Save Button -->
+          <div class="flex justify-center mt-6">
             <button
               @click="saveData"
-              class="p-2 rounded-[5px] font-semibold bg-orange-500 w-[200px]"
+              class="p-3 rounded-[5px] font-semibold bg-orange-500 text-white w-[200px] hover:bg-orange-600"
             >
               บันทึกข้อมูล
             </button>
@@ -114,9 +137,74 @@
 
 <script setup lang="ts">
 import Swal from "sweetalert2";
+import type { BankRes, BankUpdate } from "~/models/order.model";
+import service from "~/service";
+
+const route = useRoute();
+
+const bank = ref<BankUpdate>({
+  id: 0,
+  bank_name: "",
+  account_name: "",
+  account_number: "",
+  description: "",
+  image_system_bank: {
+    id: 0,
+    ref_id: 0,
+    type: "",
+    description: "",
+  },
+  is_active: true,
+});
+
+const bankRes = ref<BankRes>({
+  id: 0,
+  bank_name: "",
+  account_name: "",
+  account_number: "",
+  description: "",
+  image_system_bank: {
+    id: 0,
+    ref_id: 0,
+    type: "",
+    description: "",
+  },
+  is_active: true,
+});
+
+const getBankById = async (id: number) => {
+  try {
+    const resp = await service.order.getBankById(id);
+    const data = resp.data.data;
+    const temp: BankUpdate = {
+      id: data.id,
+      bank_name: data.bank_name,
+      account_name: data.account_name,
+      account_number: data.account_number,
+      description: data.description,
+      image_system_bank: {
+        id: 0,
+        ref_id: 0,
+        type: "",
+        description: "",
+      },
+      is_active: data.is_active,
+    };
+    bank.value = temp;
+  } catch (error) {
+    console.error("Error fetching bank by ID:", error);
+  }
+};
+
+// const getBanklist = async () => {
+//   await service.order.getBanklist().then((resp: any) => {
+//     const data = resp.data.data;
+//     console.log(data);
+//   });
+// };
 
 // ตัวแปรเก็บธนาคารทั้งหมด
-const banks = ref([
+const namebanks = ref([
   "ธนาคารกรุงเทพ",
   "ธนาคารไทยพาณิชย์",
   "ธนาคารกสิกรไทย",
@@ -205,6 +293,20 @@ const saveData = () => {
     }
   });
 };
+
+watch(
+  () => route.params.id,
+  (newId) => {
+    const id = newId ? Number(newId) : 1; // ถ้ามี id ใหม่ใน URL ใช้ค่าใหม่, ไม่งั้นใช้ 1
+    getBankById(id); // ส่ง id ไปที่ฟังก์ชัน getBankById
+  },
+  { immediate: true }
+); // ให้ทำงานทันทีเมื่อ mounted
+
+onMounted(() => {
+  const id = route.params.id ? Number(route.params.id) : 1; // ถ้าไม่มี id ใน URL ใช้ค่า 1
+  getBankById(id); // เรียกฟังก์ชันพร้อมส่ง id
+});
 </script>
 
 <style scoped></style>

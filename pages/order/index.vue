@@ -8,8 +8,8 @@
     </div>
 
     <!-- Search and Filter Section -->
-    <div class="flex justify-between items-center gap-4 mt-2  ">
-      <div class="flex gap-4 flex-1 items-end  h-full ">
+    <div class="flex justify-between items-center gap-4 mt-2">
+      <div class="flex gap-4 flex-1 items-end h-full">
         <!-- Search Bar -->
         <div class="relative w-[30%]">
           <input
@@ -54,7 +54,7 @@
         </div>
 
         <!-- Status Filter -->
-        <div class="relative group h-10  ">
+        <div class="relative group h-10">
           <div
             class="flex items-center p-[2px] rounded-full w-[200px] bg-[#EAA04B] h-full"
           >
@@ -91,7 +91,9 @@
     </div>
 
     <!-- Order Table -->
-    <div class="flex flex-col justify-between w-full h-[90%] pt-2 bg-white rounded-lg py-2 dropshadowbox">
+    <div
+      class="flex flex-col justify-between w-full h-[90%] pt-2 bg-white rounded-lg py-2 dropshadowbox"
+    >
       <table class="flex flex-col px-8 gap-2 w-full">
         <thead class="w-full">
           <tr
@@ -125,14 +127,10 @@
             </th>
             <th
               class="w-[15%] text-[15px] text-start pl-2 font-medium truncate"
-            >
-              {{ order.customer.username }}
-            </th>
+            ></th>
             <th
               class="w-[20%] text-[15px] text-start pl-2 font-medium truncate"
-            >
-              {{ order.customer.address }}
-            </th>
+            ></th>
             <th
               class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
@@ -148,7 +146,29 @@
             >
               <div class="flex flex-col items-center cursor-pointer">
                 <div
-                  class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px]"
+                  v-if="order.status === 'รอการชำระ'"
+                  class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400"
+                  @click="toggleMenu(order.order_id)"
+                >
+                  {{ order.status }}
+                </div>
+                <div
+                  v-else-if="order.status === 'กำลังจัดส่ง'"
+                  class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-orange-50 border-orange-400"
+                  @click="toggleMenu(order.order_id)"
+                >
+                  {{ order.status }}
+                </div>
+                <div
+                  v-else-if="order.status === 'จัดส่งเรียบร้อย'"
+                  class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-green-50 border-green-400"
+                  @click="toggleMenu(order.order_id)"
+                >
+                  {{ order.status }}
+                </div>
+                <div
+                  v-else
+                  class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-red-50 border-red-600"
                   @click="toggleMenu(order.order_id)"
                 >
                   {{ order.status }}
@@ -203,32 +223,26 @@
           </tr>
         </tbody>
       </table>
-      
-    <!-- Pagination -->
-    <div class="flex justify-between items-center px-8">
-      <p class="text-sm text-gray-700">
-        คำสั่งซื้อ {{ paginatedOrders.length }} จาก
-        {{ filteredOrder.length }} คำสั่งซื้อ
-      </p>
-      <div class="flex gap-4">
-        <button
-          :disabled="currentPage === 1"
-          @click="changePage(currentPage - 1)"
-          class="px-4 py-2 border rounded-md flex items-center justify-center"
-        >
-          <i class="fa-solid fa-circle-left text-[25px] text-orange-500"></i>
-        </button>
-        <button
-          :disabled="currentPage === totalPages"
-          @click="changePage(currentPage + 1)"
-          class="px-4 py-2 border rounded-md flex items-center justify-center"
-        >
-          <i class="fa-solid fa-circle-right text-[25px] text-orange-500"></i>
-        </button>
+
+      <!-- Pagination -->
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-5">
+        <p class="text-sm text-gray-600">สินค้า {{}} จาก {{}}</p>
+        <div class="flex gap-2">
+          <button
+            :disabled="currentPage === 1"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ก่อนหน้า
+          </button>
+          <button
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ถัดไป
+          </button>
+        </div>
       </div>
     </div>
-    </div>
-
   </div>
 </template>
 
@@ -346,19 +360,6 @@ const filteredOrder = computed(() => {
   }
 
   // Filter by search term
-  if (filters.value.searchTerm) {
-    const term = filters.value.searchTerm.toLowerCase();
-
-    filteredOrders = filteredOrders.filter((order) => {
-      return (
-        order.order_id.toString().includes(term) || // ตรวจสอบ order_id
-        (order.customer.username &&
-          order.customer.username.toLowerCase().includes(term)) || // ตรวจสอบ username
-        (order.customer.email &&
-          order.customer.email.toLowerCase().includes(term)) // ตรวจสอบ email
-      );
-    });
-  }
 
   return filteredOrders;
 });
@@ -389,11 +390,6 @@ const changePage = (page: number) => {
 const orders = <Order[]>[
   {
     order_id: 12346,
-    customer: {
-      user_id: 102,
-      username: "alice_smith",
-      email: "alice_smith@example.com",
-    },
     total_amount: 800,
     currency: "USD",
     status: "รอการชำระ",
@@ -410,11 +406,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12347,
-    customer: {
-      user_id: 103,
-      username: "bob_brown",
-      email: "bob_brown@example.com",
-    },
     total_amount: 1500,
     currency: "USD",
     status: "กำลังจัดส่ง",
@@ -431,11 +422,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12348,
-    customer: {
-      user_id: 104,
-      username: "charlie_johnson",
-      email: "charlie_johnson@example.com",
-    },
     total_amount: 300,
     currency: "USD",
     status: "จักส่งเรียบร้อย",
@@ -452,11 +438,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12349,
-    customer: {
-      user_id: 105,
-      username: "david_white",
-      email: "david_white@example.com",
-    },
     total_amount: 2000,
     currency: "USD",
     status: "ชำระล้มเหลว",
@@ -473,11 +454,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12350,
-    customer: {
-      user_id: 106,
-      username: "emily_clark",
-      email: "emily_clark@example.com",
-    },
     total_amount: 150,
     currency: "USD",
     status: "กำลังจัดส่ง",
@@ -494,11 +470,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12351,
-    customer: {
-      user_id: 107,
-      username: "frank_harris",
-      email: "frank_harris@example.com",
-    },
     total_amount: 450,
     currency: "USD",
     status: "รอการชำระ",
@@ -515,11 +486,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12352,
-    customer: {
-      user_id: 108,
-      username: "grace_miller",
-      email: "grace_miller@example.com",
-    },
     total_amount: 2500,
     currency: "USD",
     status: "จักส่งเรียบร้อย",
@@ -536,11 +502,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12353,
-    customer: {
-      user_id: 109,
-      username: "harry_adams",
-      email: "harry_adams@example.com",
-    },
     total_amount: 600,
     currency: "USD",
     status: "ชำระล้มเหลว",
@@ -557,11 +518,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12354,
-    customer: {
-      user_id: 110,
-      username: "isabel_james",
-      email: "isabel_james@example.com",
-    },
     total_amount: 1200,
     currency: "USD",
     status: "รอการชำระ",
@@ -578,11 +534,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12355,
-    customer: {
-      user_id: 111,
-      username: "julia_scott",
-      email: "julia_scott@example.com",
-    },
     total_amount: 3000,
     currency: "USD",
     status: "กำลังจัดส่ง",
@@ -599,11 +550,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12356,
-    customer: {
-      user_id: 112,
-      username: "luke_wilson",
-      email: "luke_wilson@example.com",
-    },
     total_amount: 800,
     currency: "USD",
     status: "รอการชำระ",
@@ -620,11 +566,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12357,
-    customer: {
-      user_id: 113,
-      username: "mia_king",
-      email: "mia_king@example.com",
-    },
     total_amount: 1200,
     currency: "USD",
     status: "จักส่งเรียบร้อย",
@@ -641,11 +582,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12358,
-    customer: {
-      user_id: 114,
-      username: "sophia_baker",
-      email: "sophia_baker@example.com",
-    },
     total_amount: 950,
     currency: "USD",
     status: "กำลังจัดส่ง",
@@ -662,11 +598,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12359,
-    customer: {
-      user_id: 115,
-      username: "noah_taylor",
-      email: "noah_taylor@example.com",
-    },
     total_amount: 500,
     currency: "USD",
     status: "ชำระล้มเหลว",
@@ -683,11 +614,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12360,
-    customer: {
-      user_id: 116,
-      username: "olivia_morris",
-      email: "olivia_morris@example.com",
-    },
     total_amount: 1750,
     currency: "USD",
     status: "รอการชำระ",
@@ -704,11 +630,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12361,
-    customer: {
-      user_id: 117,
-      username: "ella_jackson",
-      email: "ella_jackson@example.com",
-    },
     total_amount: 650,
     currency: "USD",
     status: "กำลังจัดส่ง",
@@ -725,11 +646,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12362,
-    customer: {
-      user_id: 118,
-      username: "james_brown",
-      email: "james_brown@example.com",
-    },
     total_amount: 2200,
     currency: "USD",
     status: "จักส่งเรียบร้อย",
@@ -746,11 +662,6 @@ const orders = <Order[]>[
   },
   {
     order_id: 12363,
-    customer: {
-      user_id: 119,
-      username: "lucas_lee",
-      email: "lucas_lee@example.com",
-    },
     total_amount: 950,
     currency: "USD",
     status: "ชำระล้มเหลว",

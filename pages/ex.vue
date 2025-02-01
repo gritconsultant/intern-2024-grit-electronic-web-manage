@@ -31,7 +31,9 @@
         </div>
       </div>
       <div class="p-2 flex justify-end pr-[10px]">
-        <NuxtLink to="/product/create" class="buttonproducts"> เพิ่มสินค้า </NuxtLink>
+        <NuxtLink to="/product/create" class="buttonproducts">
+          เพิ่มสินค้า
+        </NuxtLink>
       </div>
       <!-- product -->
       <div v-if="!loading">
@@ -97,13 +99,14 @@
       </div>
       <div v-else>
         <div
-  class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
-  role="status">
-  <span
-    class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-    >Loading...</span
-  >
-</div>
+          class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+          role="status"
+        >
+          <span
+            class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+            >Loading...</span
+          >
+        </div>
       </div>
     </div>
 
@@ -146,7 +149,7 @@ import service from "~/service";
 
 const loading = ref(false);
 const page = ref<number>(1);
-const size = ref<number>(3);
+const size = ref<number>(7);
 const search = ref<string>("");
 const product = ref<Listproduct>({
   status: {

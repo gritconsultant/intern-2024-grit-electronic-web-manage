@@ -53,7 +53,7 @@
                 <div>
                   <i class="fa-solid fa-arrows-rotate"></i>
                 </div>
-                <span class="ml-[8px]"> คำร้องคืนสินค้า</span>
+                <span class="ml-[8px]">คืนสินค้า</span>
               </div>
             </NuxtLink>
         </div>

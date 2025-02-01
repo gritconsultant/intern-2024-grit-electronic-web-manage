@@ -130,9 +130,7 @@
             >
               {{ order.created_at }}
             </th>
-            <th class="w-[15%] text-[15px] font-medium truncate">
-              {{ order.customer.username }}
-            </th>
+            <th class="w-[15%] text-[15px] font-medium truncate"></th>
             <th class="w-[15%] text-[15px] font-medium truncate">
               {{ order.items.reduce((sum, item) => sum + item.quantity, 0) }}
             </th>
@@ -142,7 +140,29 @@
             <th class="w-[15%] text-[15px] font-medium truncate">
               <div class="flex flex-col items-center cursor-pointer">
                 <div
-                  class="w-[150px] p-[1px] px-2 border-[1px] rounded-[5px]"
+                  v-if="order.status === 'รอการตรวจสอบ'"
+                  class="w-[150px] p-[1px] px-2 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400"
+                  @click="toggleMenu(order.order_id)"
+                >
+                  {{ order.status }}
+                </div>
+                <div
+                  v-else-if="order.status === 'อนุมัติการคืนสินค้า'"
+                  class="w-[150px] p-[1px] px-2 border-[1px] rounded-[5px] bg-orange-50 border-orange-400"
+                  @click="toggleMenu(order.order_id)"
+                >
+                  {{ order.status }}
+                </div>
+                <div
+                  v-else-if="order.status === 'การคืนเงินเสร็จสิ้น'"
+                  class="w-[150px] p-[1px] px-2 border-[1px] rounded-[5px] bg-green-50 border-green-400"
+                  @click="toggleMenu(order.order_id)"
+                >
+                  {{ order.status }}
+                </div>
+                <div
+                  v-else
+                  class="w-[150px] p-[1px] px-2 border-[1px] rounded-[5px] bg-red-50 border-red-600"
                   @click="toggleMenu(order.order_id)"
                 >
                   {{ order.status }}
@@ -212,25 +232,20 @@
       </table>
 
       <!-- Pagination -->
-      <div class="flex justify-between items-center px-8">
-        <p class="text-sm text-gray-700">
-          คำสั่งซื้อ {{ paginatedOrders.length }} จาก
-          {{ filteredOrders.length }} คำสั่งซื้อ
-        </p>
-        <div class="flex gap-4">
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-5">
+        <p class="text-sm text-gray-600">สินค้า {{}} จาก {{}}</p>
+        <div class="flex gap-2">
           <button
             :disabled="currentPage === 1"
-            @click="changePage(currentPage - 1)"
-            class="px-4 py-2 border rounded-md flex items-center justify-center"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
-            <i class="fa-solid fa-circle-left text-[25px] text-orange-500"></i>
+            ก่อนหน้า
           </button>
           <button
-            :disabled="currentPage === totalPages"
-            @click="changePage(currentPage + 1)"
-            class="px-4 py-2 border rounded-md flex items-center justify-center"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
-            <i class="fa-solid fa-circle-right text-[25px] text-orange-500"></i>
+            ถัดไป
           </button>
         </div>
       </div>
@@ -335,19 +350,6 @@ const filteredOrders = computed(() => {
     );
   });
 
-  if (filters.value.searchTerm) {
-    const term = filters.value.searchTerm.toLowerCase();
-    result = result.filter((order) => {
-      return (
-        order.order_id.toString().includes(term) ||
-        (order.customer.username &&
-          order.customer.username.toLowerCase().includes(term)) ||
-        (order.customer.email &&
-          order.customer.email.toLowerCase().includes(term))
-      );
-    });
-  }
-
   return result;
 });
 
@@ -377,11 +379,6 @@ const changePage = (page: number) => {
 const orders = <Order[]>[
   {
     order_id: 12346,
-    customer: {
-      user_id: 102,
-      username: "jane_smith",
-      email: "jane_smith@example.com",
-    },
     total_amount: 500,
     currency: "USD",
     status: "รอการตรวจสอบ",

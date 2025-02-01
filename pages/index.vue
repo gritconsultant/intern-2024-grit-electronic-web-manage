@@ -1,89 +1,47 @@
 <template>
-  <div class="defaultpages p-5 px-10">
-    <div
-      class="flex items-center h-[10%] pl-[35px] mb-5 bg-white rounded-lg dropshadowbox"
-    >
-      <h1 class="text-[25px] font-bold">แดชบอร์ด</h1>
+  <div class="defaultpages p-8 space-y-6">
+    <!-- Header -->
+    <div class="flex items-center h-[10%] px-12 bg-white rounded-lg shadow-md">
+      <h1 class="text-3xl font-bold">แดชบอร์ด</h1>
     </div>
 
-    <div class="flex gap-2 bg-slate-200 w-full h-[87%]">
-      <div class="flex justify-center items-center w-[50%] bg-slate-400 ">
-        <div class="grid grid-cols-2 gap-4 h-[90%] w-[90%]  bg-slate-500">
-          <div
-            class="w-[90%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
-          >
-            <div class="flex gap-5 h-full text-[#4CAF50]">
-              <div class="flex flex-col gap-4">
-                <h1 class="font-semibold">ยอดขายรวม</h1>
-                <i class="fa-solid fa-coins text-[60px] pl-5"></i>
-              </div>
-              <div
-                class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
-              >
-                00000
-              </div>
-            </div>
-          </div>
-          <div
-            class="w-[22%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
-          >
-            <div class="flex gap-5 h-full text-[#007BFF]">
-              <div class="flex flex-col gap-4">
-                <h1 class="font-semibold">ยอดคำสั่งซื้อ</h1>
+    <div class="flex   gap-8 w-full h-[87%]">
+      <!-- Statistics Section -->
+      <div class=" grid grid-cols-2 gap-8 w-[50%]">
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl shadow-lg  bg-white border border-gray-200 text-green-500">
+          <i class="fa-solid fa-coins text-8xl"></i>
+          <h2 class="font-semibold text-lg mt-2">ยอดขายรวม</h2>
+          <p class="text-4xl font-bold mt-5 ">00000</p>
+        </div>
 
-                <i class="fa-solid fa-cart-shopping text-[60px] pl-5"></i>
-              </div>
-              <div
-                class="w-[50%] flex items-center justify-center text-[60px] font-medium pt-3 pl-8"
-              >
-                00000
-              </div>
-            </div>
-          </div>
-          <div
-            class="w-[22%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
-          >
-            <div class="flex gap-5 h-full text-[#DC3545]">
-              <div class="flex flex-col gap-4">
-                <h1 class="font-semibold">การคืนสินค้า</h1>
-                <i class="fa-solid fa-arrows-rotate text-[60px] pl-5"></i>
-              </div>
-              <div
-                class="w-[50%] flex items-center justify-center text-[60px] font-medium pl-10 pt-3"
-              >
-                00000
-              </div>
-            </div>
-          </div>
-          <div
-            class="w-[22%] h-full border-[1px] bg-gradient-to-t bg-white dropshadowbox rounded-[5px] px-3 py-2"
-          >
-            <div class="flex gap-5 h-full text-[#FF9800]">
-              <div class="flex flex-col gap-4">
-                <h1 class="font-semibold">บัญชีลูกค้ารวม</h1>
-                <i class="fa-solid fa-users text-[60px] pl-5"></i>
-              </div>
-              <div
-                class="w-[50%] flex items-center justify-center text-[60px] font-medium pl-7 pt-3"
-              >
-                00000
-              </div>
-            </div>
-          </div>
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl shadow-lg  bg-white border border-gray-200 text-blue-500">
+          <i class="fa-solid fa-cart-shopping text-8xl"></i>
+          <h2 class="font-semibold text-lg mt-2">ยอดคำสั่งซื้อ</h2>
+          <p class="text-4xl font-bold mt-5">00000</p>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl shadow-lg  bg-white border border-gray-200 text-red-500">
+          <i class="fa-solid fa-arrows-rotate text-8xl"></i>
+          <h2 class="font-semibold text-lg mt-2">การคืนสินค้า</h2>
+          <p class="text-4xl font-bold mt-5">00000</p>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl shadow-lg  bg-white border border-gray-200 text-orange-500">
+          <i class="fa-solid fa-users text-8xl"></i>
+          <h2 class="font-semibold text-lg mt-2">บัญชีลูกค้ารวม</h2>
+          <p class="text-4xl font-bold mt-5">00000</p>
         </div>
       </div>
-      <div
-        class="flex items-center justify-center w-[50%] bg-white rounded-[5px] dropshadowbox p-2"
-      >
-        <div class="container mx-auto px-4 py-8">
-          <h1 class="text-2xl font-bold mb-6">การขายแต่ละประเภท</h1>
-          <!-- ส่งข้อมูล salesData ไปยัง PieChart -->
-          <GarphPieChart :salesData="salesData" />
-        </div>
+
+      <!-- Chart Section -->
+      <div class=" bg-white rounded-xl shadow-lg flex flex-col items-center w-[50%] p-8 border border-gray-200">
+        <h1 class="text-xl font-bold mb-4">การขายแต่ละประเภท</h1>
+        <GarphPieChart :salesData="salesData" />
       </div>
     </div>
   </div>
 </template>
+
 
 <script lang="ts" setup>
 // ข้อมูลการขาย

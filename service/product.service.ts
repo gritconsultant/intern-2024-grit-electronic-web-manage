@@ -7,11 +7,13 @@ import type {
   ProductUpdate,
 } from "~/models/product.model";
 import { client } from "./httpClient";
+import type { Params } from "~/models/client.model";
 
-export const getProductList = () => {
+export const getProductList = (params: Params) => {
   return client({
     url: "/product",
     method: "GET",
+    params,
   });
 };
 

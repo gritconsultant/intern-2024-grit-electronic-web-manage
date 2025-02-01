@@ -10,8 +10,19 @@
     <!-- Search Section -->
     <div class="flex gap-2 w-[80%]">
       <div class="w-[40%]">
-        <!-- ใช้ v-model เพื่อเชื่อมต่อกับ searchTerm -->
-        <!-- <Search v-model="filters.searchTerm" /> -->
+        <!-- Search Bar -->
+        <div class="relative w-full">
+          <input
+            type="search"
+            class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
+            placeholder="ค้นหาสินค้า"
+            v-model="search"
+            @keyup.enter="getCustomerlist"
+          />
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-2 text-gray-500 text-lg"
+          ></i>
+        </div>
       </div>
     </div>
 
@@ -61,6 +72,7 @@
 import type { Customer } from "~/models/user.model";
 import service from "~/service";
 
+const search = ref<string>("");
 const customers = ref<Customer[]>([]);
 
 const getCustomerlist = async () => {
