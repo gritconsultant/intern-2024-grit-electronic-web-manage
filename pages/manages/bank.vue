@@ -8,12 +8,12 @@
     <!-- Main Content -->
     <div class="flex justify-center h-full">
       <div
-        class="w-[75%] h-full flex flex-col justify-center rounded-[10px] bg-white shadow-lg p-8"
+        class="w-[75%] h-full flex flex-col justify-center rounded-[10px] bg-white dropshadowbox p-8"
       >
         <!-- Preview Image Section -->
         <div class="flex justify-center items-center w-full h-[45%] mb-6">
           <div
-            class="bg-slate-50 shadow-md w-[380px] h-[380px] rounded-[10px] flex justify-center items-center"
+            class="bg-slate-50 dropshadowbox w-[380px] h-[380px] rounded-[10px] flex justify-center items-center mt-[20px]"
           >
             <img
               v-if="imageUrl"
@@ -44,20 +44,20 @@
         </div>
 
         <!-- QR Code Section -->
-        <div class="text-[20px] font-bold text-center mb-6">คิวอาร์โค้ด</div>
+        <div class="text-[20px] font-bold text-center my-6  pr-[300px] ">คิวอาร์โค้ด</div>
 
         <!-- Bank Information Section -->
         <div class="w-full h-[45%] flex flex-col justify-between items-center">
           <div class="w-[90%] flex flex-col gap-6">
-            <div class="flex justify-between items-center gap-6">
+            <div class="flex  items-center gap-20 ">
               <div class="flex gap-4">
                 <span class="text-[18px] font-semibold">ชื่อธนาคาร:</span>
-                <div class="w-[230px] text-gray-700">{{ bank.bank_name }}</div>
+                <div class="w-[230px] text-gray-700 pl-[240px]">{{ bank.bank_name }}</div>
               </div>
               <select
                 v-model="selectedBank"
                 @change="onBankChange"
-                class="bg-orange-100 rounded-[5px] w-[200px] text-center py-2"
+                class="bg-orange-100 rounded-[5px] w-[200px] text-center py-2 ml-[140px]"
               >
                 <option v-for="bank in namebanks" :key="bank" :value="bank">
                   {{ bank }}
@@ -121,7 +121,7 @@
           </div>
 
           <!-- Save Button -->
-          <div class="flex justify-center mt-6">
+          <div class="flex justify-center ">
             <button
               @click="saveData"
               class="p-3 rounded-[5px] font-semibold bg-orange-500 text-white w-[200px] hover:bg-orange-600"

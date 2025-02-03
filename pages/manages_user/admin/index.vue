@@ -38,27 +38,31 @@
     </div>
 
     <!-- Admin Table Section -->
-    <div class="w-full h-[90%] mt-2 pt-2 bg-white rounded-lg dropshadowbox">
+    <div
+      class="flex flex-col justify-between w-full h-[90%] mt-2 pt-2 bg-white rounded-lg dropshadowbox"
+    >
       <table class="flex flex-col px-8 gap-2 w-full">
         <thead class="w-full">
-          <tr class="flex gap-2">
+          <tr
+            class="flex gap-2 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]"
+          >
             <th class="w-[15%] text-start">หมายเลขผู้ใช้งาน</th>
             <th class="w-[15%]">ชื่อ</th>
             <th class="w-[30%]">อีเมล</th>
             <th class="w-[38%]"></th>
           </tr>
         </thead>
-        <tbody class="w-full">
+        <tbody class="w-full" v-if="!loading">
           <tr
             v-for="(admin, index) in admins"
             :key="index"
-            class="flex gap-2 py-[1px] border-b-[1px]"
+            class="flex gap-2 py-[8px] border-b-[1px]"
           >
-            <th class="w-[15%] truncate text-start border-r-[2px]">
+            <th class="w-[15%] truncate text-start">
               {{ admin.id }}
             </th>
-            <th class="w-[15%] truncate border-r-[2px]">{{ admin.name }}</th>
-            <th class="w-[30%] truncate border-r-[2px]">{{ admin.email }}</th>
+            <th class="w-[15%] truncate">{{ admin.name }}</th>
+            <th class="w-[30%] truncate">{{ admin.email }}</th>
             <th class="w-[38%] flex justify-end gap-5 truncate">
               <i
                 @click="selectAdmin(admin)"
@@ -72,38 +76,97 @@
             </th>
           </tr>
         </tbody>
+        <div v-else class="absolute left-[600px] top-[200px]">
+          <div
+            class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+            role="status"
+          >
+            <span
+              class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+              >Loading...</span
+            >
+          </div>
+        </div>
       </table>
+      <!-- Pagination -->
+      <div class="flex justify-between items-center m-5">
+        <div class="text-sm text-gray-600">
+          <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
+          แสดง {{ (currentPage - 1) * size + 1 }} ถึง
+          {{ Math.min(currentPage * size, paginate.Total) }}
+          จากทั้งหมด {{ paginate.Total }} รายการ
+        </div>
+        <div class="flex gap-2">
+          <!-- ปุ่มก่อนหน้า -->
+          <button
+            @click="changePage(currentPage - 1)"
+            :disabled="currentPage === 1"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ก่อนหน้า
+          </button>
+
+          <span class="flex items-center px-2"> หน้า {{ currentPage }} </span>
+
+          <!-- ปุ่มถัดไป -->
+          <button
+            @click="changePage(currentPage + 1)"
+            :disabled="currentPage * size >= paginate.Total"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ถัดไป
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Add Admin Modal -->
     <AddAdmin :show="showAddAdmin" @close="toggleModal('add', false)" />
-
-    <!-- Edit Admin Modal -->
     <EditAdmin
       :show="showEditAdmin"
       @close="toggleModal('edit', false)"
-      :admin="selectedAdmin ? selectedAdmin : null"
+      :admin="selectedAdmin"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import type { Admin } from "~/models/user.model";
+import type { Params } from "~/models/client.model";
+import type { Admin, AdminUpdate } from "~/models/user.model"; // ใช้ AdminUpdate
 import service from "~/service";
 
+const route = useRoute();
+
+const loading = ref(false);
 const search = ref<string>("");
+const page = ref(1); // ทำให้เป็น ref
+const size = ref(6); // ทำให้เป็น ref
+const paginate = ref<{ Total: number }>({ Total: 0 });
 const admins = ref<Admin[]>([]);
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 
 const getAdminlist = async () => {
+  loading.value = true;
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+  };
+
   await service.user
-    .getAdmintList()
+    .getAdmintList(param)
     .then((resp: any) => {
       const data = resp.data.data;
+      paginate.value = resp.data.paginate;
+      console.log("Data from API:", data); // ตรวจสอบข้อมูลทั้งหมดที่ได้จาก API
+
       const adminlist: Admin[] = [];
-      console.log(data);
       for (let i = 0; i < data.length; i++) {
         const a = data[i];
+        if (!a.id || typeof a.id !== "number") {
+          console.error("Invalid admin data:", a); // แสดงข้อมูล admin ที่ไม่มี id ถูกต้อง
+          continue; // ข้าม admin ที่ไม่มี id
+        }
         const admin: Admin = {
           id: a.id,
           name: a.name,
@@ -118,13 +181,32 @@ const getAdminlist = async () => {
       admins.value = adminlist;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error("Error fetching admins:", err);
     })
-    .finally(() => {});
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const changePage = (pageNumber: number) => {
+  const totalPages = Math.ceil(paginate.value.Total / size.value); // คำนวณจำนวนหน้าทั้งหมด
+  if (pageNumber < 1 || pageNumber > totalPages) {
+    return; // ถ้าหน้าเกินขอบเขตให้ไม่ทำอะไร
+  }
+
+  currentPage.value = pageNumber; // เปลี่ยนหน้า
+
+  // ส่งค่า param สำหรับการเรียกข้อมูลใหม่
+  const param: Params = {
+    page: currentPage.value,
+    size: size.value,
+    search: search.value || "",
+  };
+
+  getAdminlist(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
 };
 
 const deleteAdmin = async (id: number) => {
-  // ตรวจสอบค่า id ก่อนที่จะส่งไปยัง API
   if (id === undefined || id === null) {
     console.error("ID ของผู้ดูแลไม่ถูกต้อง:", id);
     return;
@@ -141,13 +223,11 @@ const deleteAdmin = async (id: number) => {
 };
 
 const confirmDeleteAdmin = async (id: number) => {
-  // ตรวจสอบค่า id ก่อนที่จะลบ
   if (id === undefined || id === null) {
     Swal.fire("ข้อผิดพลาด", "ไม่พบหมายเลขผู้ดูแลที่ต้องการลบ", "error");
     return;
   }
 
-  // แสดงกล่องยืนยันการลบ
   const result = await Swal.fire({
     title: "คุณแน่ใจหรือไม่?",
     text: "คุณต้องการลบผู้ดูแลนี้หรือไม่?",
@@ -159,13 +239,9 @@ const confirmDeleteAdmin = async (id: number) => {
 
   if (result.isConfirmed) {
     try {
-      // เรียกใช้ฟังก์ชันลบผู้ดูแล
       await deleteAdmin(id);
-
-      // แสดงข้อความสำเร็จหลังการลบ
       Swal.fire("ลบสำเร็จ!", "ผู้ดูแลถูกลบแล้ว", "success");
     } catch (error) {
-      // หากเกิดข้อผิดพลาดระหว่างการลบ
       Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถลบผู้ดูแลได้", "error");
     }
   }
@@ -177,21 +253,43 @@ const showEditAdmin = ref(false);
 const toggleModal = (type: "add" | "edit", state = true) => {
   if (type === "add") {
     showAddAdmin.value = state;
-  }
-  if (type === "edit") {
-    showEditAdmin.value = state;
+  } else if (type === "edit") {
+    if (state) {
+      // Only open the edit modal if an admin is selected
+      if (selectedAdmin.value) {
+        showEditAdmin.value = true;
+      }
+    } else {
+      showEditAdmin.value = false; // Close the modal
+    }
   }
 };
-const selectedAdmin = ref<Admin | null>(null);
+
+// ใช้ AdminUpdate แทน Admin
+const selectedAdmin = ref<AdminUpdate | null>(null); // เปลี่ยนเป็น AdminUpdate
 const selectAdmin = (admin: Admin) => {
-  if (admin) {
-    selectedAdmin.value = admin; // ตรวจสอบให้มั่นใจว่า selectedAdmin ถูกกำหนด
-    toggleModal("edit"); // เปิด modal สำหรับแก้ไข
+  if (admin && admin.id) {
+    selectedAdmin.value = {
+      id: admin.id,
+      name: admin.name,
+      email: admin.email,
+      password: "",
+      role_id: admin.role.id,
+      is_active: admin.is_active,
+      created_at: admin.created_at,
+      updated_at: admin.updated_at,
+    };
+    console.log("Selected admin:", selectedAdmin.value); // Debugging
+    toggleModal("edit", true); // Open the modal only after selecting an admin
+  } else {
+    console.error("Invalid admin data:", admin);
   }
 };
 
 onMounted(async () => {
   await getAdminlist();
+  const adminId = route.params.id; // เข้าถึงค่า adminId จาก params
+  console.log("Admin ID from route:", adminId); // แสดงค่าใน console เพื่อตรวจสอบว่าได้ค่าถูกต้องหรือไม่
 });
 </script>
 

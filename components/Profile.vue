@@ -12,7 +12,7 @@
           >
             <ul class="py-2 text-sm text-gray-700">
               <li class="block px-4 py-2 hover:bg-gray-100">
-                <NuxtLink to="">โปรไฟล์</NuxtLink>
+                <NuxtLink to="/manages_user/admin/[id]">โปรไฟล์</NuxtLink>
               </li>
               <NuxtLink to="/login">
                 <li class="block px-4 py-2 hover:bg-gray-100">ออกจากระบบ</li>

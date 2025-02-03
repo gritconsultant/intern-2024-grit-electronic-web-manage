@@ -1,9 +1,9 @@
 <template>
   <div class="defaultpages p-5 ml-5">
     <div class="h-[10%]">
-      <div class="bg-slate-500 w-full flex gap-2">
-        <h1 class="text-[28px] font-bold">คืนสินค้า #</h1>
-        <span class="bg-slate-100 w-[180px]">{{}}</span>
+      <div class=" w-full flex gap-2">
+        <h1 class="text-[28px] font-bold">คืนสินค้า #   </h1>
+        <span class=" w-[180px] flex items-center text-[20px] font-bold"> 00000{{}}</span>
         <div class="flex items-end">
           <div
             class="flex flex-col items-center cursor-pointer"

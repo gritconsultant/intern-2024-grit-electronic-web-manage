@@ -47,10 +47,11 @@ export const deleteProduct = (id: any) => {
   });
 };
 
-export const getCategoryList = () => {
+export const getCategoryList = (params: Params) => {
   return client({
     url: "/category",
     method: "GET",
+    params,
   });
 };
 

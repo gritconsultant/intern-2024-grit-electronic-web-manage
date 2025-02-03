@@ -173,8 +173,10 @@
 
 <script setup lang="ts">
 import Swal from "sweetalert2"; // SweetAlert2 for popups
+import type { Params } from "~/models/client.model";
 import type {
   Category,
+  Product,
   ProductCreate,
   ProductRes,
 } from "~/models/product.model";
@@ -203,6 +205,37 @@ const productRes = ref<ProductRes>({
 
 // Submit the product
 const confirmSubmit = () => {
+  // Check if any required fields are empty
+  if (
+    !product.value.name ||
+    !product.value.price ||
+    !product.value.stock ||
+    !product.value.category_id
+  ) {
+    Swal.fire({
+      title: "ข้อผิดพลาด",
+      text: "กรุณากรอกข้อมูลให้ครบถ้วนก่อนที่จะบันทึกสินค้า",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+    return; // Prevent form submission if validation fails
+  }
+
+  // Check if the product name already exists
+  const isProductNameExist = products.value.some(
+    (existingProduct) => existingProduct.name === product.value.name
+  );
+
+  if (isProductNameExist) {
+    Swal.fire({
+      title: "ข้อผิดพลาด",
+      text: "ชื่อสินค้านี้มีในระบบแล้ว กรุณาเลือกชื่อสินค้าใหม่",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+    return; // Prevent form submission if the name exists
+  }
+
   Swal.fire({
     title: "คุณแน่ใจหรือไม่?",
     text: "คุณต้องการบันทึกสินค้านี้หรือไม่?",
@@ -279,8 +312,14 @@ const addProduct = async () => {
 
 const categories = ref<Category[]>([]);
 const getCategorylist = async () => {
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+  };
+
   await service.product
-    .getCategoryList()
+    .getCategoryList(param)
     .then((resp: any) => {
       const data = resp.data.data;
       const categoryList: Category[] = [];
@@ -302,6 +341,69 @@ const getCategorylist = async () => {
       console.log("Error loading product list:", error.response || error);
     })
     .finally(() => {});
+};
+
+const search = ref<string>("");
+const size = ref(6); // ทำให้เป็น ref
+const products = ref<Product[]>([]);
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+
+const getProductList = async () => {
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+  };
+
+  console.log("Sending param:", param); // ตรวจสอบการส่งพารามิเตอร์
+  await service.product
+    .getProductList(param)
+    .then((resp: any) => {
+      const data = resp.data.data;
+      const productlist: Product[] = [];
+
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const e = data[i];
+        const product: Product = {
+          id: e.id,
+          name: e.name,
+          price: e.price,
+          stock: e.stock,
+          description: e.description ?? null, // Handle null or undefined description
+          Image: {
+            id: e.Image?.id ?? 0, // Default to 0 if Image is null or undefined
+            ref_id: e.Image?.ref_id ?? 0, // Default to 0 if ref_id is missing
+            type: e.Image?.type ?? "", // Default to empty string if type is missing
+            description: e.Image?.description ?? "", // Default to empty string if description is missing
+          },
+          category: {
+            id: e.category?.id ?? 0, // Default to 0 if category is missing
+            name: e.category?.name ?? "",
+            is_active: e.category?.is_active ?? true,
+            imageCategory: e.category?.imageCategory ?? [], // Default to empty string if category name is missing
+          },
+          Review:
+            e.Review?.map((r: any) => ({
+              id: r.id,
+              rating: r.rating,
+            })) ?? [], // Ensure Review is always an array
+          is_active: e.is_active,
+          created_at: e.created_at,
+          updated_at: e.updated_at,
+          deleted_at: e.deleted_at,
+        };
+
+        productlist.push(product);
+      }
+      products.value = productlist;
+    })
+    .catch((error: any) => {
+      console.log("Error loading product list:", error.response || error);
+    })
+    .finally(() => {
+      console.log("Finished loading product list.");
+    });
 };
 
 // Handle file input change (image)
@@ -373,6 +475,7 @@ const onStatusChange = () => {
 
 onMounted(async () => {
   await getCategorylist();
+  await getProductList();
 });
 </script>
 

@@ -75,11 +75,11 @@
 
     <!-- Product List -->
     <div
-      class="bg-white flex flex-col justify-between h-[90%] rounded-lg p-6 w-full dropshadowbox"
+      class="bg-white flex flex-col justify-between h-[90%] rounded-lg px-6 w-full dropshadowbox"
     >
       <table class="w-full text-left h-[90%]">
         <thead class="w-full">
-          <tr class="bg-orange-100 rounded-t-lg text-gray-800 flex gap-2">
+          <tr class="  text-gray-800 flex border-b-[2px] pb-[4px] pt-[4px] gap-2 border-gray-400 ">
             <th class="px-4 py-2 w-[25%]">สินค้า</th>
             <th class="px-4 py-2 w-[15%]">ประเภท</th>
             <th class="px-4 py-2 w-[15%]">ราคา</th>
@@ -88,7 +88,7 @@
             <th class="px-4 py-2 w-[15%]">การจัดการ</th>
           </tr>
         </thead>
-        <tbody class="w-full">
+        <tbody class="w-full" v-if="!loading">
           <tr
             v-for="(product, index) in filteredProducts"
             :key="index"
@@ -102,12 +102,12 @@
               />
               <span class="w-full truncate">{{ product.name }}</span>
             </td>
-            <td class="px-4 py-2 w-[15%]">{{ product.category.name }}</td>
-            <td class="px-4 py-2 text-orange-500 font-bold w-[15%]">
+            <td class="px-4 py-2 w-[15%] flex items-center">{{ product.category.name }}</td>
+            <td class="px-4 py-2 text-orange-500 font-bold w-[15%] flex items-center">
               ฿{{ product.price }}
             </td>
-            <td class="px-4 py-2 w-[15%]">{{ product.stock }}</td>
-            <td class="px-4 py-2 w-[15%]">
+            <td class="px-4 py-2 w-[15%] flex items-center">{{ product.stock }}</td>
+            <td class="px-4 py-2 w-[15%] flex items-center">
               <label class="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
@@ -141,10 +141,21 @@
             </td>
           </tr>
         </tbody>
+        <div v-else class="absolute left-[600px] top-[200px]">
+          <div
+            class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white "
+            role="status"
+          >
+            <span
+              class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+              >Loading...</span
+            >
+          </div>
+        </div>
       </table>
 
       <!-- Pagination -->
-      <div class="flex justify-between items-center mt-5">
+      <div class="flex justify-between items-center m-5">
         <div class="text-sm text-gray-600">
           <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
           แสดง {{ (page - 1) * size + 1 }} ถึง
@@ -261,8 +272,14 @@ const selectCategory = (category: Category | null) => {
 const categories = ref<Category[]>([]);
 
 const getCategorylist = async () => {
+  
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+  };
   await service.product
-    .getCategoryList()
+    .getCategoryList(param)
     .then((resp: any) => {
       const data = resp.data.data;
       const categoryList: Category[] = [];
@@ -286,13 +303,16 @@ const getCategorylist = async () => {
     .finally(() => {});
 };
 
+const loading = ref(false);
 const search = ref<string>("");
 const page = ref(1); // ทำให้เป็น ref
 const size = ref(6); // ทำให้เป็น ref
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 const products = ref<Product[]>([]);
 const paginate = ref<{ Total: number }>({ Total: 0 });
 
 const getProductList = async () => {
+  loading.value = true;
   const param: Params = {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
@@ -348,10 +368,10 @@ const getProductList = async () => {
     })
     //  เมื่อโหลดข้อมูลเสร็จให้ทำอะไร
     .finally(() => {
-      console.log("Finished loading product list.");
+      loading.value = false;
     });
 };
-const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+
 
 // คำนวณจำนวนหน้า
 

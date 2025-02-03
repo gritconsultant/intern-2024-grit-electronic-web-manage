@@ -97,7 +97,7 @@
       <table class="flex flex-col px-8 gap-2 w-full">
         <thead class="w-full">
           <tr
-            class="flex gap-5 border-b-[2px] pb-[4px] pt-[8px] border-gray-400"
+            class="flex gap-5 border-b-[2px] pb-[8px] pt-[8px] border-gray-400"
           >
             <th class="w-[10%] text-start pl-2">หมายเลขคำร้อง</th>
             <th class="w-[10%] text-start pl-2">หมายเลขคำสั่งซื้อ</th>
@@ -233,7 +233,7 @@
 
       <!-- Pagination -->
       <!-- Pagination -->
-      <div class="flex justify-between items-center mt-5">
+      <div class="flex justify-between items-center mt-5 px-5">
         <p class="text-sm text-gray-600">สินค้า {{}} จาก {{}}</p>
         <div class="flex gap-2">
           <button

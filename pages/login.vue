@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import type { Login } from "~/models/page.model";
+import type { UserInfo } from "~/models/user.model";
 import service from "~/service";
 import { useIndexStore } from "~/store/main";
 
@@ -81,6 +82,18 @@ const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
+const getinfo = ref<UserInfo>({
+  ID: 0,
+  FirstName: "",
+  LastName: "",
+  Username: "",
+  Password: "",
+  Email: "",
+  Phone: 0,
+  created_at: 0,
+  updated_at: 0,
+});
+
 const logins = ref<Login>({
   email: "",
   password: "",
@@ -89,12 +102,14 @@ const logins = ref<Login>({
 const login = async () => {
   await service.login
     .login(logins.value)
-    .then((resp: any) => {
+    .then(async (resp: any) => {
       // เซ็ต Cookie
       console.log(resp.data);
       const reftoken = useStatefulCookie("token");
       reftoken.value = resp.data.token;
       store.$state.token = resp.data.token;
+
+      await getuserinfo();
 
       if (store.$state.token != null) {
         router.push("/");
@@ -106,6 +121,20 @@ const login = async () => {
     })
     .finally(() => {});
   // tast
+};
+
+const getuserinfo = async () => {
+  await service.user
+    .getUserInfo()
+    .then((resp: any) => {
+      const data = resp.data.data;
+      console.log(data.ID);
+      store.$state.userId = data.ID;
+    })
+    .catch((error: any) => {
+      console.error(error);
+    })
+    .finally(() => {});
 };
 </script>
 

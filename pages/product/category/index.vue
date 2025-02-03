@@ -22,6 +22,8 @@
             type="search"
             class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
             placeholder="ค้นหาประเภทสินค้า"
+            v-model="search"
+            @keyup.enter="getCategorylist"
           />
           <i
             class="fa-solid fa-magnifying-glass absolute left-4 top-2 text-gray-500 text-lg"
@@ -32,33 +34,33 @@
 
     <!-- Table Section -->
     <div
-      class="bg-white flex flex-col justify-between h-[90%] rounded-lg p-6 w-full dropshadowbox"
+      class="bg-white flex flex-col justify-between h-[90%] rounded-lg px-6 w-full dropshadowbox"
     >
       <table class="w-full text-left h-[90%]">
-        <thead class="w-full bg-orange-100 rounded-t-lg text-gray-800">
-          <tr class="flex gap-2">
-            <th class="px-4 py-2 w-[30%]">หมายเลขประเภท</th>
-            <th class="px-4 py-2 w-[15%]">ชื่อประเภท</th>
-            <th class="px-4 py-2 w-[15%]">จำนวน</th>
-            <th class="px-4 py-2 w-[35%]">การจัดการ</th>
+        <thead class="w-full text-gray-800">
+          <tr class="flex gap-2  border-b-[2px] pb-[4px] pt-[4px]">
+            <th class="px-4 py-2 w-[25%]">หมายเลขประเภท</th>
+            <th class="px-4 py-2 w-[25%]">ชื่อประเภท</th>
+            <th class="px-4 py-2 w-[25%]">จำนวน</th>
+            <th class="px-4 py-2 w-[25%]">การจัดการ</th>
           </tr>
         </thead>
-        <tbody class="w-full">
+        <tbody class="w-full" v-if="!loading">
           <tr
             v-for="(category, index) in categories"
             :key="index"
             class="border-b flex gap-2 hover:bg-gray-50"
           >
-            <td class="flex items-center gap-4 px-4 py-2 w-[30%]">
+            <td class="flex items-center gap-4 px-4 py-2 w-[25%]">
               <img
                 src=""
                 alt="รูปประเภท"
                 class="w-16 h-16 object-cover rounded-lg border"
               />
             </td>
-            <td class="px-4 py-2 w-[15%]">{{ category.name }}</td>
-            <td class="px-4 py-2 text-orange-500 font-bold w-[15%]">-</td>
-            <td class="px-4 py-2 w-[35%] flex gap-4 items-center justify-end">
+            <td class="px-4 py-2 w-[25%] flex items-center ">{{ category.name }}</td>
+            <td class="px-4 py-2 text-orange-500 font-bold w-[25%] flex items-center">-</td>
+            <td class="px-4 py-2 w-[25%] flex gap-4 items-center justify-start ">
               <button>
                 <i
                   @click="openEditCategory(category.id)"
@@ -74,9 +76,49 @@
             </td>
           </tr>
         </tbody>
+        <div v-else class="absolute left-[600px] top-[200px]">
+          <div
+            class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+            role="status"
+          >
+            <span
+              class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+              >Loading...</span
+            >
+          </div>
+        </div>
       </table>
 
       <!-- Pagination -->
+      <div class="flex justify-between items-center m-5">
+        <div class="text-sm text-gray-600">
+          <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
+          แสดง {{ (page - 1) * size + 1 }} ถึง
+          {{ Math.min(page * size) }}
+          จากทั้งหมด {{ paginate.Total }} รายการ
+        </div>
+        <div class="flex gap-2">
+          <!-- ปุ่มก่อนหน้า -->
+          <button
+            @click="changePage(currentPage - 1)"
+            :disabled="currentPage === 1"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ก่อนหน้า
+          </button>
+
+          <span class="flex items-center px-2">หน้า {{ currentPage }}</span>
+
+          <!-- ปุ่มถัดไป -->
+          <button
+            @click="changePage(currentPage + 1)"
+            :disabled="currentPage * size >= paginate.Total"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ถัดไป
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- AddCategory Component -->
@@ -97,10 +139,9 @@
 
 <script lang="ts" setup>
 import Swal from "sweetalert2";
+import type { Params } from "~/models/client.model";
 import type { Category } from "~/models/product.model";
 import service from "~/service";
-
-const categories = ref<Category[]>([]);
 
 // ฟังก์ชันอัปเดตข้อมูลประเภทสินค้าที่ถูกแก้ไข
 const categoryUpdated = (updatedCategory: Category) => {
@@ -113,11 +154,26 @@ const categoryUpdated = (updatedCategory: Category) => {
   }
 };
 
+const loading = ref(false);
+const search = ref<string>("");
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+const page = ref(1); // ทำให้เป็น ref
+const size = ref(6); // ทำให้เป็น ref
+const categories = ref<Category[]>([]);
+const paginate = ref<{ Total: number }>({ Total: 0 });
+
 const getCategorylist = async () => {
+  loading.value = true;
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+  };
   await service.product
-    .getCategoryList()
+    .getCategoryList(param)
     .then((resp: any) => {
       const data = resp.data.data;
+      paginate.value = resp.data.paginate;
       const categoryList: Category[] = [];
 
       console.log(data);
@@ -136,7 +192,14 @@ const getCategorylist = async () => {
     .catch((error: any) => {
       console.log("Error loading product list:", error.response || error);
     })
-    .finally(() => {});
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const changePage = (page: number) => {
+  currentPage.value = page;
+  getCategorylist(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
 };
 
 const deleteCategory = async (id: number) => {
@@ -203,6 +266,13 @@ const confirmDeleteCategory = async (id: number) => {
     }
   }
 };
+
+watch(
+  () => [size.value],
+  async () => {
+    await getCategorylist();
+  }
+);
 
 onMounted(async () => {
   await getCategorylist();

@@ -168,8 +168,6 @@ const fetchCustomerId = async () => {
 // คำนวณจำนวนเงินรวมทั้งหมด
 const totalAmount = ref(0);
 
-
-
 </script>
 
 <style scoped>
