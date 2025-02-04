@@ -1,133 +1,134 @@
 <template>
-  <div class="defaultpages flex flex-col gap-6 p-6">
+  <div class="defaultpages flex flex-col gap-8 p-6">
     <!-- Header Section -->
-    <div class="flex items-center justify-between h-[5%] pl-8">
+    <div
+      class="flex items-center justify-center h-[10%] rounded-lg bg-white dropshadowbox"
+    >
       <h1 class="text-[26px] font-bold text-gray-800">ธนาคาร</h1>
     </div>
 
     <!-- Main Content -->
-    <div class="flex justify-center h-full">
+    <div class="flex justify-center h-[70%]">
       <div
-        class="w-[75%] h-full flex flex-col justify-center rounded-[10px] bg-white dropshadowbox p-8"
+        class="w-[90%] flex flex-col gap-6 p-6 bg-white dropshadowbox rounded-lg"
       >
-        <!-- Preview Image Section -->
-        <div class="flex justify-center items-center w-full h-[45%] mb-6">
-          <div
-            class="bg-slate-50 dropshadowbox w-[380px] h-[380px] rounded-[10px] flex justify-center items-center mt-[20px]"
-          >
-            <img
-              v-if="imageUrl"
-              :src="imageUrl"
-              alt="Preview"
-              class="w-[380px] h-[380px] rounded-[10px] object-cover"
-            />
-            <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
-          </div>
-          <div class="flex flex-col items-end ml-4">
-            <div class="flex gap-2 mb-4">
-              <button
-                v-if="imageUrl"
-                @click="clearImage"
-                class="px-4 py-2 w-[110px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
-              >
-                ลบรูปภาพ
-              </button>
-              <input
-                type="file"
-                ref="fileInput"
-                @change="onFileChange"
-                accept="image/*"
-                class="mt-2"
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- QR Code Section -->
-        <div class="text-[20px] font-bold text-center my-6  pr-[300px] ">คิวอาร์โค้ด</div>
-
-        <!-- Bank Information Section -->
-        <div class="w-full h-[45%] flex flex-col justify-between items-center">
-          <div class="w-[90%] flex flex-col gap-6">
-            <div class="flex  items-center gap-20 ">
-              <div class="flex gap-4">
-                <span class="text-[18px] font-semibold">ชื่อธนาคาร:</span>
-                <div class="w-[230px] text-gray-700 pl-[240px]">{{ bank.bank_name }}</div>
-              </div>
-              <select
-                v-model="selectedBank"
-                @change="onBankChange"
-                class="bg-orange-100 rounded-[5px] w-[200px] text-center py-2 ml-[140px]"
-              >
-                <option v-for="bank in namebanks" :key="bank" :value="bank">
-                  {{ bank }}
-                </option>
-                <option value="อื่นๆ">อื่นๆ</option>
-              </select>
+        <div class="grid grid-cols-2 gap-8">
+          <!-- Left: Preview Image Section -->
+          <div class="flex flex-col items-center gap-6">
+            <h2 class="text-xl font-bold">คิวอาร์โค้ด</h2>
+            <div class="flex flex-col gap-4">
               <div
-                v-if="selectedBank === 'อื่นๆ'"
-                class="flex flex-col gap-4 absolute right-[80px]"
+                class="w-[380px] h-[380px] bg-gray-100 flex justify-center items-center rounded-lg shadow-md"
               >
+                <img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  alt="Preview"
+                  class="w-full h-full rounded-lg object-cover"
+                />
+                <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
+              </div>
+              <div class="flex flex-col gap-5">
                 <input
-                  type="text"
-                  v-model="otherBank"
-                  placeholder="กรอกชื่อธนาคาร"
-                  class="bg-white shadow-md w-[200px] rounded-[5px] px-2"
+                  type="file"
+                  ref="fileInput"
+                  @change="onFileChange"
+                  accept="image/*"
                 />
                 <button
-                  @click="confirmBank"
-                  class="h-[35px] w-[100px] bg-green-500 text-white rounded-[5px] hover:bg-green-600"
+                  v-if="imageUrl"
+                  @click="clearImage"
+                  class="px-4 py-2 w-full bg-red-500 text-white rounded-md hover:bg-red-600"
                 >
-                  ยืนยัน
+                  ลบรูปภาพ
                 </button>
               </div>
             </div>
-
-            <!-- Bank Account Number Section -->
-            <div class="flex items-center gap-4">
-              <span class="w-[25%] text-[18px] font-semibold text-gray-700"
-                >เลขบัญชี:</span
-              >
-              <input
-                v-model="bankNumber"
-                type="text"
-                class="bg-gray-200 shadow-md w-[230px] rounded-[5px] px-2"
-              />
-            </div>
-
-            <!-- Branch Name Section -->
-            <div class="flex items-center gap-4">
-              <span class="w-[25%] text-[18px] font-semibold text-gray-700"
-                >สาขาธนาคาร:</span
-              >
-              <input
-                v-model="bankNumber"
-                type="text"
-                class="bg-gray-200 shadow-md w-[230px] rounded-[5px] px-2"
-              />
-            </div>
-
-            <!-- Account Name Section -->
-            <div class="flex items-center gap-4">
-              <span class="w-[25%] text-[18px] font-semibold text-gray-700"
-                >ชื่อบัญชี:</span
-              >
-              <input
-                v-model="accountName"
-                type="text"
-                class="bg-gray-200 shadow-md w-[230px] rounded-[5px] px-2"
-              />
-            </div>
           </div>
 
-          <!-- Save Button -->
-          <div class="flex justify-center ">
-            <button
-              @click="saveData"
-              class="p-3 rounded-[5px] font-semibold bg-orange-500 text-white w-[200px] hover:bg-orange-600"
-            >
-              บันทึกข้อมูล
-            </button>
+          <!-- Right: Bank Information -->
+          <div class="flex flex-col gap-6">
+            <h2 class="text-xl font-bold flex justify-center">รายละเอียด</h2>
+            <div class="grid grid-cols-1 gap-4">
+              <!-- Bank Name -->
+              <div class="flex flex-col gap-2">
+                <label class="text-lg font-semibold">ชื่อธนาคาร</label>
+                <div class="flex gap-4">
+                  <!-- รายการเลือกธนาคาร -->
+                  <select
+                    v-model="bank.bank_name"
+                    @change="onBankChange"
+                    class="w-full p-2 border rounded-md"
+                  >
+                    <option
+                      v-for="bankName in namebanks"
+                      :key="bankName"
+                      :value="bankName"
+                    >
+                      {{ bankName }}
+                    </option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                    <!-- เพิ่มตัวเลือก "อื่นๆ" -->
+                  </select>
+
+                  <!-- เมื่อเลือก "อื่นๆ" ให้แสดง input สำหรับกรอกชื่อธนาคาร -->
+                  <div v-if="bank.bank_name === 'อื่นๆ'" class="flex gap-2">
+                    <input
+                      type="text"
+                      v-model="otherBank"
+                      placeholder="กรอกชื่อธนาคาร"
+                      class="p-2 border rounded-md w-[200px]"
+                    />
+                    <button
+                      @click="confirmBank"
+                      class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                    >
+                      ยืนยัน
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Account Number -->
+              <div class="flex flex-col gap-2">
+                <label class="text-lg font-semibold">เลขบัญชี</label>
+                <input
+                  v-model="bank.account_number"
+                  type="text"
+                  class="p-2 border rounded-md"
+                />
+              </div>
+
+              <!-- Branch Name -->
+              <div class="flex flex-col gap-2">
+                <label class="text-lg font-semibold">สาขาธนาคาร</label>
+                <input
+                  v-model="bank.description"
+                  type="text"
+                  class="p-2 border rounded-md"
+                />
+              </div>
+
+              <!-- Account Name -->
+              <div class="flex flex-col gap-2">
+                <label class="text-lg font-semibold">ชื่อบัญชี</label>
+                <input
+                  v-model="bank.account_name"
+                  type="text"
+                  class="p-2 border rounded-md"
+                />
+              </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="flex justify-end items-end h-[100px]">
+              <button
+                @click="saveData"
+                class="px-6 py-3 bg-orange-500 text-white rounded-md h-[50%] font-semibold hover:bg-orange-600"
+              >
+                บันทึกข้อมูล
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -148,12 +149,7 @@ const bank = ref<BankUpdate>({
   account_name: "",
   account_number: "",
   description: "",
-  image_system_bank: {
-    id: 0,
-    ref_id: 0,
-    type: "",
-    description: "",
-  },
+  image_system_bank: "",
   is_active: true,
 });
 
@@ -176,34 +172,56 @@ const getBankById = async (id: number) => {
   try {
     const resp = await service.order.getBankById(id);
     const data = resp.data.data;
-    const temp: BankUpdate = {
+    bank.value = {
       id: data.id,
-      bank_name: data.bank_name,
+      bank_name: data.bank_name, // ⬅ ค่า bank_name มาแล้ว
       account_name: data.account_name,
       account_number: data.account_number,
       description: data.description,
-      image_system_bank: {
-        id: 0,
-        ref_id: 0,
-        type: "",
-        description: "",
-      },
+      image_system_bank: data.image_system_bank,
       is_active: data.is_active,
     };
-    bank.value = temp;
+    // เพิ่มธนาคารที่ไม่ได้อยู่ใน namebanks
+    if (data.bank_name && !namebanks.value.includes(data.bank_name)) {
+      namebanks.value.push(data.bank_name); // เพิ่มชื่อธนาคารที่ไม่ได้อยู่ใน namebanks
+    }
+
+    // กรณีที่เลือกธนาคารที่ไม่ใช่ "อื่นๆ" ให้ reset ค่า "otherBank"
+    if (data.bank_name !== "อื่นๆ") {
+      otherBank.value = "";
+    }
   } catch (error) {
     console.error("Error fetching bank by ID:", error);
   }
 };
 
-// const getBanklist = async () => {
-//   await service.order.getBanklist().then((resp: any) => {
-//     const data = resp.data.data;
-//     console.log(data);
-//   });
-// };
+const updateBank = async () => {
+  await service.order
+    .updateBank(route.params.id, bank.value)
+    .then((resp: any) => {
+      const data = resp.data;
+      const temp: BankRes = {
+        id: data.id,
+        bank_name: data.bank_name,
+        account_name: data.account_name,
+        account_number: data.account_number,
+        description: data.description,
+        image_system_bank: {
+          id: 0,
+          ref_id: 0,
+          type: "",
+          description: "",
+        },
+        is_active: data.is_active,
+      };
+      bankRes.value = temp;
+    })
+    .catch((error: any) => {
+      console.error("Error updating bank:", error);
+    })
+    .finally(() => {});
+};
 
-// ตัวแปรเก็บธนาคารทั้งหมด
 const namebanks = ref([
   "ธนาคารกรุงเทพ",
   "ธนาคารไทยพาณิชย์",
@@ -217,25 +235,42 @@ const namebanks = ref([
   "ธนาคารซีไอเอ็มบีไทย",
   "ธนาคารยูโอบี",
   "ธนาคารแลนด์แอนด์เฮ้าส์",
+  "",
 ]);
 
+const otherBank = ref<string>("");
+
+// ฟังก์ชัน onBankChange
+const onBankChange = () => {
+  if (bank.value.bank_name !== "อื่นๆ") {
+    otherBank.value = ""; // รีเซ็ตค่าเมื่อเลือกธนาคารที่ไม่ใช่ "อื่นๆ"
+  }
+  // ไม่มีการตั้งค่า bank_name เป็น "อื่นๆ" ที่นี่อีกแล้ว
+};
+
+// เมื่อเลือก 'อื่นๆ' ให้แสดงอินพุต
+const confirmBank = () => {
+  if (otherBank.value.trim()) {
+    // เพิ่มชื่อธนาคารที่กรอกลงใน namebanks ถ้ายังไม่มีในรายการ
+    if (!namebanks.value.includes(otherBank.value)) {
+      namebanks.value.push(otherBank.value);
+    }
+    bank.value.bank_name = otherBank.value; // อัปเดตค่า bank_name เป็นชื่อที่กรอก
+    console.log("Updated bank_name:", bank.value.bank_name); // ตรวจสอบการอัปเดตค่า
+  } else {
+    Swal.fire(
+      "กรุณากรอกชื่อธนาคาร",
+      "ชื่อธนาคารไม่สามารถเป็นค่าว่าง",
+      "warning"
+    );
+  }
+};
+
 // ตัวแปรสำหรับเก็บธนาคารที่เลือก
-const selectedBank = ref<string>("กสิกรไทย");
-const bankNumber = ref<string>("000-0000-0000-0");
-const accountName = ref<string>("บริษัทจำกัด");
+const selectedBank = ref<string>();
 const qr = ref<string>(
   "https://services-inw-me.lnw.co.th/qr/132/f6d6a5dea610f3bcf11b1db8f0d6ecaa.png?p=lnwshop&h=232584b0b5146183a62d0350400c51b3725714e6&c=https%3A%2F%2Flnwgo.com%2Fqr%2Fs%2F892682%3Fs%3D8a06c9d5"
 );
-
-// ตัวแปรสำหรับกรอกชื่อธนาคารในกรณีเลือก "อื่นๆ"
-const otherBank = ref<string>("");
-
-// ฟังก์ชันจัดการเมื่อเลือกธนาคาร
-const onBankChange = () => {
-  if (selectedBank.value !== "อื่นๆ") {
-    otherBank.value = ""; // รีเซ็ตค่าเมื่อเลือกธนาคารที่ไม่ใช่ "อื่นๆ"
-  }
-};
 
 // ฟังก์ชันจัดการเมื่อมีการเลือกไฟล์
 const imageUrl = ref<string | null>(null);
@@ -262,13 +297,6 @@ const clearImage = () => {
   }
 };
 
-// ฟังก์ชันยืนยันธนาคาร
-const confirmBank = () => {
-  if (otherBank.value) {
-    selectedBank.value = otherBank.value; // เปลี่ยนชื่อธนาคารที่เลือกเป็นชื่อที่กรอก
-  }
-};
-
 // ฟังก์ชันบันทึกข้อมูล
 const saveData = () => {
   Swal.fire({
@@ -278,16 +306,15 @@ const saveData = () => {
     showCancelButton: true,
     confirmButtonText: "ยืนยัน",
     cancelButtonText: "ยกเลิก",
-  }).then((result) => {
+  }).then(async (result) => {
     if (result.isConfirmed) {
-      // Process to save the data here
-      console.log("ข้อมูลที่บันทึก:", {
-        selectedBank: selectedBank.value,
-        bankNumber: bankNumber.value,
-        accountName: accountName.value,
-      });
-
-      Swal.fire("สำเร็จ!", "ข้อมูลถูกบันทึกเรียบร้อย", "success");
+      try {
+        await updateBank(); // เรียกใช้ฟังก์ชันอัปเดตข้อมูล
+        Swal.fire("สำเร็จ!", "ข้อมูลถูกบันทึกเรียบร้อย", "success");
+      } catch (error) {
+        console.error("Error saving bank data:", error);
+        Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้", "error");
+      }
     } else {
       Swal.fire("ยกเลิก", "คุณได้ยกเลิกการบันทึกข้อมูล", "info");
     }
@@ -295,13 +322,12 @@ const saveData = () => {
 };
 
 watch(
-  () => route.params.id,
-  (newId) => {
-    const id = newId ? Number(newId) : 1; // ถ้ามี id ใหม่ใน URL ใช้ค่าใหม่, ไม่งั้นใช้ 1
-    getBankById(id); // ส่ง id ไปที่ฟังก์ชัน getBankById
-  },
-  { immediate: true }
-); // ให้ทำงานทันทีเมื่อ mounted
+  () => bank.value.bank_name,
+  (newValue) => {
+    otherBank.value = newValue === "อื่นๆ" ? otherBank.value : ""; // กรณีเลือก "อื่นๆ" ต้องคงค่าที่กรอกไว้
+    console.log("bank.bank_name changed:", newValue);
+  }
+);
 
 onMounted(() => {
   const id = route.params.id ? Number(route.params.id) : 1; // ถ้าไม่มี id ใน URL ใช้ค่า 1

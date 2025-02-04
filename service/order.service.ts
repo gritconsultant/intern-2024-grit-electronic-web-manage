@@ -17,7 +17,7 @@ export const getBankById = (id: any) => {
 
 export const updateBank = (id: any, datas: BankUpdate) => {
   return client({
-    url: `/system/${id}`,
+    url: `/system/${1}`,
     method: "PATCH",
     data: datas,
   });
