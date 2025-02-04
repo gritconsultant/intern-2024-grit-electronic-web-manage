@@ -1,14 +1,13 @@
 import type { Params } from "~/models/client.model";
 import { client } from "./httpClient";
-
-
+import type { AdminUpdate } from "~/models/user.model";
 
 export const getUserInfo = () => {
   return client({
-      url: "/admin/info",
-      method: "get",
-  })
-} 
+    url: "/admin/info",
+    method: "get",
+  });
+};
 
 export const getAdmintList = (params: Params) => {
   return client({
@@ -40,9 +39,9 @@ export const deleteAdmin = (id: any) => {
   });
 };
 
-export const updateAdmin = (datas: any) => {
+export const updateAdmin = (id: any, datas: AdminUpdate) => {
   return client({
-    url: "/admin/update",
+    url: `/admin/${id}`,
     method: "PATCH",
     data: datas,
   });
@@ -57,8 +56,8 @@ export const getCustomertList = (params: Params) => {
 };
 
 export const getCustomerById = (id: any) => {
- return client({
+  return client({
     url: `/user/${id}`,
     method: "GET",
   });
-}
+};

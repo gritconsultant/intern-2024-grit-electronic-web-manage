@@ -65,7 +65,7 @@
             <th class="w-[30%] truncate">{{ admin.email }}</th>
             <th class="w-[38%] flex justify-end gap-5 truncate">
               <i
-                @click="selectAdmin(admin)"
+                @click="openEditAdmin(admin.id)"
                 class="fa-solid fa-pen-to-square text-[20px] text-orange-400 cursor-pointer"
               >
               </i>
@@ -122,9 +122,10 @@
 
     <AddAdmin :show="showAddAdmin" @close="toggleModal('add', false)" />
     <EditAdmin
-      :show="showEditAdmin"
-      @close="toggleModal('edit', false)"
-      :admin="selectedAdmin"
+      v-if="showEditAdmin && selectedAdminId !== null"
+      :adminId="selectedAdminId"
+      @adminUpdated="handleAdminUpdate"
+      @close="closeForm"
     />
   </div>
 </template>
@@ -132,7 +133,7 @@
 <script setup lang="ts">
 import Swal from "sweetalert2";
 import type { Params } from "~/models/client.model";
-import type { Admin, AdminUpdate } from "~/models/user.model"; // ใช้ AdminUpdate
+import type { Admin, } from "~/models/user.model"; // ใช้ AdminUpdate
 import service from "~/service";
 
 const route = useRoute();
@@ -222,6 +223,40 @@ const deleteAdmin = async (id: number) => {
     .finally(() => {});
 };
 
+const showEditAdmin = ref(false);
+
+const selectedAdminId = ref<number | null>(null);
+
+const openEditAdmin = (id: number | null) => {
+  console.log("Selected Admin ID:", id, typeof id);
+  if (!id) {
+    console.error("Error: No category ID provided.");
+    return;
+  }
+  selectedAdminId.value = id;
+  showEditAdmin.value = true;
+};
+
+const closeForm = () => {
+  console.log("Form closed");
+  showEditAdmin.value = false;
+};
+
+// เมื่อมีการอัปเดตประเภทสินค้า จะเรียกฟังก์ชัน categoryUpdated
+const handleAdminUpdate = (updatedAdmin: Admin) => {
+  adminUpdated(updatedAdmin);
+};
+
+const adminUpdated = (updatedAdmin: Admin) => {
+  // ค้นหาประเภทสินค้าที่มี id ตรงกับข้อมูลที่อัปเดต
+  const index = admins.value.findIndex(
+    (category) => category.id === updatedAdmin.id
+  );
+  if (index !== -1) {
+    admins.value[index] = updatedAdmin; // แทนที่ข้อมูลประเภทสินค้าตัวเก่าด้วยข้อมูลที่อัปเดต
+  }
+};
+
 const confirmDeleteAdmin = async (id: number) => {
   if (id === undefined || id === null) {
     Swal.fire("ข้อผิดพลาด", "ไม่พบหมายเลขผู้ดูแลที่ต้องการลบ", "error");
@@ -248,41 +283,10 @@ const confirmDeleteAdmin = async (id: number) => {
 };
 
 const showAddAdmin = ref(false);
-const showEditAdmin = ref(false);
 
-const toggleModal = (type: "add" | "edit", state = true) => {
+const toggleModal = (type: "add", state = true) => {
   if (type === "add") {
     showAddAdmin.value = state;
-  } else if (type === "edit") {
-    if (state) {
-      // Only open the edit modal if an admin is selected
-      if (selectedAdmin.value) {
-        showEditAdmin.value = true;
-      }
-    } else {
-      showEditAdmin.value = false; // Close the modal
-    }
-  }
-};
-
-// ใช้ AdminUpdate แทน Admin
-const selectedAdmin = ref<AdminUpdate | null>(null); // เปลี่ยนเป็น AdminUpdate
-const selectAdmin = (admin: Admin) => {
-  if (admin && admin.id) {
-    selectedAdmin.value = {
-      id: admin.id,
-      name: admin.name,
-      email: admin.email,
-      password: "",
-      role_id: admin.role.id,
-      is_active: admin.is_active,
-      created_at: admin.created_at,
-      updated_at: admin.updated_at,
-    };
-    console.log("Selected admin:", selectedAdmin.value); // Debugging
-    toggleModal("edit", true); // Open the modal only after selecting an admin
-  } else {
-    console.error("Invalid admin data:", admin);
   }
 };
 
