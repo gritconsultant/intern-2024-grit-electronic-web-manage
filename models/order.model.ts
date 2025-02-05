@@ -1,11 +1,25 @@
 export interface Order {
-  order_id: number;
-  total_amount: number;
-  currency: string;
+  id: number;
+  user_id: number;
   status: string;
-  created_at: string;
+  total_amount: number;
+  total_price: number;
+  system_bank_id: number;
+  payment_price: number;
+  bank_name: string;
+  account_name: string;
+  account_number: string;
   payment_status: string;
-  items: Item[];
+  firstname: string;
+  lastname: string;
+  address: string;
+  zip_code: string;
+  sub_district: string;
+  district: string;
+  province: string;
+  shipment_status: string;
+  created_at: number;
+  updated_at: number;
 }
 
 export interface Item {

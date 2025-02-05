@@ -16,7 +16,8 @@
             type="search"
             class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
             placeholder="ค้นหาคำสั่งซื้อ"
-            v-model="filters.searchTerm"
+            v-model="search"
+            @keyup.enter="getOrderList"
           />
           <i
             class="fa-solid fa-magnifying-glass absolute left-4 top-2 text-gray-500 text-lg"
@@ -109,16 +110,16 @@
             <th class="w-[3%] text-start pl-2"></th>
           </tr>
         </thead>
-        <tbody
-          class="w-full py-[4px]"
-          v-for="(order, index) in paginatedOrders"
-          :key="index"
-        >
-          <tr class="flex gap-5 pb-2 border-b-[1px]">
+        <tbody class="w-full py-[4px]" v-if="!loading">
+          <tr
+            class="flex gap-5 pb-2 border-b-[1px]"
+            v-for="(order, index) in orders"
+            :key="index"
+          >
             <th
               class="w-[10%] text-start pl-2 truncate text-[15px] font-medium"
             >
-              {{ order.order_id }}
+              {{ order.id }}
             </th>
             <th
               class="w-[12%] text-[15px] text-start pl-2 font-medium truncate"
@@ -127,83 +128,87 @@
             </th>
             <th
               class="w-[15%] text-[15px] text-start pl-2 font-medium truncate"
-            ></th>
+            >
+              {{ order.account_name }}
+            </th>
             <th
               class="w-[20%] text-[15px] text-start pl-2 font-medium truncate"
-            ></th>
-            <th
-              class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
-              {{ order.total_amount }}
+              {{ order.address }}
             </th>
             <th
               class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
-              {{ order.items.length }} ชิ้น
+              {{ order.total_price }}
+            </th>
+            <th
+              class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
+            >
+              {{ order.total_amount }} ชิ้น
             </th>
             <th
               class="w-[10%] text-[15px] font-medium flex items-center justify-center"
             >
               <div class="flex flex-col items-center cursor-pointer">
                 <div
-                  v-if="order.status === 'รอการชำระ'"
+                  v-if="order.status === 'pending'"
                   class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400"
-                  @click="toggleMenu(order.order_id)"
+                  @click="toggleMenu(order.id)"
                 >
                   {{ order.status }}
                 </div>
                 <div
                   v-else-if="order.status === 'กำลังจัดส่ง'"
                   class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-orange-50 border-orange-400"
-                  @click="toggleMenu(order.order_id)"
+                  @click="toggleMenu(order.id)"
                 >
                   {{ order.status }}
                 </div>
                 <div
-                  v-else-if="order.status === 'จัดส่งเรียบร้อย'"
+                  v-else-if="order.status === 'shipped'"
                   class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-green-50 border-green-400"
-                  @click="toggleMenu(order.order_id)"
+                  @click="toggleMenu(order.id)"
                 >
                   {{ order.status }}
                 </div>
                 <div
                   v-else
                   class="w-[120px] p-[1px] px-2 border-[1px] rounded-[5px] bg-red-50 border-red-600"
-                  @click="toggleMenu(order.order_id)"
+                  @click="toggleMenu(order.id)"
                 >
                   {{ order.status }}
                 </div>
                 <div>
                   <ul
                     class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 dropshadowbottomsub p-[1px] w-[140px] h-[120px] -translate-x-[70px]"
-                    v-show="isMenuVisible[order.order_id]"
+                    v-show="isMenuVisible[order.id]"
                   >
                     <li
                       class="h-[25%] hover:bg-slate-300 rounded-t-[19px] flex items-center justify-center"
-                      @click="changeStatus(order.order_id, 'รอการชำระ')"
-                      :class="{ 'bg-gray-200': order.status === 'รอการชำระ' }"
+                      @click="changeStatus(order.id, 'pending')"
+                      :class="{ 'bg-gray-200': order.status === 'pending' }"
                     >
                       รอการชำระ
                     </li>
                     <li
                       class="h-[25%] hover:bg-slate-300 flex items-center justify-center"
-                      @click="changeStatus(order.order_id, 'กำลังจัดส่ง')"
+                      @click="changeStatus(order.id, 'กำลังจัดส่ง')"
                       :class="{ 'bg-gray-200': order.status === 'กำลังจัดส่ง' }"
                     >
                       กำลังจัดส่ง
                     </li>
                     <li
                       class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center"
-                      @click="changeStatus(order.order_id, 'จัดส่งเรียบร้อย')"
+                      @click="changeStatus(order.id, 'shipped')"
                       :class="{
-                        'bg-gray-200': order.status === 'จัดส่งเรียบร้อย',
+                        'bg-gray-200': order.status === 'shipped',
                       }"
                     >
                       จัดส่งเรียบร้อย
                     </li>
                     <li
                       class="h-[25%] text-[14px] hover:bg-slate-300 rounded-b-[19px] flex items-center justify-center"
-                      @click="changeStatus(order.order_id, 'ชำระล้มเหลว')"
+                      @click="changeStatus(order.id, 'ชำระล้มเหลว')"
                       :class="{ 'bg-gray-200': order.status === 'ชำระล้มเหลว' }"
                     >
                       ชำระล้มเหลว
@@ -222,20 +227,43 @@
             </th>
           </tr>
         </tbody>
+        <div v-else class="absolute left-[600px] top-[200px]">
+          <div
+            class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+            role="status"
+          >
+            <span
+              class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+              >Loading...</span
+            >
+          </div>
+        </div>
       </table>
 
       <!-- Pagination -->
-      <!-- Pagination -->
-      <div class="flex justify-between items-center mt-5 px-5">
-        <p class="text-sm text-gray-600">สินค้า {{}} จาก {{}}</p>
+      <div class="flex justify-between items-center m-5">
+        <div class="text-sm text-gray-600">
+          <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
+          แสดง {{ (currentPage - 1) * size + 1 }} ถึง
+          {{ Math.min(currentPage * size, paginate.Total) }}
+          จากทั้งหมด {{ paginate.Total }} รายการ
+        </div>
         <div class="flex gap-2">
+          <!-- ปุ่มก่อนหน้า -->
           <button
+            @click="changePage(currentPage - 1)"
             :disabled="currentPage === 1"
             class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
             ก่อนหน้า
           </button>
+
+          <span class="flex items-center px-2">หน้า {{ currentPage }}</span>
+
+          <!-- ปุ่มถัดไป -->
           <button
+            @click="changePage(currentPage + 1)"
+            :disabled="currentPage >= Math.ceil(paginate.Total / size)"
             class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
             ถัดไป
@@ -249,6 +277,8 @@
 <script lang="ts" setup>
 import type { Order, StatusOrder } from "~/models/order.model";
 import Swal from "sweetalert2";
+import type { Params } from "~/models/client.model";
+import service from "~/service";
 
 const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
 
@@ -263,10 +293,9 @@ const toggleMenu = (orderId: number) => {
   };
 };
 
-// Change the status of a specific order
 const changeStatus = (orderId: number, status: string) => {
   // Find the order by ID
-  const order = orders.find((order) => order.order_id === orderId);
+  const order = orders.value.find((order) => order.id === orderId); // Ensure consistency here
 
   if (order) {
     // Check if the new status is different from the current one
@@ -334,349 +363,99 @@ const selectStatusOrder = (statusorder: StatusOrder) => {
   selectedStatusOrder.value = statusorder;
 };
 
-// Filter orders based on selected criteria
-const filteredOrder = computed(() => {
-  let filteredOrders = orders;
+const loading = ref(false);
+const search = ref<string>("");
+const size = ref(6); // ทำให้เป็น ref
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+const orders = ref<Order[]>([]);
+const paginate = ref<{ Total: number }>({ Total: 0 });
+const Category = ref();
 
-  // Filter by status
-  if (selectedStatusOrder.value.id !== 1) {
-    filteredOrders = filteredOrders.filter(
-      (order) => order.status === selectedStatusOrder.value.status
-    );
-  }
 
-  // Filter by start date
-  if (filters.value.startDate) {
-    filteredOrders = filteredOrders.filter(
-      (order) => new Date(order.created_at) >= new Date(filters.value.startDate)
-    );
-  }
+const getOrderList = async () => {
+  loading.value = true;
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    Categories : Category.value,
+  };
 
-  // Filter by end date
-  if (filters.value.endDate) {
-    filteredOrders = filteredOrders.filter(
-      (order) => new Date(order.created_at) <= new Date(filters.value.endDate)
-    );
-  }
+  console.log("Sending param:", param); // ตรวจสอบค่า param ที่ส่งไป
 
-  // Filter by search term
+  await service.order
+    .getOrderlist(param)
+    .then((resp: any) => {
+      const data = resp.data.data;
+      paginate.value = resp.data.paginate; // ตั้งค่าจำนวนทั้งหมดใหม่
 
-  return filteredOrders;
-});
+      const orderlist: Order[] = [];
 
-// Pagination variables
-const currentPage = ref(1);
-const itemsPerPage = 10; // จำนวนคำสั่งซื้อที่จะแสดงในแต่ละหน้า
-
-// Paginate the filtered orders
-const paginatedOrders = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  const end = currentPage.value * itemsPerPage;
-  return filteredOrder.value.slice(start, end);
-});
-
-// Calculate total pages
-const totalPages = computed(() => {
-  return Math.ceil(filteredOrder.value.length / itemsPerPage);
-});
-
-// Change the current page
-const changePage = (page: number) => {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page;
-  }
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const r = data[i];
+        const order: Order = {
+          id: r.id,
+          user_id: r.user_id,
+          status: r.status,
+          total_amount: r.total_amount,
+          total_price: r.total_price,
+          system_bank_id: r.system_bank,
+          payment_price: r.payment_price,
+          bank_name: r.bank_name,
+          account_name: r.account_name,
+          account_number: r.account_number,
+          payment_status: r.payment_status,
+          firstname: r.firstname,
+          lastname: r.lastname,
+          address: r.address,
+          zip_code: r.zip_code,
+          sub_district: r.sub_district,
+          district: r.district,
+          province: r.province,
+          shipment_status: r.shipment_status,
+          created_at: r.created_at,
+          updated_at: r.updated_at,
+        };
+        orderlist.push(order);
+      }
+      orders.value = orderlist; // Assign the populated order list to orders
+    })
+    .catch((error: any) => {
+      console.error("Error fetching order data:", error);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
-const orders = <Order[]>[
-  {
-    order_id: 12346,
-    total_amount: 800,
-    currency: "USD",
-    status: "รอการชำระ",
-    created_at: "2024-12-16T09:00:00Z",
-    payment_status: "pending",
-    items: [
-      {
-        product_id: 203,
-        product_name: "Tablet Y",
-        quantity: 1,
-        price: 800,
-      },
-    ],
-  },
-  {
-    order_id: 12347,
-    total_amount: 1500,
-    currency: "USD",
-    status: "กำลังจัดส่ง",
-    created_at: "2024-12-17T10:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 204,
-        product_name: "Gaming Laptop Z",
-        quantity: 1,
-        price: 1500,
-      },
-    ],
-  },
-  {
-    order_id: 12348,
-    total_amount: 300,
-    currency: "USD",
-    status: "จักส่งเรียบร้อย",
-    created_at: "2024-12-18T11:00:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 205,
-        product_name: "Smartwatch W",
-        quantity: 1,
-        price: 300,
-      },
-    ],
-  },
-  {
-    order_id: 12349,
-    total_amount: 2000,
-    currency: "USD",
-    status: "ชำระล้มเหลว",
-    created_at: "2024-12-19T12:15:00Z",
-    payment_status: "failed",
-    items: [
-      {
-        product_id: 206,
-        product_name: "Desktop PC X",
-        quantity: 1,
-        price: 2000,
-      },
-    ],
-  },
-  {
-    order_id: 12350,
-    total_amount: 150,
-    currency: "USD",
-    status: "กำลังจัดส่ง",
-    created_at: "2024-12-20T13:45:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 207,
-        product_name: "Bluetooth Speaker",
-        quantity: 1,
-        price: 150,
-      },
-    ],
-  },
-  {
-    order_id: 12351,
-    total_amount: 450,
-    currency: "USD",
-    status: "รอการชำระ",
-    created_at: "2024-12-21T14:30:00Z",
-    payment_status: "pending",
-    items: [
-      {
-        product_id: 208,
-        product_name: "4K Monitor",
-        quantity: 1,
-        price: 450,
-      },
-    ],
-  },
-  {
-    order_id: 12352,
-    total_amount: 2500,
-    currency: "USD",
-    status: "จักส่งเรียบร้อย",
-    created_at: "2024-12-22T15:00:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 209,
-        product_name: "High-End Camera",
-        quantity: 1,
-        price: 2500,
-      },
-    ],
-  },
-  {
-    order_id: 12353,
-    total_amount: 600,
-    currency: "USD",
-    status: "ชำระล้มเหลว",
-    created_at: "2024-12-23T16:00:00Z",
-    payment_status: "failed",
-    items: [
-      {
-        product_id: 210,
-        product_name: "VR Headset",
-        quantity: 1,
-        price: 600,
-      },
-    ],
-  },
-  {
-    order_id: 12354,
-    total_amount: 1200,
-    currency: "USD",
-    status: "รอการชำระ",
-    created_at: "2024-12-24T17:30:00Z",
-    payment_status: "pending",
-    items: [
-      {
-        product_id: 211,
-        product_name: "Drone X",
-        quantity: 1,
-        price: 1200,
-      },
-    ],
-  },
-  {
-    order_id: 12355,
-    total_amount: 3000,
-    currency: "USD",
-    status: "กำลังจัดส่ง",
-    created_at: "2024-12-25T18:00:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 212,
-        product_name: "Gaming PC Ultimate",
-        quantity: 1,
-        price: 3000,
-      },
-    ],
-  },
-  {
-    order_id: 12356,
-    total_amount: 800,
-    currency: "USD",
-    status: "รอการชำระ",
-    created_at: "2024-12-26T19:15:00Z",
-    payment_status: "pending",
-    items: [
-      {
-        product_id: 213,
-        product_name: "Smart TV",
-        quantity: 1,
-        price: 800,
-      },
-    ],
-  },
-  {
-    order_id: 12357,
-    total_amount: 1200,
-    currency: "USD",
-    status: "จักส่งเรียบร้อย",
-    created_at: "2024-12-27T20:00:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 214,
-        product_name: "Laptop Pro",
-        quantity: 1,
-        price: 1200,
-      },
-    ],
-  },
-  {
-    order_id: 12358,
-    total_amount: 950,
-    currency: "USD",
-    status: "กำลังจัดส่ง",
-    created_at: "2024-12-28T21:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 215,
-        product_name: "Wireless Charger",
-        quantity: 1,
-        price: 950,
-      },
-    ],
-  },
-  {
-    order_id: 12359,
-    total_amount: 500,
-    currency: "USD",
-    status: "ชำระล้มเหลว",
-    created_at: "2024-12-29T22:15:00Z",
-    payment_status: "failed",
-    items: [
-      {
-        product_id: 216,
-        product_name: "Fitness Tracker",
-        quantity: 1,
-        price: 500,
-      },
-    ],
-  },
-  {
-    order_id: 12360,
-    total_amount: 1750,
-    currency: "USD",
-    status: "รอการชำระ",
-    created_at: "2024-12-30T23:00:00Z",
-    payment_status: "pending",
-    items: [
-      {
-        product_id: 217,
-        product_name: "Smartphone Y",
-        quantity: 1,
-        price: 1750,
-      },
-    ],
-  },
-  {
-    order_id: 12361,
-    total_amount: 650,
-    currency: "USD",
-    status: "กำลังจัดส่ง",
-    created_at: "2024-12-31T00:30:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 218,
-        product_name: "Noise Cancelling Earbuds",
-        quantity: 1,
-        price: 650,
-      },
-    ],
-  },
-  {
-    order_id: 12362,
-    total_amount: 2200,
-    currency: "USD",
-    status: "จักส่งเรียบร้อย",
-    created_at: "2025-01-01T01:15:00Z",
-    payment_status: "paid",
-    items: [
-      {
-        product_id: 219,
-        product_name: "High-Performance Desktop",
-        quantity: 1,
-        price: 2200,
-      },
-    ],
-  },
-  {
-    order_id: 12363,
-    total_amount: 950,
-    currency: "USD",
-    status: "ชำระล้มเหลว",
-    created_at: "2025-01-02T02:00:00Z",
-    payment_status: "failed",
-    items: [
-      {
-        product_id: 220,
-        product_name: "Smart Home Hub",
-        quantity: 1,
-        price: 950,
-      },
-    ],
-  },
-];
+// ฟังก์ชันที่ใช้ในการเปลี่ยนหน้า
+const changePage = (pageNumber: number) => {
+  const totalPages = Math.ceil(paginate.value.Total / size.value); // คำนวณจำนวนหน้าทั้งหมด
+  if (pageNumber < 1 || pageNumber > totalPages) {
+    return; // ถ้าหน้าเกินขอบเขตให้ไม่ทำอะไร
+  }
+
+  currentPage.value = pageNumber; // เปลี่ยนหน้า
+
+  // ส่งค่า param สำหรับการเรียกข้อมูลใหม่
+  const param: Params = {
+    page: currentPage.value,
+    size: size.value,
+    search: search.value || "",
+    Categories : Category.value,
+  };
+
+  getOrderList(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
+};
+
+watch([() => currentPage.value], async () => {
+  await getOrderList();
+});
+
+onMounted(async () => {
+  await getOrderList();
+});
 </script>
 
 <style></style>

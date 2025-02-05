@@ -130,6 +130,7 @@ const search = ref("");
 const currentPage = ref(1);
 const size = ref(10);
 const customers = ref<Customer[]>([]);
+const Category = ref();
 
 const paginate = ref<{ Total: number }>({ Total: 0 });
 
@@ -139,6 +140,7 @@ const getCustomerlist = async () => {
     page: currentPage.value,
     size: size.value,
     search: search.value || "",
+    category : Category.value,
   };
 
   try {
@@ -187,6 +189,7 @@ const changePage = (pageNumber: number) => {
     page: currentPage.value,
     size: size.value,
     search: search.value || "",
+    category : Category.value,
   };
 
   getCustomerlist(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า

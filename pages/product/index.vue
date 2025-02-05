@@ -42,8 +42,10 @@
             <div class="mt-[2px] pl-[2px]">
               <i class="fa-solid fa-filter"></i>
             </div>
-            <div class="flex justify-start w-full">
-              {{ selectedCategory ? selectedCategory.name : "เลือกหมวดหมู่" }}
+            <div class="flex justify-center w-full">
+              {{
+                selectedCategory ? selectedCategory.name : "เลือกประเภทสินค้า"
+              }}
             </div>
           </button>
 
@@ -57,7 +59,7 @@
                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 @click="selectCategory(null)"
               >
-                All
+                ทั้งหมด
               </li>
               <li
                 v-for="(category, i) in categories"
@@ -79,7 +81,9 @@
     >
       <table class="w-full text-left h-[90%]">
         <thead class="w-full">
-          <tr class="  text-gray-800 flex border-b-[2px] pb-[4px] pt-[4px] gap-2 border-gray-400 ">
+          <tr
+            class="text-gray-800 flex border-b-[2px] pb-[4px] pt-[4px] gap-2 border-gray-400"
+          >
             <th class="px-4 py-2 w-[25%]">สินค้า</th>
             <th class="px-4 py-2 w-[15%]">ประเภท</th>
             <th class="px-4 py-2 w-[15%]">ราคา</th>
@@ -102,17 +106,22 @@
               />
               <span class="w-full truncate">{{ product.name }}</span>
             </td>
-            <td class="px-4 py-2 w-[15%] flex items-center">{{ product.category.name }}</td>
-            <td class="px-4 py-2 text-orange-500 font-bold w-[15%] flex items-center">
+            <td class="px-4 py-2 w-[15%] flex items-center">
+              {{ product.category.name }}
+            </td>
+            <td
+              class="px-4 py-2 text-orange-500 font-bold w-[15%] flex items-center"
+            >
               ฿{{ product.price }}
             </td>
-            <td class="px-4 py-2 w-[15%] flex items-center">{{ product.stock }}</td>
+            <td class="px-4 py-2 w-[15%] flex items-center">
+              {{ product.stock }}
+            </td>
             <td class="px-4 py-2 w-[15%] flex items-center">
               <label class="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   class="sr-only peer"
-                  v-model="product.is_active"
                   :checked="product.is_active"
                   @click="changeProductStatus(product.id)"
                 />
@@ -143,7 +152,7 @@
         </tbody>
         <div v-else class="absolute left-[600px] top-[200px]">
           <div
-            class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white "
+            class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
             role="status"
           >
             <span
@@ -158,8 +167,8 @@
       <div class="flex justify-between items-center m-5">
         <div class="text-sm text-gray-600">
           <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
-          แสดง {{ (page - 1) * size + 1 }} ถึง
-          {{ Math.min(page * size, filteredProducts.length) }}
+          แสดง {{ (currentPage - 1) * size + 1 }} ถึง
+          {{ Math.min(currentPage * size, paginate.Total) }}
           จากทั้งหมด {{ paginate.Total }} รายการ
         </div>
         <div class="flex gap-2">
@@ -177,7 +186,7 @@
           <!-- ปุ่มถัดไป -->
           <button
             @click="changePage(currentPage + 1)"
-            :disabled="currentPage * size >= paginate.Total"
+            :disabled="currentPage >= Math.ceil(paginate.Total / size)"
             class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
             ถัดไป
@@ -215,15 +224,13 @@ const toggleMenu = (productId: number) => {
   };
 };
 
-const changeProductStatus = (productId: number) => {
-  // Find the product by ID
+const changeProductStatus = async (productId: number) => {
   const product = products.value.find((product) => product.id === productId);
 
   if (product) {
-    // Toggle the status (true becomes false, and false becomes true)
     const newStatus = !product.is_active;
 
-    Swal.fire({
+    const result = await Swal.fire({
       title: "ยืนยันการเปลี่ยนสถานะ",
       text: `คุณต้องการเปลี่ยนสถานะของสินค้าเป็น "${
         newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
@@ -232,51 +239,45 @@ const changeProductStatus = (productId: number) => {
       showCancelButton: true,
       confirmButtonText: "ยืนยัน",
       cancelButtonText: "ยกเลิก",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Only update the status if confirmed
-        product.is_active = newStatus; // อัปเดตสถานะในข้อมูลท้องถิ่น
-
-        updateProduct(product.id, product)
-          .then(() => {
-            Swal.fire(
-              "สำเร็จ!",
-              `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
-                newStatus ? "ใช้งาน" : "ไม่ใช้งาน"
-              }" แล้ว`,
-              "success"
-            );
-          })
-          .catch((error: any) => {
-            console.error("Error in changeProductStatus:", error);
-            Swal.fire(
-              "เกิดข้อผิดพลาด!",
-              "ไม่สามารถเปลี่ยนสถานะสินค้าได้",
-              "error"
-            );
-          });
-      } else {
-        // Reset the status to the previous value if canceled
-        product.is_active = !newStatus;
-      }
     });
+
+    if (result.isConfirmed) {
+      try {
+        await updateProduct(product.id, { ...product, is_active: newStatus });
+        // อัปเดตสถานะสินค้าใน products ทันที
+        const updatedProduct = { ...product, is_active: newStatus };
+        const productIndex = products.value.findIndex(
+          (p) => p.id === productId
+        );
+        if (productIndex !== -1) {
+          products.value[productIndex] = updatedProduct;
+        }
+        await getProductList(); // รีโหลดข้อมูลหลังอัปเดต
+        Swal.fire("สำเร็จ!", "สถานะสินค้าเปลี่ยนแปลงแล้ว", "success");
+      } catch (error) {
+        Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถเปลี่ยนสถานะสินค้าได้", "error");
+      }
+    }
   }
 };
 
 const selectedCategory = ref<Category | null>(null);
-const selectCategory = (category: Category | null) => {
-  selectedCategory.value = category;
-  isDropdownVisible.value = false; // ปิด dropdown
+
+// ฟังก์ชันที่ใช้ในการเลือกหมวดหมู่
+const selectCategory = (categoryItem: Category | null) => {
+  selectedCategory.value = categoryItem;
+  category.value = categoryItem ? categoryItem.id : null; // อัปเดต category
+  getProductList();
 };
 
 const categories = ref<Category[]>([]);
 
 const getCategorylist = async () => {
-  
   const param: Params = {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    category: category.value ?? null,
   };
   await service.product
     .getCategoryList(param)
@@ -310,6 +311,7 @@ const size = ref(6); // ทำให้เป็น ref
 const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 const products = ref<Product[]>([]);
 const paginate = ref<{ Total: number }>({ Total: 0 });
+const category = ref<number | null>(null);
 
 const getProductList = async () => {
   loading.value = true;
@@ -317,6 +319,7 @@ const getProductList = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    category: selectedCategory.value ? selectedCategory.value.id : null,
   };
 
   console.log("Sending param:", param); // ตรวจส
@@ -371,7 +374,6 @@ const getProductList = async () => {
       loading.value = false;
     });
 };
-
 
 // คำนวณจำนวนหน้า
 
@@ -516,11 +518,16 @@ const filteredProducts = computed(() => {
 });
 
 watch(
-  () => [size.value],
-  async () => {
-    await getProductList();
-  }
+  () => category.value, // คอยติดตามการเปลี่ยนแปลงของ category
+  () => {
+    nextTick(async () => {
+      // ใช้ nextTick เพื่อรอให้ Vue อัปเดตเสร็จก่อน
+      await getProductList(); // ฟังก์ชันที่ดึงข้อมูลสินค้าจากเซิร์ฟเวอร์
+    });
+  },
+  { immediate: true } // ให้มันรันในตอนที่ mounted ครั้งแรก
 );
+
 onMounted(async () => {
   await getProductList();
   await getCategorylist();

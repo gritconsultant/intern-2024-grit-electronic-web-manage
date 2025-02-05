@@ -1,12 +1,12 @@
 <template>
   <div class="defaultpages flex flex-col gap-4 p-6 bg-gray-50">
     <div
-      class="flex justify-between items-center bg-white p-5 rounded-lg dropshadowbox "
+      class="flex justify-between items-center bg-white p-5 rounded-lg dropshadowbox"
     >
       <h1 class="text-2xl font-bold text-gray-800">รายงานการคืนสินค้า</h1>
     </div>
 
-    <div class="flex justify-between    p-5 rounded-lg h-[8%] ">
+    <div class="flex justify-between p-5 rounded-lg h-[8%]">
       <div class="flex gap-8 mb-6">
         <!-- Filter Section -->
         <div class="space-x-4">
@@ -40,20 +40,23 @@
       </div>
     </div>
 
-    <div class="bg-white p-5 rounded-lg dropshadowbox h-full w-full ">
+    <div
+      class="flex flex-col justify-between bg-white p-5 rounded-lg dropshadowbox h-full w-full"
+    >
       <!-- Sales Table -->
-      <table
-        class="min-w-full   "
-      >
-        <thead class=" text-orange-800 " >
-          <tr>
-            <th class="border px-4 py-2">หมายเลขคำสั่งซื้อ</th>
-            <th class="border px-4 py-2">ชื่อผู้ซื้อ</th>
-            <th class="border px-4 py-2">รายการสินค้า</th>
-            <th class="border px-4 py-2">จำนวน</th>
-            <th class="border px-4 py-2">ราคา</th>
-            <th class="border px-4 py-2">ยอดรวม</th>
-            <th class="border px-4 py-2">วันที่สั่งซื้อ</th>
+      <table class="w-full">
+        <thead class="w-full">
+          <tr
+            class="flex gap-5 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]"
+          >
+            <th class="w-[11%]">หมายเลขคืนสินค้า</th>
+            <th class="w-[11%]">หมายเลขคำสั่งซื้อ</th>
+            <th class="w-[11%]">ชื่อผู้ซื้อ</th>
+            <th class="w-[15%]">รายการสินค้า</th>
+            <th class="w-[11%]">จำนวน</th>
+            <th class="w-[11%]">ราคา</th>
+            <th class="w-[11%]">ยอดรวม</th>
+            <th class="w-[11%]">วันที่</th>
           </tr>
         </thead>
         <tbody>
@@ -62,20 +65,48 @@
             :key="order.id"
             class="hover:bg-orange-50"
           >
-            <td class="border px-4 py-2 text-center">{{ order.id }}</td>
-            <td class="border px-4 py-2">{{ order.buyer.name }}</td>
-            <td class="border px-4 py-2">{{ order.items.join(", ") }}</td>
-            <td class="border px-4 py-2 text-center">{{ order.quantity }}</td>
-            <td class="border px-4 py-2 text-right">
+            <td class="w-[11%] text-center">{{ order.id }}</td>
+            <td class="w-[11%] text-center">{{ order.id }}</td>
+            <td class="w-[11%]">{{ order.buyer.name }}</td>
+            <td class="w-[15%]">{{ order.items.join(", ") }}</td>
+            <td class="w-[11%] text-center">{{ order.quantity }}</td>
+            <td class="w-[11%] text-right">
               {{ order.price | currency }}
             </td>
-            <td class="border px-4 py-2 text-right">
+            <td class="w-[11%] text-right">
               {{ order.total | currency }}
             </td>
-            <td class="border px-4 py-2">{{ order.date }}</td>
+            <td class="w-[11%]">{{ order.date }}</td>
           </tr>
         </tbody>
       </table>
+      <!-- Pagination -->
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">
+          <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
+          แสดง
+          {{}} ถึง
+          {{}}
+          จากทั้งหมด {{}} รายการ
+        </div>
+        <div class="flex gap-2">
+          <!-- ปุ่มก่อนหน้า -->
+          <button
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ก่อนหน้า
+          </button>
+
+          <span class="flex items-center px-2"> หน้า {{ currentPage }} </span>
+
+          <!-- ปุ่มถัดไป -->
+          <button
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ถัดไป
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -107,7 +138,7 @@ const orders = [
     buyer: { name: "ลูกค้ากลุ่ม A" },
     items: ["สินค้า 1", "สินค้า 2"],
     quantity: 3,
-    price: 100,
+    price: 110,
     total: 300,
     date: "2024-01-15",
   },
@@ -152,32 +183,4 @@ const filteredOrders = computed(() => {
 
 <style scoped>
 /* สไตล์เพิ่มเติมสำหรับสีส้ม */
-.container {
-  background-color: #fff;
-}
-
-th {
-  color: #fb923c; /* สีส้ม */
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #fffaf1; /* สีพื้นหลังแถวคี่ */
-}
-
-tbody tr:nth-child(even) {
-  background-color: #fef3c7; /* สีพื้นหลังแถวคู่ */
-}
-
-tbody tr:hover {
-  background-color: #fef2f2; /* สีพื้นหลังเมื่อ hover */
-}
-
-td,
-th {
-  text-align: center;
-}
-
-label {
-  color: #fb923c; /* สีส้มสำหรับตัวหนังสือ */
-}
 </style>

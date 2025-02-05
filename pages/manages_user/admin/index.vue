@@ -133,7 +133,7 @@
 <script setup lang="ts">
 import Swal from "sweetalert2";
 import type { Params } from "~/models/client.model";
-import type { Admin, } from "~/models/user.model"; // ใช้ AdminUpdate
+import type { Admin } from "~/models/user.model"; // ใช้ AdminUpdate
 import service from "~/service";
 
 const route = useRoute();
@@ -145,6 +145,7 @@ const size = ref(6); // ทำให้เป็น ref
 const paginate = ref<{ Total: number }>({ Total: 0 });
 const admins = ref<Admin[]>([]);
 const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+const Category = ref();
 
 const getAdminlist = async () => {
   loading.value = true;
@@ -152,6 +153,7 @@ const getAdminlist = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    category: Category.value,
   };
 
   await service.user
@@ -202,6 +204,7 @@ const changePage = (pageNumber: number) => {
     page: currentPage.value,
     size: size.value,
     search: search.value || "",
+    category: Category.value,
   };
 
   getAdminlist(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า

@@ -1,5 +1,16 @@
 import type { BankUpdate } from "~/models/order.model";
 import { client } from "./httpClient";
+import type { Params } from "~/models/client.model";
+
+export const getOrderlist = (params: Params) => {
+  return client({
+    url: "/order",
+    method: "GET",
+    params,
+  });
+};
+
+////////////////////////////////////////////////////////////////
 
 export const getBanklist = () => {
   return client({

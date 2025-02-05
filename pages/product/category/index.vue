@@ -39,7 +39,7 @@
       <table class="w-full text-left h-[90%]">
         <thead class="w-full text-gray-800">
           <tr class="flex gap-2  border-b-[2px] pb-[4px] pt-[4px]">
-            <th class="px-4 py-2 w-[25%]">หมายเลขประเภท</th>
+            <th class="px-4 py-2 w-[25%]">รูปประเภท</th>
             <th class="px-4 py-2 w-[25%]">ชื่อประเภท</th>
             <th class="px-4 py-2 w-[25%]">จำนวน</th>
             <th class="px-4 py-2 w-[25%]">การจัดการ</th>

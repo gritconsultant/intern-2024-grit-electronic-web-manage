@@ -14,4 +14,5 @@ export interface Params {
   page: number;
   size: number;
   search: string;
+  category: number | null;
 }
