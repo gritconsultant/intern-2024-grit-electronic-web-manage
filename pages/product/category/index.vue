@@ -161,6 +161,7 @@ const page = ref(1); // ทำให้เป็น ref
 const size = ref(6); // ทำให้เป็น ref
 const categories = ref<Category[]>([]);
 const paginate = ref<{ Total: number }>({ Total: 0 });
+const Category = ref();
 
 const getCategorylist = async () => {
   loading.value = true;
@@ -168,6 +169,7 @@ const getCategorylist = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    category : Category.value,
   };
   await service.product
     .getCategoryList(param)

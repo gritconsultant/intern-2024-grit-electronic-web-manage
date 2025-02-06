@@ -19,15 +19,6 @@ export interface Paginate {
   Total: number;
 }
 
-export interface ResponseData {
-  status: {
-    code: number;
-    message: string;
-  };
-  data: Product[];
-  paginate: Paginate;
-}
-
 export interface Image {
   id: number;
   ref_id: number;
@@ -37,7 +28,9 @@ export interface Image {
 
 export interface Review {
   id: number;
+  username: string;
   rating: number;
+  description: string;
 }
 
 export interface ProductCreate {
@@ -70,15 +63,13 @@ export interface ProductUpdate {
   category_id: number;
   is_active: boolean;
   image_product: string;
+  Review: Review[];
 }
 
 export interface Status {
   code: number;
   message: string;
 }
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -114,4 +105,3 @@ export interface CategoryUpdate {
   is_active: boolean;
   imageCategory: string;
 }
-

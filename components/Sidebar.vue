@@ -61,11 +61,11 @@
         <!-- DropdownProduct -->
         <div class="relative group">
           <div
-            class="flex gap-2 text-[14px]"
+            class="flex gap-[6px] text-[14px]"
             @click="toggleDropdown('dropdown1')"
           >
             <div
-              class="flex gap-2"
+              class="flex gap-2 "
               :class="{
                 'text-orange-500':
                   route.path === '/product' ||
@@ -75,7 +75,7 @@
               }"
             >
               <div>
-                <i class="fa-solid fa-gear"></i>
+                <i class="fa-solid fa-boxes-stacked"></i>
               </div>
               <span class="ml-[6px]">จัดการผลิตภัณฑ์</span>
             </div>
@@ -119,7 +119,7 @@
         </div>
 
         <!-- DropdowUser -->
-        <div class="relative group ">
+        <div class="relative group    ">
           <div
             class="flex gap-2 text-[15px]"
             @click="toggleDropdown('dropdown2')"
@@ -134,9 +134,9 @@
               }"
             >
               <div>
-                <i class="fa-solid fa-gear"></i>
+                <i class="fa-solid fa-users"></i>
               </div>
-              <span class="ml-[6px]">ผู้ใช้งาน</span>
+              <span class="ml-[3px]">ผู้ใช้งาน</span>
             </div>
             <i
               :class="{
@@ -248,9 +248,9 @@
               }"
             >
               <div>
-                <i class="fa-solid fa-gear"></i>
+                <i class="fa-solid fa-file"></i>
               </div>
-              <span class="ml-[6px]">รายงาน</span>
+              <span class="ml-[11px]">รายงาน</span>
             </div>
             <i
               :class="{
@@ -273,7 +273,7 @@
                     'text-orange-500': route.path === '/order/report',
                   }"
                 >
-                  รายงานการขาย
+                  การขายสินค้า
                 </li>
               </NuxtLink>
               <NuxtLink to="/refund/report">
@@ -283,7 +283,7 @@
                     'text-orange-500': route.path === '/refund/report',
                   }"
                 >
-                  รายงานการคืนสิน
+                  การคืนสินค้า
                 </li>
               </NuxtLink>
             </ul>

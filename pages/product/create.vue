@@ -182,6 +182,8 @@ import type {
 } from "~/models/product.model";
 import service from "~/service";
 
+const Category = ref();
+
 const product = ref<ProductCreate>({
   name: "",
   price: 0,
@@ -316,6 +318,7 @@ const getCategorylist = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    category : Category.value,
   };
 
   await service.product
@@ -353,6 +356,7 @@ const getProductList = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    category : Category.value,
   };
 
   console.log("Sending param:", param); // ตรวจสอบการส่งพารามิเตอร์

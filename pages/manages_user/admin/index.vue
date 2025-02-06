@@ -46,10 +46,10 @@
           <tr
             class="flex gap-2 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]"
           >
-            <th class="w-[15%] text-start">หมายเลขผู้ใช้งาน</th>
-            <th class="w-[15%]">ชื่อ</th>
+            <th class="w-[20%] text-start">หมายเลขผู้ใช้งาน</th>
+            <th class="w-[20%]">ชื่อ</th>
             <th class="w-[30%]">อีเมล</th>
-            <th class="w-[38%]"></th>
+            <th class="w-[30%]">การจัดการ</th>
           </tr>
         </thead>
         <tbody class="w-full" v-if="!loading">
@@ -58,12 +58,12 @@
             :key="index"
             class="flex gap-2 py-[8px] border-b-[1px]"
           >
-            <th class="w-[15%] truncate text-start">
+            <th class="w-[20%] truncate text-start">
               {{ admin.id }}
             </th>
-            <th class="w-[15%] truncate">{{ admin.name }}</th>
+            <th class="w-[20%] truncate">{{ admin.name }}</th>
             <th class="w-[30%] truncate">{{ admin.email }}</th>
-            <th class="w-[38%] flex justify-end gap-5 truncate">
+            <th class="w-[30%] flex justify-center gap-8 truncate">
               <i
                 @click="openEditAdmin(admin.id)"
                 class="fa-solid fa-pen-to-square text-[20px] text-orange-400 cursor-pointer"

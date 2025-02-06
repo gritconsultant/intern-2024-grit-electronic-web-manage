@@ -10,7 +10,7 @@
       <div class="flex gap-8 mb-6">
         <!-- Filter Section -->
         <div class="space-x-4">
-          <label for="year" class="font-semibold text-orange-600"
+          <label for="year" class="font-semibold "
             >เลือกปี:</label
           >
           <select
@@ -24,7 +24,7 @@
           </select>
         </div>
         <div class="space-x-4">
-          <label for="month" class="font-semibold text-orange-600"
+          <label for="month" class="font-semibold "
             >เลือกเดือน:</label
           >
           <select

@@ -35,11 +35,10 @@
           <tr
             class="flex gap-5 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]"
           >
-            <th class="w-[10%] text-start">หมายเลขผู้ใช้งาน</th>
-            <th class="w-[15%]">ชื่อ</th>
+            <th class="w-[20%] text-start">หมายเลขผู้ใช้งาน</th>
+            <th class="w-[20%]">ชื่อ</th>
             <th class="w-[30%]">อีเมล</th>
-            <th class="w-[15%]">จำนวนคำสั่งซื้อ</th>
-            <th class="w-[25%]"></th>
+            <th class="w-[25%]">รายละเอียดเพิ่มเติม</th>
           </tr>
         </thead>
         <tbody class="w-full text-[15px]" v-if="!loading">
@@ -48,17 +47,16 @@
             :key="index"
             class="flex gap-5 py-[8px] border-b-[1px]"
           >
-            <th class="w-[10%] font-medium truncate flex gap-2 justify-between">
+            <th class="w-[20%] font-medium truncate flex gap-2 ">
               {{ customer.id }}
             </th>
-            <th class="w-[15%] font-medium flex truncate">
+            <th class="w-[20%] font-medium flex justify-center truncate">
               {{ customer.username }}
             </th>
             <th class="w-[30%] font-medium truncate">
               {{ customer.email }}
             </th>
-            <th class="w-[15%] font-medium truncate"></th>
-            <th class="w-[25%] font-medium flex justify-end truncate">
+            <th class="w-[25%] font-medium flex justify-center truncate">
               <i
                 class="fa-regular fa-eye text-[20px] cursor-pointer"
                 @click="openEditCustomer(customer.id)"

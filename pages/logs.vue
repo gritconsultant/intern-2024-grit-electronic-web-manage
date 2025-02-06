@@ -1,11 +1,13 @@
 <template>
-  <div class="defaultpages flex flex-col gap-4 p-4">
-    <div class="flex items-center justify-between">
+  <div class="defaultpages flex flex-col gap-4 p-6">
+    <div
+      class="flex items-center justify-between pl-[10px] bg-white dropshadowbox rounded-lg h-[8%]"
+    >
       <h1 class="text-2xl font-bold">รายงานการทำงาน</h1>
     </div>
     <div>
       <!-- ส่วนตัวกรอง -->
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center gap-4">
         <!-- วันที่เริ่มต้น -->
         <div>
           <label
@@ -35,13 +37,16 @@
         </div>
       </div>
     </div>
-    <div class="bg-white">
+
+    <div
+      class="bg-white pt-2 py-2 flex flex-col justify-between rounded-lg dropshadowbox h-[90%]"
+    >
       <!-- ตาราง Logs -->
-      <table class="table-auto w-full border-collapse border border-gray-200">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="border border-gray-200 p-2 w-[20%] text-left">วัน</th>
-            <th class="border border-gray-200 p-2 text-left">รายละเอียด</th>
+      <table class="flex flex-col px-8 gap-2 w-full ">
+        <thead class="w-full">
+          <tr class="flex gap-5 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]">
+            <th class="w-[20%] text-start">วัน</th>
+            <th class="w-[80%] text-start">รายละเอียด</th>
           </tr>
         </thead>
         <tbody>
@@ -49,10 +54,10 @@
           <tr
             v-for="(log, index) in paginatedLogs"
             :key="index"
-            class="hover:bg-gray-50"
+            class="flex gap-5 py-[8px] border-b-[1px]"
           >
-            <td class="border border-gray-200 p-2">{{ log.date }}</td>
-            <td class="border border-gray-200 p-2">{{ log.details }}</td>
+            <td class="w-[20%]">{{ log.date }}</td>
+            <td class="w-[80%]">{{ log.details }}</td>
           </tr>
 
           <!-- หากไม่มี Logs -->
@@ -66,10 +71,40 @@
           </tr>
         </tbody>
       </table>
+      <!-- Pagination -->
+      <div class="flex justify-between items-center p-4">
+        <div class="text-sm text-gray-600">
+          <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
+          แสดง
+          {{}} ถึง
+          {{}}
+          จากทั้งหมด {{ filteredLogs.length }} รายการ
+        </div>
+        <div class="flex gap-2">
+          <!-- ปุ่มก่อนหน้า -->
+          <button
+            :disabled="currentPage === 1"
+            @click="currentPage--"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ก่อนหน้า
+          </button>
+          <span class="flex items-center px-2"> หน้า {{ currentPage }} </span>
+
+          <!-- ปุ่มถัดไป -->
+          <button
+            :disabled="currentPage === totalPages"
+            @click="currentPage++"
+            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+          >
+            ถัดไป
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- แสดงข้อมูลเกี่ยวกับการแบ่งหน้า -->
-    <div class="flex justify-between items-center mt-4 text-sm text-gray-700">
+    <!-- <div class="flex justify-between items-center mt-4 text-sm text-gray-700">
       <div>
         <span>ข้อมูลทั้งหมด: {{ filteredLogs.length }} รายการ</span>
       </div>
@@ -79,10 +114,10 @@
       <div>
         <span>แสดงข้อมูล {{ startItem }} ถึง {{ endItem }}</span>
       </div>
-    </div>
+    </div> -->
 
     <!-- ปุ่มเปลี่ยนหน้า -->
-    <div class="flex justify-between mt-4">
+    <!-- <div class="flex justify-between mt-4">
       <button
         :disabled="currentPage === 1"
         @click="currentPage--"
@@ -97,7 +132,7 @@
       >
         ถัดไป
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -232,7 +267,7 @@ const filteredLogs = computed(() => {
 
 // ตั้งค่าการแบ่งหน้า
 const currentPage = ref(1);
-const logsPerPage = 13;
+const logsPerPage = 10;
 
 // คำนวณข้อมูลที่แสดงในแต่ละหน้า
 const paginatedLogs = computed(() => {

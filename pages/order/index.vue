@@ -112,7 +112,7 @@
         </thead>
         <tbody class="w-full py-[4px]" v-if="!loading">
           <tr
-            class="flex gap-5 pb-2 border-b-[1px]"
+            class="flex gap-5 pb-2 border-b-[1px] py-4"
             v-for="(order, index) in orders"
             :key="index"
           >
@@ -129,7 +129,7 @@
             <th
               class="w-[15%] text-[15px] text-start pl-2 font-medium truncate"
             >
-              {{ order.account_name }}
+              {{ order.username }}
             </th>
             <th
               class="w-[20%] text-[15px] text-start pl-2 font-medium truncate"
@@ -378,7 +378,7 @@ const getOrderList = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
-    Categories : Category.value,
+    category : Category.value,
   };
 
   console.log("Sending param:", param); // ตรวจสอบค่า param ที่ส่งไป
@@ -397,6 +397,7 @@ const getOrderList = async () => {
         const order: Order = {
           id: r.id,
           user_id: r.user_id,
+          username: r.username,
           status: r.status,
           total_amount: r.total_amount,
           total_price: r.total_price,
@@ -443,7 +444,7 @@ const changePage = (pageNumber: number) => {
     page: currentPage.value,
     size: size.value,
     search: search.value || "",
-    Categories : Category.value,
+    category : Category.value,
   };
 
   getOrderList(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
@@ -452,6 +453,7 @@ const changePage = (pageNumber: number) => {
 watch([() => currentPage.value], async () => {
   await getOrderList();
 });
+
 
 onMounted(async () => {
   await getOrderList();

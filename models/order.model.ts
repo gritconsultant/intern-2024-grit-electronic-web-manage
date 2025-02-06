@@ -1,6 +1,7 @@
 export interface Order {
   id: number;
   user_id: number;
+  username: string;
   status: string;
   total_amount: number;
   total_price: number;

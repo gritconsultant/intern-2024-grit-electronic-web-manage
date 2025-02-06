@@ -1,21 +1,23 @@
 <template>
-  <div class="defaultpages flex flex-col gap-8 p-6">
+  <div class="defaultpages flex flex-col  gap-8 p-6">
     <!-- Header Section -->
-    <div
-      class="flex items-center justify-center h-[10%] rounded-lg bg-white dropshadowbox"
-    >
-      <h1 class="text-[26px] font-bold text-gray-800">ธนาคาร</h1>
+    <div class="w-full flex items-center justify-center h-[10%]  ">
+      <div
+        class="flex items-center justify-center h-full w-[100%] rounded-lg bg-white dropshadowbox"
+      >
+        <h1 class="text-[26px] font-bold text-gray-800 mr-[90 px]">ธนาคาร</h1>
+      </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex justify-center h-[70%]">
+    <div class="flex flex-col justify-center items-center  h-[90%] bg-white rounded-lg dropshadowbox ">
       <div
-        class="w-[90%] flex flex-col gap-6 p-6 bg-white dropshadowbox rounded-lg"
+        class="w-[70%] flex flex-col gap-6 p-6 bg-white  rounded-lg"
       >
-        <div class="grid grid-cols-2 gap-8">
+        <div class="flex gap-8">
           <!-- Left: Preview Image Section -->
-          <div class="flex flex-col items-center gap-6">
-            <h2 class="text-xl font-bold">คิวอาร์โค้ด</h2>
+          <div class="flex flex-col w-[50%] items-end pr-[90px] gap-6">
+            <h2 class="text-xl font-bold mr-[140px]">คิวอาร์โค้ด</h2>
             <div class="flex flex-col gap-4">
               <div
                 class="w-[380px] h-[380px] bg-gray-100 flex justify-center items-center rounded-lg shadow-md"
@@ -47,9 +49,11 @@
           </div>
 
           <!-- Right: Bank Information -->
-          <div class="flex flex-col gap-6">
-            <h2 class="text-xl font-bold flex justify-center">รายละเอียด</h2>
-            <div class="grid grid-cols-1 gap-4">
+          <div class="flex flex-col gap-6 w-[50%]">
+            <h2 class="text-xl font-bold flex justify-center mr-[160px]">
+              รายละเอียด
+            </h2>
+            <div class="grid grid-cols-1 pr-[70px] gap-4">
               <!-- Bank Name -->
               <div class="flex flex-col gap-2">
                 <label class="text-lg font-semibold">ชื่อธนาคาร</label>
@@ -120,18 +124,19 @@
               </div>
             </div>
 
-            <!-- Save Button -->
-            <div class="flex justify-end items-end h-[100px]">
+            
+          </div>
+        </div>
+      </div>
+      <!-- Save Button -->
+      <div class="flex justify-end items-end h-[100px] mr-[75px]">
               <button
                 @click="saveData"
-                class="px-6 py-3 bg-orange-500 text-white rounded-md h-[50%] font-semibold hover:bg-orange-600"
+                class="px-6 py-3 bg-orange-500 text-white rounded-md h-[45%] font-semibold hover:bg-orange-600"
               >
                 บันทึกข้อมูล
               </button>
             </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -235,7 +240,6 @@ const namebanks = ref([
   "ธนาคารซีไอเอ็มบีไทย",
   "ธนาคารยูโอบี",
   "ธนาคารแลนด์แอนด์เฮ้าส์",
-  "",
 ]);
 
 const otherBank = ref<string>("");
