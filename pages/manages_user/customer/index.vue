@@ -1,11 +1,11 @@
 <template>
   <div class="defaultpages flex flex-col gap-2 p-6 bg-gray-50">
     <!-- Header Section -->
-    <div
-      class="flex items-center justify-between h-[10%] bg-white pl-[10px] rounded-lg dropshadowbox"
+    <div   class="flex items-center justify-between h-[10%] bg-white pl-[10px] rounded-lg dropshadowbox"
     >
       <h1 class="text-[25px] font-bold">รายการบัญชีลูกค้า</h1>
     </div>
+   
 
     <!-- Search Section -->
     <div class="flex gap-2 w-[80%] mt-8">
@@ -62,6 +62,11 @@
                 @click="openEditCustomer(customer.id)"
               ></i>
             </th>
+          </tr>
+          <tr v-if="customers.length === 0">
+            <td colspan="6" class="absolute left-[700px] top-[300px] text-[30px]  py-4 text-gray-500">
+              ไม่มีข้อมูล
+            </td>
           </tr>
         </tbody>
         <div v-else class="absolute left-[600px] top-[200px]">

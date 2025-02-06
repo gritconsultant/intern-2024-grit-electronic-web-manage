@@ -1,7 +1,7 @@
 <template>
-  <div class="defaultpages flex flex-col  gap-8 p-6">
+  <div class="defaultpages flex flex-col gap-8 p-6">
     <!-- Header Section -->
-    <div class="w-full flex items-center justify-center h-[10%]  ">
+    <div class="w-full flex items-center justify-center h-[10%]">
       <div
         class="flex items-center justify-center h-full w-[100%] rounded-lg bg-white dropshadowbox"
       >
@@ -10,10 +10,11 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex flex-col justify-center items-center  h-[90%] bg-white rounded-lg dropshadowbox ">
-      <div
-        class="w-[70%] flex flex-col gap-6 p-6 bg-white  rounded-lg"
-      >
+    <div
+      class="flex flex-col justify-center items-center h-[90%] bg-white rounded-lg dropshadowbox"
+      v-if="!loading"
+    >
+      <div class="w-[70%] flex flex-col gap-6 p-6 bg-white rounded-lg">
         <div class="flex gap-8">
           <!-- Left: Preview Image Section -->
           <div class="flex flex-col w-[50%] items-end pr-[90px] gap-6">
@@ -123,20 +124,29 @@
                 />
               </div>
             </div>
-
-            
           </div>
         </div>
       </div>
       <!-- Save Button -->
       <div class="flex justify-end items-end h-[100px] mr-[75px]">
-              <button
-                @click="saveData"
-                class="px-6 py-3 bg-orange-500 text-white rounded-md h-[45%] font-semibold hover:bg-orange-600"
-              >
-                บันทึกข้อมูล
-              </button>
-            </div>
+        <button
+          @click="saveData"
+          class="px-6 py-3 bg-orange-500 text-white rounded-md h-[45%] font-semibold hover:bg-orange-600"
+        >
+          บันทึกข้อมูล
+        </button>
+      </div>
+    </div>
+    <div v-else class="absolute left-[600px] top-[200px]">
+      <div
+        class="float-right inline-block h-96 w-96 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+        role="status"
+      >
+        <span
+          class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+          >Loading...</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -147,6 +157,7 @@ import type { BankRes, BankUpdate } from "~/models/order.model";
 import service from "~/service";
 
 const route = useRoute();
+const loading = ref(false);
 
 const bank = ref<BankUpdate>({
   id: 0,
@@ -174,6 +185,7 @@ const bankRes = ref<BankRes>({
 });
 
 const getBankById = async (id: number) => {
+  loading.value = true;
   try {
     const resp = await service.order.getBankById(id);
     const data = resp.data.data;
@@ -197,6 +209,8 @@ const getBankById = async (id: number) => {
     }
   } catch (error) {
     console.error("Error fetching bank by ID:", error);
+  } finally {
+    loading.value = false;
   }
 };
 

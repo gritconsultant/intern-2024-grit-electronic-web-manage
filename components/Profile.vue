@@ -11,9 +11,9 @@
             class="absolute bg-white rounded-lg border shadow w-44 hidden group-hover:block z-10 mt-[40px]"
           >
             <ul class="py-2 text-sm text-gray-700">
-              <li class="block px-4 py-2 hover:bg-gray-100">
-                <NuxtLink to="/manages_user/admin/[id]">โปรไฟล์</NuxtLink>
-              </li>
+              <NuxtLink to="/profile">
+                <li class="block px-4 py-2 hover:bg-gray-100">โปรไฟล์</li>
+              </NuxtLink>
               <NuxtLink to="/login">
                 <li class="block px-4 py-2 hover:bg-gray-100">ออกจากระบบ</li>
               </NuxtLink>

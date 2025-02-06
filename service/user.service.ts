@@ -2,7 +2,7 @@ import type { Params } from "~/models/client.model";
 import { client } from "./httpClient";
 import type { AdminUpdate } from "~/models/user.model";
 
-export const getUserInfo = () => {
+export const getAdminInfo = () => {
   return client({
     url: "/admin/info",
     method: "get",

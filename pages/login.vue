@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import type { Login } from "~/models/page.model";
-import type { UserInfo } from "~/models/user.model";
+import type { AdminInfo } from "~/models/user.model";
 import service from "~/service";
 import { useIndexStore } from "~/store/main";
 
@@ -82,17 +82,19 @@ const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
-const getinfo = ref<UserInfo>({
-  ID: 0,
-  FirstName: "",
-  LastName: "",
-  Username: "",
-  Password: "",
-  Email: "",
-  Phone: 0,
+const getinfo = ref<AdminInfo>({
+  id: 0,
+  name: "",
+  email: "",
+  role: {
+    id: 0,
+    name: "",
+  },
+  is_active: true,
   created_at: 0,
   updated_at: 0,
 });
+
 
 const logins = ref<Login>({
   email: "",
@@ -125,7 +127,7 @@ const login = async () => {
 
 const getuserinfo = async () => {
   await service.user
-    .getUserInfo()
+    .getAdminInfo()
     .then((resp: any) => {
       const data = resp.data.data;
       console.log(data.ID);

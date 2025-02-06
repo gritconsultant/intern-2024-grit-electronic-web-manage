@@ -1,12 +1,12 @@
 <template>
-  <div class="defaultpages flex flex-col gap-4 p-4">
+  <div class="defaultpages flex flex-col gap-4 p-6">
     <!-- Header Section -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between bg-white rounded-lg dropshadowbox pl-[10px] h-[10%]">
       <h1 class="text-2xl font-bold">แบนเนอร์</h1>
     </div>
 
     <!-- Content Section -->
-    <div class="bg-gray-100 w-full h-full p-5">
+    <div class="bg-white rounded-lg dropshadowbox  w-full h-full p-5">
 
       <!-- Image Table -->
       <div class="overflow-x-auto">

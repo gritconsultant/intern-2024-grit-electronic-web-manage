@@ -38,6 +38,17 @@ export interface AdminUpdate {
   is_active: boolean ;
 }
 
+
+export interface AdminInfo {
+    id: number;
+    name: string;
+    email: string;
+    role: Role;
+    is_active: boolean;
+    created_at: number;
+    updated_at: number;
+}
+
 ////////////////////////////////////////////////////////////////
 
 export interface Customer {
@@ -63,14 +74,4 @@ export interface CustomerRes{
   phone: string;
 }
 
-export interface UserInfo {
-  ID: number;
-  FirstName: string;
-  LastName: string;
-  Username: string;
-  Password: string;
-  Email: string;
-  Phone: number;
-  created_at: number;
-  updated_at: number;
-}
+

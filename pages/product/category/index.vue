@@ -75,6 +75,11 @@
               </button>
             </td>
           </tr>
+          <tr v-if="categories.length === 0">
+            <td colspan="6" class="text-center text-[30px]  py-4 text-gray-500">
+              ไม่มีข้อมูล
+            </td>
+          </tr>
         </tbody>
         <div v-else class="absolute left-[600px] top-[200px]">
           <div

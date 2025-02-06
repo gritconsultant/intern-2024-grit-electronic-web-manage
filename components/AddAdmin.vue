@@ -116,7 +116,7 @@ const admin = ref<AdminCreate>({
   name: "",
   email: " ",
   password: "",
-  role_id: 2,
+  role_id: 1,
   is_active: true,
 });
 
