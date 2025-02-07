@@ -38,7 +38,7 @@
           />
         </div>
 
-        <div class="mb-4" v-if="admin.password">
+        <div class="mb-4" >
           <label for="confirmPassword" class="block text-[15px]"
             >ยืนยันรหัสผ่าน</label
           >

@@ -45,6 +45,11 @@ export interface StatusRefund {
   status: string;
 }
 
+export interface UpdateStatusOrder {
+  id: number;
+  status: string;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 export interface Bank {
@@ -84,4 +89,14 @@ export interface BankRes {
   description: string;
   image_system_bank: ImageSystemBank;
   is_active: boolean;
+}
+
+
+
+//////////////////////////////////////////////
+
+export interface Params {
+  page: number;
+  size: number;
+  search: string;
 }

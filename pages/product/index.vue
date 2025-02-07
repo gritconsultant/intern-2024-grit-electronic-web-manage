@@ -218,16 +218,6 @@ const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
 };
 
-// สถานะการแสดงเมนูของสินค้า
-const isMenuVisible = ref<Record<number, boolean>>({});
-
-// ฟังก์ชันสำหรับสลับการแสดงผลของเมนู
-const toggleMenu = (productId: number) => {
-  isMenuVisible.value = {
-    ...isMenuVisible.value,
-    [productId]: !isMenuVisible.value[productId],
-  };
-};
 
 const changeProductStatus = async (productId: number) => {
   const product = products.value.find((product) => product.id === productId);
@@ -404,13 +394,6 @@ const updateProduct = async (productId: number, product: any) => {
     .updateProduct(productId, product)
     .then((resp: any) => {
       const data = resp.data;
-      if (data) {
-        Swal.fire({
-          title: "เพิ่มสินค้าสำเร็จ",
-          text: "เพิ่มสินค้า",
-          icon: "success",
-        });
-      }
 
       const temp: ProductRes = {
         id: data.id,

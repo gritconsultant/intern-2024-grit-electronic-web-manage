@@ -51,7 +51,7 @@
               {{ customer.id }}
             </th>
             <th class="w-[20%] font-medium flex justify-center truncate">
-              {{ customer.username }}
+              {{ customer.firstname }} {{ customer.lastname }} 
             </th>
             <th class="w-[30%] font-medium truncate">
               {{ customer.email }}

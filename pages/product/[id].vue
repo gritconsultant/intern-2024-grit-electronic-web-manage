@@ -49,10 +49,10 @@
                     >
                       <option value="">กรุณาเลือกประเภท</option>
                       <option value="1">อาหาร</option>
-                      <option value="4">เครื่องดื่ม</option>
-                      <option value="5">สมุนไพร</option>
-                      <option value="6">ผ้าและเครื่องแต่งกาย</option>
-                      <option value="7">ของใช้ ของตกแต่ง</option>
+                      <option value="3">เครื่องดื่ม</option>
+                      <option value="">สมุนไพร</option>
+                      <option value="5">ผ้าและเครื่องแต่งกาย</option>
+                      <option value="4">ของใช้ ของตกแต่ง</option>
                     </select>
                   </div>
 
@@ -71,14 +71,14 @@
                   <label class="text-xl font-semibold">จำนวนสินค้า</label>
                   <div class="flex items-center gap-4">
                     <div
-                      class="quantity-display bg-gray-100 p-2  rounded-md w-[40px] flex items-center justify-center"
+                      class="quantity-display bg-gray-100 p-2 rounded-md w-[40px] flex items-center justify-center"
                     >
                       {{ product.stock }}
                     </div>
                     <div class="flex items-center gap-2">
                       <!-- Add "-" button for decreasing stock -->
                       <button
-                        class="bg-orange-500 text-white text-[20px] px-2 py-1  h-[25px] rounded-md flex items-center justify-center"
+                        class="bg-orange-500 text-white text-[20px] px-2 py-1 h-[25px] rounded-md flex items-center justify-center"
                         @click="decreaseAmount"
                       >
                         -
@@ -345,9 +345,6 @@ const confirmSave = () => {
 
 const products = ref<Product[]>([]);
 
-// สถานะการแสดงเมนูของสินค้า
-const isMenuVisible = ref<Record<number, boolean>>({});
-
 const confirmStatusChange = (productId: number, currentStatus: boolean) => {
   const newStatus = !currentStatus;
 
@@ -362,11 +359,14 @@ const confirmStatusChange = (productId: number, currentStatus: boolean) => {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
-      const product = products.value.find(
-        (product) => product.id === productId
-      );
-      if (product) {
-        product.is_active = newStatus;
+      // Update status locally
+      product.value.is_active = newStatus;
+      productRes.value.is_active = newStatus; // Ensure productRes is updated too
+
+      // Then update product with the new status
+      updateProduct().then(() => {
+        // Fetch the updated product info from the server
+        getProductById();
         Swal.fire(
           "สำเร็จ!",
           `สถานะของสินค้าได้ถูกเปลี่ยนเป็น "${
@@ -374,7 +374,7 @@ const confirmStatusChange = (productId: number, currentStatus: boolean) => {
           }" แล้ว`,
           "success"
         );
-      }
+      });
     }
   });
 };
