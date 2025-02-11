@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white shadow-md rounded-lg p-8 h-[650px] max-w-3xl mx-auto dropshadowboxabsolute"
+    class="bg-white shadow-md rounded-lg p-8  h-[700px] w-[800px] max-w-3xl mx-auto dropshadowboxabsolute"
   >
     <div class="flex items-center justify-between mb-10">
       <h1 class="text-4xl font-bold text-gray-800">เพิ่มประเภทสินค้า</h1>
@@ -15,42 +15,35 @@
           type="text"
           id="category-name"
           v-model="category.name"
-          class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full p-3 text-gray-700"
+          class="rounded-md border-gray-300 w-full p-3 text-gray-700 dropshadowboxsub"
           placeholder="กรอกชื่อประเภทสินค้า"
         />
       </div>
 
       <!-- อัพโหลดไฟล์และแสดงภาพ -->
-      <div class="flex flex-col gap-4 md:flex-row items-center justify-between">
-        <div class="flex flex-col items-start gap-2">
-          <label for="upload-file" class="text-lg font-medium text-gray-700"
+      <div class="flex flex-col gap-4  items-center justify-between  h-[350px]">
+        <div class="flex flex-col items-start gap-2 w-full">
+          <label for="image-url" class="text-lg font-medium text-gray-700"
             >อัพโหลดรูปภาพ</label
           >
-          <div class="flex items-end h-full">
-            <div class="flex flex-col gap-5 pl-8">
+          <div class="flex items-end h-full w-full">
+            <div class="flex flex-col gap-5  w-full">
               <input
-                type="file"
-                ref="fileInput"
-                @change="onFileChange"
-                accept="image/*"
-                class="w-full md:w-64 file:rounded-md file:border-0 file:bg-blue-500 file:text-white file:px-4 file:py-2 file:cursor-pointer"
+                type="text"
+                id="image-url"
+                v-model="category.image"
+                placeholder="กรอก URL รูปภาพ"
+                class="w-full rounded-lg  p-3 pl-3 text-gray-700 dropshadowboxsub"
               />
-              <button
-                v-if="imageUrl"
-                @click="clearImage"
-                class="mb-2 px-4 py-2 w-[100px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
-              >
-                ลบรูปภาพ
-              </button>
             </div>
           </div>
         </div>
         <div
-          class="flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
+          class="flex justify-center items-center  w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
         >
           <img
-            v-if="category.imageCategory"
-            :src="category.imageCategory"
+            v-if="category.image"
+            :src="category.image"
             alt="Preview"
             class="w-[400px] h-[400px] rounded-[5px] object-cover"
           />
@@ -85,14 +78,14 @@ import service from "~/service";
 const category = ref<CategoryCreate>({
   name: "",
   is_active: true,
-  imageCategory: "",
+  image: "",
 });
 
 const categoryRes = ref<CategoryRes>({
   id: 0,
   name: "",
   is_active: true,
-  imageCategory: "",
+  image: "",
 });
 
 const addCategory = async () => {
@@ -115,7 +108,7 @@ const addCategory = async () => {
         id: data.id,
         name: data.name,
         is_active: data.is_active,
-        imageCategory: data.imageCategory,
+        image: data.image,
       };
       categoryRes.value = category;
     })
@@ -150,7 +143,7 @@ const confirm = () => {
     });
     return;
   }
-  if (!category.value.imageCategory) {
+  if (!category.value.image) {
     Swal.fire({
       title: "ข้อผิดพลาด",
       text: "กรุณาอัพโหลดรูปภาพ",
@@ -206,7 +199,7 @@ const onFileChange = (event: Event) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       // เก็บ URL ของภาพลงใน category.value.imageCategory
-      category.value.imageCategory = e.target?.result as string;
+      category.value.image = e.target?.result as string;
       // ตั้งค่า imageUrl ด้วย URL ของไฟล์
       imageUrl.value = e.target?.result as string;
     };
@@ -217,7 +210,7 @@ const onFileChange = (event: Event) => {
 const clearImage = () => {
   // ตั้งค่า imageUrl และ imageCategory ให้เป็น null หรือค่าว่าง
   imageUrl.value = null;
-  category.value.imageCategory = ""; // ทำให้ตัวแปร imageCategory เป็นค่าว่าง
+  category.value.image = ""; // ทำให้ตัวแปร imageCategory เป็นค่าว่าง
   if (fileInput.value) {
     fileInput.value.value = ""; // เคลียร์ค่าของ input file
   }

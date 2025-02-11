@@ -100,7 +100,7 @@
           >
             <td class="flex items-center gap-4 px-4 py-2 w-[25%]">
               <img
-                src=""
+                :src="product.image"
                 alt="Product"
                 class="w-16 h-16 object-cover rounded-lg border"
               />
@@ -287,7 +287,7 @@ const getCategorylist = async () => {
           id: c.id,
           name: c.name,
           is_active: c.is_active,
-          imageCategory: c.imageCategory,
+          image: c.image,
         };
         categoryList.push(category);
       }
@@ -333,18 +333,12 @@ const getProductList = async () => {
           name: e.name,
           price: e.price,
           stock: e.stock,
-          description: e.description ?? null, // Handle null or undefined description
-          Image: {
-            id: e.Image?.id ?? 0, // Default to 0 if Image is null or undefined
-            ref_id: e.Image?.ref_id ?? 0, // Default to 0 if ref_id is missing
-            type: e.Image?.type ?? "", // Default to empty string if type is missing
-            description: e.Image?.description ?? "", // Default to empty string if description is missing
-          },
+          image: e.image ?? null, // Handle null or undefined description
           category: {
             id: e.category?.id ?? 0, // Default to 0 if category is missing
             name: e.category?.name ?? "",
             is_active: e.category?.is_active ?? true,
-            imageCategory: e.category?.imageCategory ?? [], // Default to empty string if category name is missing
+            image: e. image?. image ?? "", // Default to empty string if category name is missing
           },
           Review:
             e.Review?.map((r: any) => ({
@@ -386,7 +380,7 @@ const productRes = ref<ProductRes>({
   stock: 0,
   category_id: 0,
   is_active: true,
-  image_product: "",
+  image: "",
 });
 
 const updateProduct = async (productId: number, product: any) => {
@@ -403,7 +397,7 @@ const updateProduct = async (productId: number, product: any) => {
         stock: data.stock,
         category_id: data.category,
         is_active: data.is_active,
-        image_product: data.image_product,
+        image: data.image,
       };
       productRes.value = temp;
     })

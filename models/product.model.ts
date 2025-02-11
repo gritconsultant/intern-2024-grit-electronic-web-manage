@@ -3,8 +3,7 @@ export interface Product {
   name: string;
   price: number;
   stock: number;
-  description: string;
-  Image: Image;
+ image: string;
   category: Category;
   Review: Review[];
   is_active: boolean;
@@ -40,7 +39,7 @@ export interface ProductCreate {
   stock: number;
   category_id: number;
   is_active: boolean;
-  image_product: string;
+  Image: string;
 }
 
 export interface ProductRes {
@@ -51,7 +50,7 @@ export interface ProductRes {
   stock: number;
   category_id: number;
   is_active: boolean;
-  image_product: string;
+  image: string;
 }
 
 export interface ProductUpdate {
@@ -62,8 +61,8 @@ export interface ProductUpdate {
   stock: number;
   category_id: number;
   is_active: boolean;
-  image_product: string;
   Review: Review[];
+  image: string;
 }
 
 export interface Status {
@@ -77,7 +76,7 @@ export interface Category {
   id: number;
   name: string;
   is_active: boolean;
-  imageCategory: ImageCategories[];
+  image: string;
 }
 
 export interface ImageCategories {
@@ -90,18 +89,18 @@ export interface CategoryRes {
   id: number;
   name: string;
   is_active: boolean;
-  imageCategory: string;
+  image: string;
 }
 
 export interface CategoryCreate {
   name: string;
   is_active: boolean;
-  imageCategory: string;
+  image: string;
 }
 
 export interface CategoryUpdate {
   id: number;
   name: string;
   is_active: boolean;
-  imageCategory: string;
+  image: string;
 }

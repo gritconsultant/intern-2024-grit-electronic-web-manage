@@ -5,22 +5,18 @@ export interface Order {
   status: string;
   total_amount: number;
   total_price: number;
-  system_bank_id: number;
-  payment_price: number;
-  bank_name: string;
-  account_name: string;
-  account_number: string;
-  payment_status: string;
   firstname: string;
   lastname: string;
-  address: string;
-  zip_code: string;
-  sub_district: string;
-  district: string;
-  province: string;
-  shipment_status: string;
   created_at: number;
   updated_at: number;
+  shipment_id: number;
+  shipment_firstname: string;
+  shipment_lastname: string;
+  shipment_address: string;
+  shipment_sub_district: string;
+  shipment_district: string;
+  shipment_province: string;
+  shipment_zip_code: string;
 }
 
 export interface Item {
@@ -58,7 +54,7 @@ export interface Bank {
   account_name: string;
   account_number: string;
   description: string;
-  image_system_bank: ImageSystemBank;
+  image: string;
   is_active: boolean;
   created_at: number;
   updated_at: number;
@@ -77,7 +73,7 @@ export interface BankUpdate {
   account_name: string;
   account_number: string;
   description: string;
-  image_system_bank: string;
+  image: string;
   is_active: boolean;
 }
 
@@ -87,7 +83,7 @@ export interface BankRes {
   account_name: string;
   account_number: string;
   description: string;
-  image_system_bank: ImageSystemBank;
+  image: string;
   is_active: boolean;
 }
 

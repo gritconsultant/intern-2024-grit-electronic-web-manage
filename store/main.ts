@@ -1,21 +1,21 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 interface State {
-  token : string
-  userId : string
-  notification : boolean
-  orderstatus : boolean
-  paymentstatus : boolean
-  statusrefund : boolean
+  token: string | null;
+  userId: string | null;
+  notification: boolean;
+  orderstatus: boolean;
+  paymentstatus: boolean;
+  statusrefund: boolean;
 }
 
-export const useIndexStore = defineStore('index', {
+export const useIndexStore = defineStore("index", {
   state: (): State => ({
-    token:'',
-    userId:'',
-    notification : false,
-    orderstatus : false,
-    paymentstatus : false,
-    statusrefund : false,
-   }),
-})
+    token: null,
+    userId: null,
+    notification: false,
+    orderstatus: false,
+    paymentstatus: false,
+    statusrefund: false,
+  }),
+});

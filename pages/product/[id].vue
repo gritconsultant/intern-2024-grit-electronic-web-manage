@@ -1,9 +1,7 @@
 <template>
   <div class="defaultpages p-8 pb-16">
-    <div v-if="product.id != 0" class="h-full">
-      <div
-        class="header mb-8 bg-white h-[10%] flex items-center justify-between pl-[10px] dropshadowbox rounded-lg"
-      >
+    <div v-if="product.id !== 0" class="h-full">
+      <div class="header mb-8 bg-white h-[10%] flex items-center justify-between pl-[10px] dropshadowbox rounded-lg">
         <h1 class="text-3xl font-bold text-gray-800">
           สินค้า #{{ product.id }}
         </h1>
@@ -11,21 +9,22 @@
 
       <div class="flex gap-4 h-[90%]">
         <!-- Product List Section -->
-        <div
-          class="flex flex-col bg-white dropshadowbox rounded-lg p-4 w-[70%] h-full"
-        >
+        <div class="flex flex-col bg-white dropshadowbox rounded-lg p-4 w-[70%] h-full">
           <div class="flex gap-8 p-6 w-full">
-            <div class="product-image flex-none w-80">
-              <div
-                class="h-80 w-full bg-gray-300 rounded-lg flex items-center justify-center relative"
-              >
-                <img src="" class="object-cover h-full w-full rounded-lg" />
+            <div class="product-image flex flex-col gap-4 w-80">
+              <div class="h-60 w-full bg-gray-300 rounded-lg flex items-center justify-center relative">
+                <img :src="product.image" class="object-cover h-full w-full rounded-lg" />
               </div>
+              <input
+                type="text"
+                id="image-url"
+                v-model="product.image"
+                placeholder="กรอก URL รูปภาพ"
+                class="w-full rounded-lg p-3 pl-3 text-gray-700 dropshadowboxsub"
+              />
             </div>
 
-            <div
-              class="product-info flex flex-col justify-between gap-6 w-full"
-            >
+            <div class="product-info flex flex-col justify-between gap-6 w-full">
               <div class="product-details flex flex-col gap-6">
                 <div class="product-name text-xl font-semibold">
                   <label class="block">ชื่อ</label>
@@ -43,13 +42,11 @@
                     <select
                       class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
                       v-model="product.category_id"
-                      @change="
-                        product.category_id = Number(product.category_id)
-                      "
+                      @change="product.category_id = Number(product.category_id)"
                     >
                       <option value="">กรุณาเลือกประเภท</option>
-                      <option value="1">อาหาร</option>
-                      <option value="3">เครื่องดื่ม</option>
+                      <option value="2">อาหาร</option>
+                      <option value="1">เครื่องดื่ม</option>
                       <option value="">สมุนไพร</option>
                       <option value="5">ผ้าและเครื่องแต่งกาย</option>
                       <option value="4">ของใช้ ของตกแต่ง</option>
@@ -70,13 +67,10 @@
                 <div class="product-quantity flex items-center gap-4">
                   <label class="text-xl font-semibold">จำนวนสินค้า</label>
                   <div class="flex items-center gap-4">
-                    <div
-                      class="quantity-display bg-gray-100 p-2 rounded-md w-[40px] flex items-center justify-center"
-                    >
+                    <div class="quantity-display bg-gray-100 p-2 rounded-md w-[40px] flex items-center justify-center">
                       {{ product.stock }}
                     </div>
                     <div class="flex items-center gap-2">
-                      <!-- Add "-" button for decreasing stock -->
                       <button
                         class="bg-orange-500 text-white text-[20px] px-2 py-1 h-[25px] rounded-md flex items-center justify-center"
                         @click="decreaseAmount"
@@ -87,9 +81,8 @@
                         type="number"
                         v-model="inputAmount"
                         placeholder="เพิ่มจำนวนสินค้า"
-                        class="w-24 p-1 h-[25px] text-center border border-gray-300 rounded-md input::-webkit-outer-spin-button"
+                        class="w-24 p-1 h-[25px] text-center border border-gray-300 rounded-md"
                       />
-                      <!-- Add "+" button for increasing stock -->
                       <button
                         class="bg-orange-500 text-white px-2 py-1 h-[25px] rounded-md flex items-center justify-center"
                         @click="increaseAmount"
@@ -104,23 +97,15 @@
               <div class="product-status flex justify-between items-center">
                 <div class="status flex gap-4">
                   <span class="text-lg font-semibold">สถานะสินค้า</span>
-                  <label
-                    class="relative inline-flex items-center cursor-pointer"
-                  >
+                  <label class="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
                       class="sr-only peer"
                       :checked="product.is_active"
-                      @click="
-                        confirmStatusChange(product.id, product.is_active)
-                      "
+                      @click="confirmStatusChange(product.id, product.is_active)"
                     />
-                    <div
-                      class="w-16 h-8 bg-orange-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
-                    ></div>
-                    <div
-                      class="absolute w-7 h-7 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-8 transition-transform"
-                    ></div>
+                    <div class="w-16 h-8 bg-orange-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"></div>
+                    <div class="absolute w-7 h-7 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-8 transition-transform"></div>
                   </label>
                 </div>
               </div>
@@ -137,6 +122,7 @@
               placeholder="กรุณากรอกรายละเอียดสินค้า"
             ></textarea>
           </div>
+
           <div class="actions flex justify-end gap-6 mt-4 px-6">
             <button
               class="bg-orange-500 w-24 py-2 text-white rounded-md hover:bg-yellow-500 font-semibold"
@@ -148,15 +134,12 @@
         </div>
 
         <!-- Customer Reviews -->
-        <div
-          class="w-[30%] pt-4 px-2 h-full bg-white flex flex-col gap-5 dropshadowbox rounded-lg"
-        >
+        <div class="w-[30%] pt-4 px-2 h-full bg-white flex flex-col gap-5 dropshadowbox rounded-lg">
           <h3 class="text-2xl font-semibold text-center flex flex-col gap-2">
             รีวิวจากลูกค้า
-            <span class="text-sm text-gray-600"
-              >{{ reviewCount }} รีวิว {{ averageRating }} คะแนน</span
-            >
+            <span class="text-sm text-gray-600">{{ reviewCount }} รีวิว {{ averageRating }} คะแนน</span>
           </h3>
+
           <div class="reviews-container">
             <div
               class="review-item dropshadowboxsub"
@@ -164,12 +147,9 @@
               :key="index"
             >
               <div class="flex justify-between gap-8">
-                <span class="flex items-end truncate w-[60%]"
-                  >ชื่อ {{ review.username }}</span
-                >
+                <span class="flex items-end truncate w-[60%]">ชื่อ {{ review.username }}</span>
                 <div class="flex gap-4 w-[40%]">
                   <div class="flex gap-1">
-                    <!-- แสดงดาวตามค่า review.rating -->
                     <span
                       v-for="star in 5"
                       :key="star"
@@ -182,22 +162,20 @@
                       <i class="fas fa-star"></i>
                     </span>
                   </div>
-                  <div
-                    class="text-[15px] font-bold flex items-center pt-[5px] place-content-center"
-                  >
+                  <div class="text-[15px] font-bold flex items-center pt-[5px] place-content-center">
                     {{ review.rating }}
                   </div>
                 </div>
               </div>
               <div class="h-[80px] text-wrap p-2">{{ review.description }}</div>
             </div>
-            <div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script lang="ts" setup>
 import { ref } from "vue";
@@ -219,7 +197,7 @@ const product = ref<ProductUpdate>({
   stock: 0,
   category_id: 0,
   is_active: true,
-  image_product: "",
+  image: "",
   Review: [{ id: 0, username: "", rating: 0, description: "" }],
 });
 
@@ -231,7 +209,7 @@ const productRes = ref<ProductRes>({
   stock: 0,
   category_id: 0,
   is_active: true,
-  image_product: "",
+  image: "",
 });
 
 const getProductById = async () => {
@@ -247,7 +225,7 @@ const getProductById = async () => {
         stock: data.stock,
         category_id: Number(data.category.id), // แปลงเป็นตัวเลข
         is_active: data.is_active,
-        image_product: data.Image.description,
+        image: data.image,
         Review: data.Review
           ? data.Review.map((review: any) => ({
               id: review.id,
@@ -287,7 +265,7 @@ const updateProduct = async () => {
         stock: data.stock,
         category_id: data.category,
         is_active: data.is_active,
-        image_product: data.image_product,
+        image: data.image_product,
       };
       productRes.value = temp;
     })

@@ -102,8 +102,8 @@
           >
             <th class="w-[10%] text-start pl-2">หมายเลขคำสั่งซื้อ</th>
             <th class="w-[12%] text-start pl-2">วัน/เวลา</th>
-            <th class="w-[15%] text-start pl-2">ลูกค้า</th>
-            <th class="w-[20%] text-start pl-2">ที่อยู่</th>
+            <th class="w-[10%] text-start pl-2">ลูกค้า</th>
+            <th class="w-[25%] text-start pl-2">ที่อยู่</th>
             <th class="w-[10%] text-start pl-2">ราคารวม</th>
             <th class="w-[10%] text-start pl-2">จำนวนรวม</th>
             <th class="w-[10%]">สถานะคำสั่งซื้อ</th>
@@ -127,15 +127,15 @@
               {{ formatDate(order.created_at) }}
             </th>
             <th
-              class="w-[15%] text-[15px] text-start pl-2 font-medium truncate"
+              class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
-              {{ order.username }}
+              {{ order.firstname }} {{ order.lastname }}
             </th>
             <th
-              class="w-[20%] text-[15px] text-start pl-2 font-medium truncate"
+              class="w-[25%] text-[15px] text-start pl-2 font-medium truncate"
             >
-              {{ order.address }}
-            </th>
+          {{ order.shipment_address }} {{ order.shipment_province }} {{ order.shipment_district }}  {{ order.shipment_sub_district }}  {{ order.shipment_zip_code }}
+           </th>
             <th
               class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
@@ -285,7 +285,6 @@ import type {
 import Swal from "sweetalert2";
 import type { Params } from "~/models/order.model";
 import service from "~/service";
-import { updateStatusOrder } from "~/service/order.service";
 
 const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
 
@@ -409,22 +408,18 @@ const getOrderList = async () => {
           status: r.status,
           total_amount: r.total_amount,
           total_price: r.total_price,
-          system_bank_id: r.system_bank,
-          payment_price: r.payment_price,
-          bank_name: r.bank_name,
-          account_name: r.account_name,
-          account_number: r.account_number,
-          payment_status: r.payment_status,
           firstname: r.firstname,
           lastname: r.lastname,
-          address: r.address,
-          zip_code: r.zip_code,
-          sub_district: r.sub_district,
-          district: r.district,
-          province: r.province,
-          shipment_status: r.shipment_status,
           created_at: r.created_at,
           updated_at: r.updated_at,
+          shipment_id: r.shipment_id,
+          shipment_firstname: r.shipment_firstname,
+          shipment_lastname: r.shipment_lastname,
+          shipment_address: r.shipment_address,
+          shipment_sub_district: r.shipment_sub_district,
+          shipment_district: r.shipment_district,
+          shipment_province: r.shipment_province,
+          shipment_zip_code: r.shipment_zip_code,
         };
         orderlist.push(order);
       }
@@ -438,9 +433,26 @@ const getOrderList = async () => {
     });
 };
 
-const formatDate = (timestamp: number) => {
-  return new Date(timestamp * 1000).toISOString().split("T")[0];
+const formatDate = (dateInput: string | number) => {
+  let date: Date;
+
+  if (typeof dateInput === "string") {
+    date = new Date(dateInput); // ถ้าเป็น ISO string
+  } else {
+    date = new Date(dateInput * 1000); // ถ้าเป็น Unix timestamp
+  }
+
+  if (isNaN(date.getTime())) return "Invalid Date"; // ตรวจสอบค่า
+  
+  return date.toLocaleDateString("th-TH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
+
+
+
 
 // ฟังก์ชันที่ใช้ในการเปลี่ยนหน้า
 const changePage = (pageNumber: number) => {

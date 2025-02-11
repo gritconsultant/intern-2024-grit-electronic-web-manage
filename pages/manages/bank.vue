@@ -19,32 +19,27 @@
           <!-- Left: Preview Image Section -->
           <div class="flex flex-col w-[50%] items-end pr-[90px] gap-6">
             <h2 class="text-xl font-bold mr-[140px]">คิวอาร์โค้ด</h2>
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-2">
               <div
                 class="w-[380px] h-[380px] bg-gray-100 flex justify-center items-center rounded-lg shadow-md"
               >
                 <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
+                  v-if="bank.image && isValidUrl(bank.image)"
+                  :src="bank.image"
                   alt="Preview"
-                  class="w-full h-full rounded-lg object-cover"
+                  class="w-full h-full rounded-lg object-cover dropshadowbox"
                 />
                 <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
               </div>
               <div class="flex flex-col gap-5">
+                <!-- Input field placed next to the image -->
                 <input
-                  type="file"
-                  ref="fileInput"
-                  @change="onFileChange"
-                  accept="image/*"
+                  type="text"
+                  id="image-url"
+                  v-model="bank.image"
+                  class="mt-4 w-full text-center border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  placeholder="กรุณาใส่ลิ้งรูป"
                 />
-                <button
-                  v-if="imageUrl"
-                  @click="clearImage"
-                  class="px-4 py-2 w-full bg-red-500 text-white rounded-md hover:bg-red-600"
-                >
-                  ลบรูปภาพ
-                </button>
               </div>
             </div>
           </div>
@@ -147,6 +142,7 @@
           >Loading...</span
         >
       </div>
+      
     </div>
   </div>
 </template>
@@ -165,7 +161,7 @@ const bank = ref<BankUpdate>({
   account_name: "",
   account_number: "",
   description: "",
-  image_system_bank: "",
+  image: "",
   is_active: true,
 });
 
@@ -175,12 +171,7 @@ const bankRes = ref<BankRes>({
   account_name: "",
   account_number: "",
   description: "",
-  image_system_bank: {
-    id: 0,
-    ref_id: 0,
-    type: "",
-    description: "",
-  },
+  image: "",
   is_active: true,
 });
 
@@ -195,7 +186,7 @@ const getBankById = async (id: number) => {
       account_name: data.account_name,
       account_number: data.account_number,
       description: data.description,
-      image_system_bank: data.image_system_bank,
+      image: data.image,
       is_active: data.is_active,
     };
     // เพิ่มธนาคารที่ไม่ได้อยู่ใน namebanks
@@ -225,12 +216,7 @@ const updateBank = async () => {
         account_name: data.account_name,
         account_number: data.account_number,
         description: data.description,
-        image_system_bank: {
-          id: 0,
-          ref_id: 0,
-          type: "",
-          description: "",
-        },
+        image: data.Image,
         is_active: data.is_active,
       };
       bankRes.value = temp;
@@ -284,34 +270,27 @@ const confirmBank = () => {
   }
 };
 
-// ตัวแปรสำหรับเก็บธนาคารที่เลือก
-const selectedBank = ref<string>();
-const qr = ref<string>(
-  "https://services-inw-me.lnw.co.th/qr/132/f6d6a5dea610f3bcf11b1db8f0d6ecaa.png?p=lnwshop&h=232584b0b5146183a62d0350400c51b3725714e6&c=https%3A%2F%2Flnwgo.com%2Fqr%2Fs%2F892682%3Fs%3D8a06c9d5"
-);
+const isValidUrl = (url: string) => {
+  const regex = /^(http|https):\/\/[^ "]+$/;
+  return regex.test(url);
+};
 
-// ฟังก์ชันจัดการเมื่อมีการเลือกไฟล์
+// Handle file input change (image)
 const imageUrl = ref<string | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 
+// Handle file input change (image)
 const onFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
-
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
       imageUrl.value = e.target?.result as string;
     };
     reader.readAsDataURL(file);
-  }
-};
-
-// ฟังก์ชันลบรูปภาพ
-const clearImage = () => {
-  imageUrl.value = null;
-  if (fileInput.value) {
-    fileInput.value.value = "";
+  } else {
+    imageUrl.value = target.value; // อัปเดตกับ URL ที่ใส่ใน input text
   }
 };
 

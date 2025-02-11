@@ -38,7 +38,7 @@
     >
       <table class="w-full text-left h-[90%]">
         <thead class="w-full text-gray-800">
-          <tr class="flex gap-2  border-b-[2px] pb-[4px] pt-[4px]">
+          <tr class="flex gap-2 border-b-[2px] pb-[4px] pt-[4px]">
             <th class="px-4 py-2 w-[25%]">รูปประเภท</th>
             <th class="px-4 py-2 w-[25%]">ชื่อประเภท</th>
             <th class="px-4 py-2 w-[25%]">จำนวน</th>
@@ -53,14 +53,20 @@
           >
             <td class="flex items-center gap-4 px-4 py-2 w-[25%]">
               <img
-                src=""
+                :src="category.image"
                 alt="รูปประเภท"
                 class="w-16 h-16 object-cover rounded-lg border"
               />
             </td>
-            <td class="px-4 py-2 w-[25%] flex items-center ">{{ category.name }}</td>
-            <td class="px-4 py-2 text-orange-500 font-bold w-[25%] flex items-center">-</td>
-            <td class="px-4 py-2 w-[25%] flex gap-4 items-center justify-start ">
+            <td class="px-4 py-2 w-[25%] flex items-center">
+              {{ category.name }}
+            </td>
+            <td
+              class="px-4 py-2 text-orange-500 font-bold w-[25%] flex items-center"
+            >
+              -
+            </td>
+            <td class="px-4 py-2 w-[25%] flex gap-4 items-center justify-start">
               <button>
                 <i
                   @click="openEditCategory(category.id)"
@@ -76,7 +82,7 @@
             </td>
           </tr>
           <tr v-if="categories.length === 0">
-            <td colspan="6" class="text-center text-[30px]  py-4 text-gray-500">
+            <td colspan="6" class="text-center text-[30px] py-4 text-gray-500">
               ไม่มีข้อมูล
             </td>
           </tr>
@@ -174,7 +180,7 @@ const getCategorylist = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
-    category : Category.value,
+    category: Category.value,
   };
   await service.product
     .getCategoryList(param)
@@ -190,7 +196,7 @@ const getCategorylist = async () => {
           id: c.id,
           name: c.name,
           is_active: c.is_active,
-          imageCategory: c.imageCategory,
+          image: c.image,
         };
         categoryList.push(category);
       }

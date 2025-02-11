@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white shadow-md rounded-lg p-8 h-[650px] max-w-3xl mx-auto dropshadowboxabsolute"
+    class="bg-white shadow-md rounded-lg p-8 h-[700px] w-[800px] max-w-3xl mx-auto dropshadowboxabsolute"
   >
     <div class="flex items-center justify-between mb-10">
       <h1 class="text-4xl font-bold text-gray-800">แก้ไขประเภทสินค้า</h1>
@@ -15,49 +15,44 @@
           type="text"
           id="category-name"
           v-model="category.name"
-          class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full p-3 text-gray-700"
+          class="rounded-md border-gray-300 w-full p-3 text-gray-700 dropshadowboxsub"
           placeholder="กรอกชื่อประเภทสินค้า"
         />
       </div>
 
       <!-- อัพโหลดไฟล์และแสดงภาพ -->
-      <div class="flex flex-col gap-4 md:flex-row items-center justify-between">
-        <div class="flex flex-col items-start gap-2">
-          <label for="upload-file" class="text-lg font-medium text-gray-700">
+      <div class="flex flex-col gap-4 items-center justify-between h-[350px]">
+        <div class="flex flex-col items-start gap-2 w-full">
+          <label for="image-url" class="text-lg font-medium text-gray-700">
             อัพโหลดรูปภาพ
           </label>
-          <div class="flex items-end h-full">
-            <div class="flex flex-col gap-5 pl-8">
+          <div class="flex items-enปd h-full w-full">
+            <div class="flex flex-col gap-5 w-full">
+              <!-- ใช้ input สำหรับ URL -->
               <input
-                type="file"
-                ref="fileInput"
-                @change="onFileChange"
-                accept="image/*"
-                class="w-full md:w-64 file:rounded-md file:border-0 file:bg-blue-500 file:text-white file:px-4 file:py-2 file:cursor-pointer"
+                type="text"
+                id="image-url"
+                v-model="category.image"
+                placeholder="กรอก URL รูปภาพ"
+                class="w-full rounded-lg p-3 pl-3 text-gray-700 dropshadowboxsub"
               />
-              <button
-                v-if="category.imageCategory"
-                @click="clearImage"
-                class="mb-2 px-4 py-2 w-[100px] bg-red-500 text-white rounded-[5px] hover:bg-red-600"
-              >
-                ลบรูปภาพ
-              </button>
             </div>
           </div>
         </div>
+
+        <!-- แสดงภาพจาก URL -->
         <div
-          class="flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
+          class="bg-slate-50 flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
         >
           <img
-            v-if="imageUrl"
-            :src="imageUrl"
+          v-if="category.image && isValidUrl(category.image)"
+            :src="category.image"
             alt="Preview"
             class="w-[400px] h-[400px] rounded-[5px] object-cover"
           />
           <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
         </div>
       </div>
-
       <!-- ปุ่มยืนยันและยกเลิก -->
       <div class="flex justify-center gap-6 mt-6">
         <button
@@ -88,14 +83,14 @@ const category = ref<CategoryUpdate>({
   id: 0,
   name: "",
   is_active: true,
-  imageCategory: "",
+  image: "",
 });
 
 const categoryRes = ref<CategoryRes>({
   id: 0,
   name: "",
   is_active: true,
-  imageCategory: "",
+  image: "",
 });
 
 const emit = defineEmits(["close", "addCategory"]);
@@ -125,10 +120,10 @@ const getCategoryById = async () => {
           id: data.id,
           name: data.name,
           is_active: data.is_active,
-          imageCategory: data.imageCategory?.description || "",
+          image: data.image,
         };
-        if (category.value.imageCategory) {
-          imageUrl.value = category.value.imageCategory;
+        if (category.value.image) {
+          imageUrl.value = category.value.image;
         }
       }
     })
@@ -159,7 +154,7 @@ const updateCategory = async () => {
         id: data.id,
         name: data.name,
         is_active: data.is_active,
-        imageCategory: data.imageCategory,
+        image: data.image,
       };
       categoryRes.value = temp;
     })
@@ -202,6 +197,11 @@ const confirmCancel = () => {
   });
 };
 
+const isValidUrl = (url: string) => {
+  const regex = /^(http|https):\/\/[^ "]+$/;
+  return regex.test(url);
+};
+
 const imageUrl = ref<string | null>(null);
 
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -212,7 +212,7 @@ const onFileChange = (event: Event) => {
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      category.value.imageCategory = e.target?.result as string;
+      category.value.image = e.target?.result as string;
       imageUrl.value = e.target?.result as string;
     };
     reader.readAsDataURL(file);
@@ -221,12 +221,11 @@ const onFileChange = (event: Event) => {
 
 const clearImage = () => {
   imageUrl.value = null;
-  category.value.imageCategory = ""; // ลบค่าของ imageCategory
+  category.value.image = ""; // ลบค่าของ image_categories
   if (fileInput.value) {
     fileInput.value.value = ""; // ลบค่าใน input file
   }
 };
-
 
 onMounted(() => {
   // ดึงข้อมูลเมื่อ component ถูกโหลด

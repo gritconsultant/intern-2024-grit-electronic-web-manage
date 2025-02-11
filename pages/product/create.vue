@@ -1,10 +1,12 @@
 <template>
   <div class="defaultpages px-8 py-10">
-    <div class="flex items-center justify-between mb-8">
+    <div
+      class="flex items-center justify-between mb-4 bg-white p-4 dropshadowbox rounded-lg"
+    >
       <h1 class="text-3xl font-bold text-gray-800">เพิ่มสินค้า</h1>
     </div>
 
-    <div class="grid gap-8">
+    <div class="grid gap-4">
       <!-- Product Name -->
       <div>
         <label
@@ -100,60 +102,55 @@
         </div>
       </div>
 
-      <!-- Product Details -->
-      <div>
-        <label
-          for="product-details"
-          class="block text-lg font-medium text-gray-700"
-          >รายละเอียด</label
-        >
-        <textarea
-          id="product-details"
-          rows="4"
-          placeholder="ระบุรายละเอียดสินค้า"
-          class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
-          v-model="product.description"
-        ></textarea>
-      </div>
-
-      <!-- Product Image -->
-      <div>
-        <h3 class="text-lg font-medium text-gray-700">รูปสินค้า</h3>
-        <div
-          class="flex items-center justify-center mt-4 rounded-lg border border-dashed border-gray-300 p-6 bg-gray-50"
-        >
+      <div class="grid grid-cols-2 gap-8">
+        <!-- Product Image -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-700">รูปสินค้า</h3>
           <div
-            class="w-48 h-48 flex items-center justify-center rounded-lg shadow-md bg-white"
+            class="flex flex-col items-center justify-center mt-4 rounded-lg border border-dashed border-gray-300 p-6 bg-gray-50"
           >
-            <img
-              v-if="imageUrl"
-              :src="imageUrl"
-              alt="Preview"
-              class="w-full h-full object-cover rounded-lg"
-            />
-            <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
-          </div>
-          <div class="ml-8">
+            <!-- กล่องแสดงรูป -->
+            <div
+              class="w-48 h-48 flex items-center justify-center rounded-lg shadow-md bg-white"
+            >
+              <img
+                v-if="imageUrl"
+                :src="imageUrl"
+                alt="Preview"
+                class="w-full h-full object-cover rounded-lg"
+              />
+              <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
+            </div>
+            <!-- ปุ่ม Input -->
             <input
-              type="file"
+              type="text"
               ref="fileInput"
               @change="onFileChange"
               accept="image/*"
-              class="mt-4"
+              class="mt-4 w-[50%] text-center border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              placeholder="กรุณาใส่ลิ้งรูปสินค้า"
             />
-            <button
-              v-if="imageUrl"
-              @click="clearImage"
-              class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-            >
-              ลบรูปภาพ
-            </button>
           </div>
+        </div>
+        <!-- Product Details -->
+        <div class="">
+          <label
+            for="product-details"
+            class="block text-lg font-medium text-gray-700 mb-2"
+            >รายละเอียด</label
+          >
+          <textarea
+            id="product-details"
+            rows="4"
+            placeholder="ระบุรายละเอียดสินค้า"
+            class="w-full h-[87%] mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+            v-model="product.description"
+          ></textarea>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex justify-center gap-8 mt-8">
+      <div class="flex justify-center gap-8 mt-2">
         <button
           @click.prevent="confirmCancel"
           class="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
@@ -191,7 +188,7 @@ const product = ref<ProductCreate>({
   stock: 0,
   category_id: 0,
   is_active: true,
-  image_product: "",
+  Image: "",
 });
 
 const productRes = ref<ProductRes>({
@@ -202,7 +199,7 @@ const productRes = ref<ProductRes>({
   stock: 0,
   category_id: 0,
   is_active: true,
-  image_product: "",
+  image: "",
 });
 
 // Submit the product
@@ -252,16 +249,12 @@ const confirmSubmit = () => {
   });
 };
 
-// Add product to the server
 const addProduct = async () => {
   // แปลง category_id เป็นตัวเลข
-  product.value.category_id = parseInt(
-    product.value.category_id.toString(),
-    10
-  );
+  const categoryId = parseInt(product.value.category_id?.toString() ?? "0", 10);
+  product.value.category_id = categoryId;
 
-  // ตรวจสอบว่า category_id เป็นตัวเลขที่ถูกต้องหรือไม่
-  if (isNaN(product.value.category_id)) {
+  if (isNaN(categoryId)) {
     Swal.fire({
       title: "ข้อผิดพลาด",
       text: "กรุณาเลือกประเภทสินค้าให้ถูกต้อง",
@@ -272,10 +265,10 @@ const addProduct = async () => {
   }
 
   // แปลง product.price เป็นตัวเลขเพื่อให้แน่ใจว่าเป็น float64
-  product.value.price = parseFloat(product.value.price.toString());
+  const price = parseFloat(product.value.price?.toString() ?? "0");
+  product.value.price = price;
 
-  // ตรวจสอบว่าราคาที่แปลงแล้วเป็นตัวเลขที่ถูกต้องหรือไม่
-  if (isNaN(product.value.price)) {
+  if (isNaN(price)) {
     Swal.fire({
       title: "ข้อผิดพลาด",
       text: "กรุณากรอกราคาให้ถูกต้อง",
@@ -283,6 +276,13 @@ const addProduct = async () => {
       confirmButtonText: "ตกลง",
     });
     return;
+  }
+
+  // ตรวจสอบและตั้งค่ารูปภาพให้ถูกต้อง
+  if (imageUrl.value) {
+    product.value.Image = imageUrl.value;
+  } else {
+    product.value.Image = ""; // หรือสามารถตั้งค่าเป็นค่าว่างถ้ารูปภาพไม่ถูกเลือก
   }
 
   // ส่งข้อมูล API
@@ -318,7 +318,7 @@ const getCategorylist = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
-    category : Category.value,
+    category: Category.value,
   };
 
   await service.product
@@ -334,7 +334,7 @@ const getCategorylist = async () => {
           id: c.id,
           name: c.name,
           is_active: c.is_active,
-          imageCategory: c.imageCategory,
+          image: c.image,
         };
         categoryList.push(category);
       }
@@ -356,7 +356,7 @@ const getProductList = async () => {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
-    category : Category.value,
+    category: Category.value ?? undefined,
   };
 
   console.log("Sending param:", param); // ตรวจสอบการส่งพารามิเตอร์
@@ -374,18 +374,12 @@ const getProductList = async () => {
           name: e.name,
           price: e.price,
           stock: e.stock,
-          description: e.description ?? null, // Handle null or undefined description
-          Image: {
-            id: e.Image?.id ?? 0, // Default to 0 if Image is null or undefined
-            ref_id: e.Image?.ref_id ?? 0, // Default to 0 if ref_id is missing
-            type: e.Image?.type ?? "", // Default to empty string if type is missing
-            description: e.Image?.description ?? "", // Default to empty string if description is missing
-          },
+          image: e.description ?? null, // Handle null or undefined description
           category: {
             id: e.category?.id ?? 0, // Default to 0 if category is missing
             name: e.category?.name ?? "",
             is_active: e.category?.is_active ?? true,
-            imageCategory: e.category?.imageCategory ?? [], // Default to empty string if category name is missing
+            image: e.category?.image ?? [], // Default to empty string if category name is missing
           },
           Review:
             e.Review?.map((r: any) => ({
@@ -414,16 +408,18 @@ const getProductList = async () => {
 const imageUrl = ref<string | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 
+// Handle file input change (image)
 const onFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
-
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
       imageUrl.value = e.target?.result as string;
     };
     reader.readAsDataURL(file);
+  } else {
+    imageUrl.value = target.value; // อัปเดตกับ URL ที่ใส่ใน input text
   }
 };
 
