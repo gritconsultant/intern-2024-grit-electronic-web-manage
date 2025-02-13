@@ -486,9 +486,6 @@ const endTimestamp = end.value
     start: startTimestamp,
     end: endTimestamp,
   };
-  console.log("Start Date:", start.value);
-  console.log("End Date:", end.value);
-  console.log("Sending param:", param);
   console.log("Sending param:", param); // ตรวจสอบค่า param ที่ส่งไป
 
   await service.order

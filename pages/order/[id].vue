@@ -1,5 +1,7 @@
 <template>
-  <div class="defaultpages p-6">
+  <div class="defaultpages p-6"
+   v-if="order"
+  >
     <!-- Order Header -->
     <div class="bg-white rounded-xl p-4 flex flex-col dropshadowbox">
       <h1 class="text-3xl font-semibold text-gray-800">
@@ -451,6 +453,7 @@ const updatestatus = async (orderId: number, order: any) => {
       Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถอัปเดตคำสั่งซื้อได้", "error");
     });
 };
+
 
 
 onMounted(() => {

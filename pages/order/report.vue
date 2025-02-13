@@ -1,102 +1,97 @@
 <template>
-  <div class="defaultpages flex flex-col gap-4 p-6 bg-gray-50">
+  <div class="defaultpages flex flex-col gap-6 p-6">
+    <!-- Header -->
     <div
       class="flex justify-between items-center bg-white p-5 rounded-lg dropshadowbox"
     >
       <h1 class="text-2xl font-bold text-gray-800">รายงานการขายสินค้า</h1>
     </div>
 
-    <div class="flex justify-between p-5 rounded-lg h-[8%]">
-      <div class="flex gap-8 mb-6">
-        <!-- Filter Section -->
-        <div class="space-x-4">
-          <label for="year" class="font-semibold "
-            >เลือกปี:</label
+    <!-- Filter Section -->
+    <div class="flex gap-6 p-2 rounded-lg">
+      <div class="space-x-4">
+        <label for="year" class="font-semibold">เลือกปี:</label>
+        <select
+          id="year"
+          v-model="selectedYear"
+          class="border px-4 py-2 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+        >
+          <option v-for="year in years" :key="year" :value="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+
+      <div class="space-x-4">
+        <label for="month" class="font-semibold">เลือกเดือน:</label>
+        <select
+          id="month"
+          v-model="month"
+          class="border px-4 py-2 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+        >
+          <option
+            v-for="(monthName, index) in months"
+            :key="index"
+            :value="monthName"
           >
-          <select
-            id="year"
-            v-model="selectedYear"
-            class="border px-4 py-2 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
-          >
-            <option v-for="year in years" :key="year" :value="year">
-              {{ year }}
-            </option>
-          </select>
-        </div>
-        <div class="space-x-4">
-          <label for="month" class="font-semibold "
-            >เลือกเดือน:</label
-          >
-          <select
-            id="month"
-            v-model="selectedMonth"
-            class="border px-4 py-2 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
-          >
-            <option v-for="month in months" :key="month" :value="month">
-              {{ month }}
-            </option>
-          </select>
-        </div>
+            {{ monthName }}
+          </option>
+        </select>
       </div>
     </div>
 
-    <div class="flex flex-col justify-between bg-white p-5 rounded-lg dropshadowbox h-full w-full">
-      <!-- Sales Table -->
+    <!-- Sales Table -->
+    <div
+      class="bg-white p-4 rounded-lg dropshadowbox h-[80%] flex flex-col justify-between"
+    >
       <table class="w-full">
         <thead class="w-full">
-          <tr
-            class="flex gap-5 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]"
-          >
-            <th class="w-[13%]">หมายเลขคำสั่งซื้อ</th>
-            <th class="w-[13%]">ชื่อผู้ซื้อ</th>
-            <th class="w-[13%]">รายการสินค้า</th>
-            <th class="w-[13%]">จำนวน</th>
-            <th class="w-[13%]">ราคา</th>
-            <th class="w-[13%]">ยอดรวม</th>
-            <th class="w-[13%]">วันที่สั่งซื้อ</th>
+          <tr class="border-b-2 mb-[8px] mt-[8px] w-full">
+            <th class="text-center">หมายเลขคำสั่งซื้อ</th>
+            <th class="text-center">ชื่อผู้ซื้อ</th>
+            <th class="text-center">รายการสินค้า</th>
+            <th class="text-center r">จำนวน</th>
+            <th class="text-center">ราคา</th>
+            <th class="text-center">ยอดรวม</th>
+            <th class="text-center">วันที่สั่งซื้อ</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="order in filteredOrders"
-            :key="order.id"
-            class="hover:bg-orange-50"
+            v-for="(report, index) in salereport"
+            :key="index"
+            class="border-b hover:bg-orange-50 text-[15px] font-medium"
           >
-            <td class="w-[13%] text-center">{{ order.id }}</td>
-            <td class="w-[13%]">{{ order.buyer.name }}</td>
-            <td class="w-[13%]">{{ order.items.join(", ") }}</td>
-            <td class="w-[13%] text-center">{{ order.quantity }}</td>
-            <td class="w-[13%] text-right">
-              {{ order.price | currency }}
-            </td>
-            <td class="w-[13%] text-right">
-              {{ order.total | currency }}
-            </td>
-            <td class="w-[13%]">{{ order.date }}</td>
+            <td class="p-4 text-center">{{ report.OrderID }}</td>
+            <td class="p-4 text-center">{{ report.UserName }}</td>
+            <td class="p-4 text-center">{{ report.ProductName }}</td>
+            <td class="p-4 text-center">{{ report.Amount }}</td>
+            <td class="p-4 text-center">{{ report.Price }}</td>
+            <td class="p-4 text-center">{{ report.TotalPrice }}</td>
+            <td class="p-4 text-center">{{ formatDate(report.Created_at) }}</td>
           </tr>
         </tbody>
       </table>
       <!-- Pagination -->
-      <div class="flex justify-between items-center ">
+      <div class="flex justify-between items-center p-5 rounded-lg">
         <div class="text-sm text-gray-600">
-          <!-- แสดงข้อมูลจาก (หน้า) และจำนวนทั้งหมด -->
-          แสดง {{}} ถึง
-          {{}}
-          จากทั้งหมด {{}} รายการ
+          แสดง {{ (currentPage - 1) * size + 1 }} ถึง
+          {{ Math.min(currentPage * size, paginate.Total) }}
+          จากทั้งหมด {{ paginate.Total }} รายการ
         </div>
         <div class="flex gap-2">
-          <!-- ปุ่มก่อนหน้า -->
           <button
-            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+            @click="changePage(currentPage - 1)"
+            :disabled="currentPage === 1"
+            class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50"
           >
             ก่อนหน้า
           </button>
-
-          <span class="flex items-center px-2"> หน้า {{ currentPage }} </span>
-
-          <!-- ปุ่มถัดไป -->
+          <span class="flex items-center px-2">หน้า {{ currentPage }}</span>
           <button
-            class="px-3 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
+            @click="changePage(currentPage + 1)"
+            :disabled="currentPage >= Math.ceil(paginate.Total / size)"
+            class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50"
           >
             ถัดไป
           </button>
@@ -106,11 +101,14 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from "vue";
+<script lang="ts" setup>
+import service from "~/service";
+import type { ParamsReport, SaleReport } from "../../models/report.model";
 
-// ตัวเลือกตัวกรอง
-const years = [2023, 2024, 2025];
+const size = ref(8); // ทำให้เป็น ref
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+const paginate = ref<{ Total: number }>({ Total: 0 });
+
 const months = [
   "มกราคม",
   "กุมภาพันธ์",
@@ -125,54 +123,110 @@ const months = [
   "พฤศจิกายน",
   "ธันวาคม",
 ];
+const currentMonthIndex = new Date().getMonth(); // ได้ค่า 0-11
+const month = ref(months[currentMonthIndex]); // ตอนนี้ months ถูกประกาศแล้ว
 
-// ข้อมูลคำสั่งซื้อ
-const orders = [
-  {
-    id: "ORD001",
-    buyer: { name: "ลูกค้ากลุ่ม A" },
-    items: ["สินค้า 1", "สินค้า 2"],
-    quantity: 3,
-    price: 100,
-    total: 300,
-    date: "2024-01-15",
-  },
-  {
-    id: "ORD002",
-    buyer: { name: "ลูกค้ากลุ่ม B" },
-    items: ["สินค้า 3"],
-    quantity: 1,
-    price: 150,
-    total: 150,
-    date: "2024-02-03",
-  },
-  // เพิ่มข้อมูลคำสั่งซื้อที่นี่
-];
+const currentYear = new Date().getFullYear();
+const years = ref<number[]>(
+  Array.from({ length: 5 }, (_, i) => currentYear - 2 + i)
+); // ใช้ ref
+const selectedYear = ref<number>(currentYear); // ตั้งค่าให้เป็นปี 2025
 
-const selectedYear = ref(2024);
-const selectedMonth = ref("กุมภาพันธ์");
-const selectedBuyer = ref(null);
+const salereport = ref<SaleReport[]>([]);
 
-// ฟังก์ชันคำนวณยอดรวม
-const currency = (value) => {
-  return new Intl.NumberFormat("th-TH", {
-    style: "currency",
-    currency: "THB",
-  }).format(value);
+const getSaleReport = async () => {
+  const param: ParamsReport = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    month: month.value, //
+    year: selectedYear.value, // ใช้ .value ในการเข้า����ง selectedYear
+  };
+
+  console.log("Sending param:", param); // ตรวจสอบค่า param ที่ส่งไป
+  await service.report
+    .getSaleReport(param)
+    .then((resp: any) => {
+      const data = resp.data.data;
+      paginate.value = resp.data.paginate;
+
+      const reportsale: SaleReport[] = [];
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const s = data[i];
+        const report: SaleReport = {
+          OrderID: s.OrderID,
+          UserName: s.UserName,
+          ProductName: s.ProductName,
+          Amount: s.Amount,
+          Price: s.Price,
+          TotalPrice: s.TotalPrice,
+          Created_at: s.Created_at,
+        };
+        reportsale.push(report);
+      }
+      salereport.value = reportsale;
+    })
+    .catch((error: any) => {
+      console.error("Error fetching order data:", error);
+    })
+    .finally(() => {});
 };
 
-// ฟิลเตอร์คำสั่งซื้อ
-const filteredOrders = computed(() => {
-  return orders.filter((order) => {
-    const orderDate = new Date(order.date);
-    const year = orderDate.getFullYear();
-    const month = orderDate.getMonth() + 1; // เดือนใน JS เริ่มที่ 0
-    return (
-      selectedYear.value === year &&
-      months[selectedMonth.value - 1] === months[month - 1] &&
-      (selectedBuyer.value ? order.buyer.id === selectedBuyer.value : true)
-    );
+// ฟังก์ชันที่ใช้ในการเปลี่ยนหน้า
+const changePage = (pageNumber: number) => {
+  const totalPages = Math.ceil(paginate.value.Total / size.value); // คำนวณจำนวนหน้าทั้งหมด
+  if (pageNumber < 1 || pageNumber > totalPages) {
+    return; // ถ้าหน้าเกินขอบเขตให้ไม่ทำอะไร
+  }
+
+  currentPage.value = pageNumber; // เปลี่ยนหน้า
+
+  // ส่งค่า param สำหรับการเรียกข้อมูลใหม่
+  const param: ParamsReport = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    month: month.value, //
+    year: selectedYear.value,
+  };
+
+  getSaleReport(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
+};
+
+const formatDate = (dateInput: string | number) => {
+  let date: Date;
+
+  if (typeof dateInput === "string") {
+    date = new Date(dateInput); // ถ้าเป็น ISO string
+  } else {
+    date = new Date(dateInput * 1000); // ถ้าเป็น Unix timestamp
+  }
+
+  if (isNaN(date.getTime())) return "Invalid Date"; // ตรวจสอบค่า
+
+  return date.toLocaleDateString("th-TH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
+};
+
+const selectedMonth = ref("");
+
+// Watch สำหรับปี
+watch(selectedYear, (newYear) => {
+  console.log("📅 ปีที่เลือก:", newYear);
+  getSaleReport(); // โหลดข้อมูลใหม่เมื่อเปลี่ยนปี
+});
+
+// Watch สำหรับเดือน
+watch(month, (newMonth) => {
+  console.log("📅 เดือนที่เลือก:", newMonth);
+  getSaleReport(); // โหลดข้อมูลใหม่เมื่อเปลี่ยนเดือน
+});
+
+
+onMounted(async () => {
+  await getSaleReport();
 });
 </script>
 

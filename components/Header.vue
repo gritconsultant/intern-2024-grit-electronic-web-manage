@@ -10,9 +10,9 @@
       </NuxtLink>
     </div>
     <div class="flex justify-end gap-2">
-      <div class="pt-[8px]">
+      <!-- <div class="pt-[8px]">
         <Notification />
-      </div>
+      </div> -->
       <Profile />
     </div>
   </div>

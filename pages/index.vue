@@ -68,7 +68,7 @@ const getDashboard = () => {
     .then((resp: any) => {
       const data = resp.data?.data;
 
-      console.log("📌 API Response:", data); // เช็ค API Response
+      console.log(" API Response:", data); // เช็ค API Response
 
       if (data) {
         const dashboardData: Dashboard = {
