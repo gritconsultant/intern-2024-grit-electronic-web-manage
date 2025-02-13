@@ -81,7 +81,7 @@
                         type="number"
                         v-model="inputAmount"
                         placeholder="เพิ่มจำนวนสินค้า"
-                        class="w-24 p-1 h-[25px] text-center border border-gray-300 rounded-md"
+                        class="w-10 p-1 h-[25px] text-center border border-gray-300 rounded-md"
                       />
                       <button
                         class="bg-orange-500 text-white px-2 py-1 h-[25px] rounded-md flex items-center justify-center"

@@ -9,6 +9,13 @@ export const getOrderlist = (params: Params) => {
   });
 };
 
+export const getOrderById = (id: any) => {
+  return client({
+    url: `/order/${id}`,
+    method: "GET",
+  });
+}
+
 export const updateStatusOrder = (id:any, datas: UpdateStatusOrder) => {
   return client({
     url: `/order/${id}`,

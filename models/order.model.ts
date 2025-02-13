@@ -17,22 +17,12 @@ export interface Order {
   shipment_district: string;
   shipment_province: string;
   shipment_zip_code: string;
-}
-
-export interface Item {
-  product_id: number;
-  product_name: string;
-  quantity: number;
-  price: number;
+  tracking_number: string;
 }
 
 export interface StatusOrder {
   id: number;
-  status: string;
-}
-
-export interface PaymentStatus {
-  id: number;
+  name: string;
   status: string;
 }
 
@@ -44,7 +34,70 @@ export interface StatusRefund {
 export interface UpdateStatusOrder {
   id: number;
   status: string;
+  tracking_number: string;
 }
+
+export interface OrderRes {
+  id: number;
+  User: User;
+  products: Product[];
+  Payment: Payment;
+  SystemBank: SystemBank;
+  Shipment: Shipment;
+  total_amount: number;
+  total_price: number;
+  tracking_number: string;
+  status: string;
+  created_at: number;
+  updated_at: number;
+}
+
+export interface Product {
+  product_id: number;
+  product_name: string;
+  price: number;
+  total_product_amount: number;
+  image: string;
+}
+
+export interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  phone: string;
+}
+
+export interface Payment {
+  id: number;
+  price: number;
+  bank_name: string;
+  account_name: string;
+  account_number: string;
+  status: string;
+}
+
+export interface SystemBank {
+  id: number;
+  bank_name: string;
+  account_name: string;
+  account_number: string;
+  description: string;
+  image: string;
+}
+
+export interface Shipment {
+  id: number;
+  firstname: string;
+  lastname: string;
+  address: string;
+  zip_code: string;
+  sub_district: string;
+  district: string;
+  province: string;
+}
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,4 +148,7 @@ export interface Params {
   page: number;
   size: number;
   search: string;
+  status: string;
+  start: number | null; // รองรับ null;
+  end: number | null; // รองรับ null;
 }

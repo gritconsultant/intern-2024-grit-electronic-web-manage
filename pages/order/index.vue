@@ -33,9 +33,9 @@
               >วันที่เริ่มต้น</label
             >
             <input
+              v-model="start"
               type="date"
               id="startDate"
-              v-model="filters.startDate"
               class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
             />
           </div>
@@ -46,9 +46,9 @@
               >วันที่สิ้นสุด</label
             >
             <input
+              v-model="end"
               type="date"
               id="endDate"
-              v-model="filters.endDate"
               class="p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none h-[30px]"
             />
           </div>
@@ -68,7 +68,7 @@
             <div
               class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[10px]"
             >
-              {{ selectedStatusOrder.status }}
+              {{ selectedStatusOrder.name }}
             </div>
           </div>
 
@@ -80,10 +80,10 @@
               <li
                 v-for="(statusorder, i) in Statusorders"
                 :key="i"
-                class="block px-4 py-2 hover:bg-gray-100"
+                class="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 @click="selectStatusOrder(statusorder)"
               >
-                {{ statusorder.status }}
+                {{ statusorder.name }}
               </li>
             </ul>
           </div>
@@ -134,8 +134,10 @@
             <th
               class="w-[25%] text-[15px] text-start pl-2 font-medium truncate"
             >
-          {{ order.shipment_address }} {{ order.shipment_province }} {{ order.shipment_district }}  {{ order.shipment_sub_district }}  {{ order.shipment_zip_code }}
-           </th>
+              {{ order.shipment_address }} {{ order.shipment_province }}
+              {{ order.shipment_district }} {{ order.shipment_sub_district }}
+              {{ order.shipment_zip_code }}
+            </th>
             <th
               class="w-[10%] text-[15px] text-start pl-2 font-medium truncate"
             >
@@ -158,18 +160,32 @@
                   รอการชำระ
                 </div>
                 <div
-                  v-else-if="order.status === 'กำลังจัดส่ง'"
+                  v-else-if="order.status === 'prepare'"
                   class="w-[120px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
+                  @click="toggleMenu(order.id)"
+                >
+                  เตรียมสินค้า
+                </div>
+                <div
+                  v-else-if="order.status === 'ship'"
+                  class="w-[120px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   กำลังจัดส่ง
                 </div>
                 <div
-                  v-else-if="order.status === 'shipped'"
+                  v-else-if="order.status === 'success'"
                   class="w-[120px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
-                  {{ order.status }}
+                  จัดส่งเรียบร้อย
+                </div>
+                <div
+                  v-else-if="order.status === 'cancelled'"
+                  class="w-[120px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
+                  @click="toggleMenu(order.id)"
+                >
+                  ยกเลิก
                 </div>
                 <div
                   v-else
@@ -180,38 +196,30 @@
                 </div>
                 <div>
                   <ul
-                    class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] h-[110px] -translate-x-[70px] flex flex-col gap-2 mt-[1px]"
+                    class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] -translate-x-[70px] flex flex-col gap-2 mt-[1px]"
                     v-show="isMenuVisible[order.id]"
                   >
                     <li
                       class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
-                      @click="changeStatus(order.id, 'pending')"
-                      :class="{ 'bg-gray-200': order.status === 'pending' }"
-                      v-if="order.status !== 'pending'"
+                      @click="changeStatus(order.id, 'prepare')"
+                      :class="{ 'bg-gray-200': order.status === 'prepare' }"
+                      v-if="order.status !== 'prepare'"
                     >
-                      รอการชำระ
+                      เตรียมสินค้า
                     </li>
                     <li
                       class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
-                      @click="changeStatus(order.id, 'กำลังจัดส่ง')"
-                      :class="{ 'bg-gray-200': order.status === 'กำลังจัดส่ง' }"
-                      v-if="order.status !== 'กำลังจัดส่ง'"
+                      @click="changeStatus(order.id, 'ship')"
+                      :class="{ 'bg-gray-200': order.status === 'ship' }"
+                      v-if="order.status !== 'ship'"
                     >
                       กำลังจัดส่ง
                     </li>
                     <li
                       class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
-                      @click="changeStatus(order.id, 'shipped')"
-                      :class="{ 'bg-gray-200': order.status === 'shipped' }"
-                      v-if="order.status !== 'shipped'"
-                    >
-                      จัดส่งเรียบร้อย
-                    </li>
-                    <li
-                      class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
-                      @click="changeStatus(order.id, 'ชำระล้มเหลว')"
-                      :class="{ 'bg-gray-200': order.status === 'ชำระล้มเหลว' }"
-                      v-if="order.status !== 'ชำระล้มเหลว'"
+                      @click="changeStatus(order.id, 'failed')"
+                      :class="{ 'bg-gray-200': order.status === 'failed' }"
+                      v-if="order.status !== 'failed'"
                     >
                       ชำระล้มเหลว
                     </li>
@@ -221,12 +229,17 @@
             </th>
             <th class="w-[3%] flex items-center justify-center">
               <NuxtLink
-                to="/order/[id]"
+                :to="`/order/${order.id}`"
                 class="flex items-center place-content-center justify-center rounded-[5px] h-[20px] w-[25px]"
               >
                 <i class="fa-regular fa-eye text-[15px]"></i>
               </NuxtLink>
             </th>
+          </tr>
+          <tr v-if="orders.length === 0">
+            <td colspan="6" class="text-center text-[30px]  py-4 text-gray-500">
+              ไม่มีข้อมูลคำสั่งซื้อ
+            </td>
           </tr>
         </tbody>
         <div v-else class="absolute left-[600px] top-[200px]">
@@ -238,6 +251,36 @@
               class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
               >Loading...</span
             >
+          </div>
+        </div>
+
+        <!-- Popup Tracking Number -->
+        <div
+          v-if="popupVisible"
+          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        >
+          <div class="bg-white p-5 rounded shadow-lg">
+            <h3 class="text-lg font-bold">กรอกเลขพัสดุ</h3>
+            <input
+              type="text"
+              v-model="trackingNumber"
+              class="border p-2 w-full"
+              placeholder="ใส่เลขพัสดุ"
+            />
+            <div class="flex justify-end mt-4">
+              <button
+                @click="confirmTracking"
+                class="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                ยืนยัน
+              </button>
+              <button
+                @click="popupVisible = false"
+                class="ml-2 bg-gray-300 px-4 py-2 rounded"
+              >
+                ปิด
+              </button>
+            </div>
           </div>
         </div>
       </table>
@@ -287,107 +330,165 @@ import type { Params } from "~/models/order.model";
 import service from "~/service";
 
 const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
+const popupVisible = ref(false);
+const trackingNumber = ref("");
+const selectedOrderId = ref<number | null>(null);
 
 // Toggle the visibility of the menu for a specific order
 const toggleMenu = (orderId: number) => {
-  // Toggle the menu visibility, close all other menus before opening the new one
   isMenuVisible.value = {
     ...Object.fromEntries(
       Object.keys(isMenuVisible.value).map((key) => [key, false])
-    ), // Close all menus
-    [orderId]: !isMenuVisible.value[orderId], // Toggle current order's menu
+    ),
+    [orderId]: !isMenuVisible.value[orderId],
   };
-};
 
-const changeStatus = (orderId: number, status: string) => {
-  const order = orders.value.find((order) => order.id === orderId); // Find the order by ID
-
-  if (order) {
-    if (order.status === status) {
-      Swal.fire("ไม่สามารถเปลี่ยนสถานะ", "สถานะนี้ได้ถูกตั้งไว้แล้ว", "info");
-      return; // Do nothing if the status is the same
-    }
-
-    Swal.fire({
-      title: "ยืนยันการเปลี่ยนสถานะ",
-      text: `คุณต้องการเปลี่ยนสถานะเป็น "${status}" ใช่หรือไม่?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "ยืนยัน",
-      cancelButtonText: "ยกเลิก",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        // Update status locally first
-        order.status = status;
-        toggleMenu(orderId); // Close the dropdown menu
-
-        // Call the API to update the status on the server
-        await updatestatus(orderId, order); // Make the server request to update the status
-
-        Swal.fire("สำเร็จ!", `สถานะถูกเปลี่ยนเป็น "${status}" แล้ว`, "success");
-      }
-    });
+  if (!isMenuVisible.value[orderId]) {
+    // Reset tracking number and selected order id when closing the menu
+    trackingNumber.value = "";
+    selectedOrderId.value = null;
   }
 };
 
-// Filter configuration
-const filters = ref({
-  startDate: "",
-  endDate: "",
-  searchTerm: "", // คำค้นหา
-});
+const changeStatus = async (orderId: number, status: string) => {
+  const order = orders.value.find((order) => order.id === orderId);
+  if (!order) return;
+
+  if (order.status === status) {
+    Swal.fire("ไม่สามารถเปลี่ยนสถานะ", "สถานะนี้ได้ถูกตั้งไว้แล้ว", "info");
+    return;
+  }
+
+  if (status === "ship") {
+    // เปิด popup ให้กรอกเลขพัสดุ
+    selectedOrderId.value = orderId;
+    popupVisible.value = true;
+    return; // ยังไม่อัปเดตสถานะจนกว่าจะกด "ยืนยัน"
+  }
+
+  // ถ้าเป็นสถานะอื่น อัปเดตได้เลย
+  const result = await Swal.fire({
+    title: "ยืนยันการเปลี่ยนสถานะ",
+    text: `คุณต้องการเปลี่ยนสถานะเป็น "${status}" ใช่หรือไม่?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  });
+
+  if (result.isConfirmed) {
+    order.status = status;
+    await updatestatus(orderId, order);
+    Swal.fire("สำเร็จ!", "เปลี่ยนสถานะเรียบร้อย", "success");
+  }
+};
+
+const confirmTracking = async () => {
+  if (!trackingNumber.value.trim()) {
+    Swal.fire("กรุณาใส่เลขพัสดุ", "", "warning");
+    return;
+  }
+
+  if (selectedOrderId.value !== null) {
+    const order = orders.value.find((o) => o.id === selectedOrderId.value);
+    if (order) {
+      order.tracking_number = trackingNumber.value.trim();
+      order.status = "ship"; // ต้องเปลี่ยนเป็น 'ship' แทน 'prepare'
+
+      await updatestatus(selectedOrderId.value, order);
+      Swal.fire("สำเร็จ!", "บันทึกเลขพัสดุและเปลี่ยนสถานะเรียบร้อย", "success");
+    }
+  }
+
+  popupVisible.value = false;
+  trackingNumber.value = ""; // รีเซ็ตค่า
+};
 
 // Selected status order
 const selectedStatusOrder = ref<StatusOrder>({
   id: 1,
-  status: "ทั้งหมด",
+  name: "ทั้งหมด",
+  status: "",
 });
 
 // List of status orders
 const Statusorders = ref<StatusOrder[]>([
   {
     id: 1,
-    status: "ทั้งหมด",
+    name: "ทั้งหมด",
+    status: "",
   },
   {
     id: 2,
-    status: "รอการชำระ",
+    name: "รอการชำระ",
+    status: "pending",
   },
   {
     id: 3,
-    status: "กำลังจัดส่ง",
+    name: "เตรียมสินค้า",
+    status: "prepare",
   },
   {
     id: 4,
-    status: "จัดส่งแล้ว",
+    name: "กำลังจัดส่ง",
+    status: "ship",
   },
   {
     id: 5,
-    status: "ชำระล้มเหลว",
+    name: "จัดส่งเรียบร้อย",
+    status: "success",
+  },
+  {
+    id: 6,
+    name: "ชำระล้มเหลว",
+    status: "failed",
+  },
+  {
+    id: 7,
+    name: "ยกเลิก",
+    status: "cancelled",
   },
 ]);
 
-// Function to select a status order
 const selectStatusOrder = (statusorder: StatusOrder) => {
-  selectedStatusOrder.value = statusorder;
+  selectedStatusOrder.value = { ...statusorder };
+  console.log("เลือกสถานะ:", selectedStatusOrder.value);
+  getOrderList(); // เรียกฟังก์ชันดึงข้อมูลใหม่พร้อมกับค่า status ที่อัปเดตแล้ว
 };
 
 const loading = ref(false);
 const search = ref<string>("");
+const start = ref(null);
+const end = ref(null);
 const size = ref(8); // ทำให้เป็น ref
 const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 const orders = ref<Order[]>([]);
 const paginate = ref<{ Total: number }>({ Total: 0 });
-const Category = ref();
 
 const getOrderList = async () => {
   loading.value = true;
+
+  // แปลงค่า start และ end เป็น Unix timestamp
+  const startTimestamp = start.value
+  ? Math.floor(new Date(new Date(start.value).setHours(0, 0, 0, 0)).getTime() / 1000)
+  : 0;
+
+const endTimestamp = end.value
+  ? Math.floor(new Date(new Date(end.value).setHours(23, 59, 59, 999)).getTime() / 1000)
+  : 0;
+
+
   const param: Params = {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
     size: size.value, // ใช้ .value ในการเข้าถึง size
     search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    status: selectedStatusOrder.value.status,
+    start: startTimestamp,
+    end: endTimestamp,
   };
-
+  console.log("Start Date:", start.value);
+  console.log("End Date:", end.value);
+  console.log("Sending param:", param);
   console.log("Sending param:", param); // ตรวจสอบค่า param ที่ส่งไป
 
   await service.order
@@ -420,6 +521,7 @@ const getOrderList = async () => {
           shipment_district: r.shipment_district,
           shipment_province: r.shipment_province,
           shipment_zip_code: r.shipment_zip_code,
+          tracking_number: r.tracking_number,
         };
         orderlist.push(order);
       }
@@ -443,16 +545,13 @@ const formatDate = (dateInput: string | number) => {
   }
 
   if (isNaN(date.getTime())) return "Invalid Date"; // ตรวจสอบค่า
-  
+
   return date.toLocaleDateString("th-TH", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 };
-
-
-
 
 // ฟังก์ชันที่ใช้ในการเปลี่ยนหน้า
 const changePage = (pageNumber: number) => {
@@ -468,6 +567,9 @@ const changePage = (pageNumber: number) => {
     page: currentPage.value,
     size: size.value,
     search: search.value || "",
+    status: selectedStatusOrder.value.status,
+    start: start.value ?? 0,
+    end: end.value ?? 0,
   };
 
   getOrderList(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
@@ -476,6 +578,7 @@ const changePage = (pageNumber: number) => {
 const status = ref<UpdateStatusOrder>({
   id: 0,
   status: "",
+  tracking_number: "",
 });
 
 const updatestatus = async (orderId: number, order: any) => {
@@ -487,6 +590,7 @@ const updatestatus = async (orderId: number, order: any) => {
       const orderstatus: UpdateStatusOrder = {
         id: data.id,
         status: data.status,
+        tracking_number: data.tracking_number,
       };
       status.value = orderstatus;
     })
@@ -498,6 +602,11 @@ const updatestatus = async (orderId: number, order: any) => {
 };
 
 watch([() => currentPage.value], async () => {
+  await getOrderList();
+});
+// เพิ่ม watch สำหรับ start และ end (ให้แสดงข้อมูลใหม่เมื่อเลือกวันที่ใหม่)
+watch([start, end], async () => {
+  console.log("Start:", start.value, "End:", end.value);
   await getOrderList();
 });
 
