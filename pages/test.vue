@@ -67,6 +67,8 @@ const getOrderList = async () => {
     });
 };
 
+const logsadmin =ref<LogsAdmin>
+
 onMounted(async () => {
   await getOrderList();
 });

@@ -22,3 +22,26 @@ export interface ParamsReport {
     month: string;
     year: number;
 }
+
+//////////////////////////////////////////////////////
+
+export interface LogsAdmin {
+    id: number;
+    Admin: Admin;
+    action: string;
+    description: string;
+    created_at: number;
+  }
+
+export interface Admin {
+    id: number;
+    name: string;
+  }
+  
+export interface ParamsLogs {
+    page: number;
+    size: number;
+    search: string;
+    start: number | null; // รองรับ null;
+    end: number | null; // รองรับ null;
+}

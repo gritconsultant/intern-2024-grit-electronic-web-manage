@@ -3,11 +3,11 @@
     <canvas ref="chartCanvas"></canvas>
     <!-- ใส่ selector ในวงกลม -->
     <div class="month-selector">
-      <select v-model="selectedMonth" @change="updateChart">
+      <!-- <select v-model="selectedMonth" @change="updateChart">
         <option v-for="(month, index) in months" :key="index" :value="month">
           {{ month }}
         </option>
-      </select>
+      </select> -->
     </div>
   </div>
 </template>

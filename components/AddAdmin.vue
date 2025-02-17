@@ -222,12 +222,7 @@ const closeModal = () => {
   // resetForm();
 };
 
-// Reset the form fields
-// const resetForm = () => {
-//   admin.value = { name: "", email: "", password: "" };
-//   confirmPassword.value = "";
-//   isConfirming.value = false;
-// };
+
 
 // Method to handle form submission
 const submitForm = () => {

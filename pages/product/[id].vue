@@ -48,8 +48,8 @@
                       <option value="2">อาหาร</option>
                       <option value="1">เครื่องดื่ม</option>
                       <option value="">สมุนไพร</option>
-                      <option value="5">ผ้าและเครื่องแต่งกาย</option>
-                      <option value="4">ของใช้ ของตกแต่ง</option>
+                      <option value="">ผ้าและเครื่องแต่งกาย</option>
+                      <option value="5">ของใช้ ของตกแต่ง</option>
                     </select>
                   </div>
 

@@ -75,9 +75,11 @@
       <!-- Pagination -->
       <div class="flex justify-between items-center p-5 rounded-lg">
         <div class="text-sm text-gray-600">
-          แสดง {{ (currentPage - 1) * size + 1 }} ถึง
-          {{ Math.min(currentPage * size, paginate.Total) }}
-          จากทั้งหมด {{ paginate.Total }} รายการ
+          <div class="text-sm text-gray-600">
+            แสดง {{ (currentPage - 1) * size + 1 }} ถึง
+            {{ Math.min(currentPage * size, paginate.Total) }}
+            จากทั้งหมด {{ paginate.Total }} รายการ
+          </div>
         </div>
         <div class="flex gap-2">
           <button
@@ -98,6 +100,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -149,22 +152,27 @@ const getSaleReport = async () => {
       const data = resp.data.data;
       paginate.value = resp.data.paginate;
 
-      const reportsale: SaleReport[] = [];
-      console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        const s = data[i];
-        const report: SaleReport = {
-          OrderID: s.OrderID,
-          UserName: s.UserName,
-          ProductName: s.ProductName,
-          Amount: s.Amount,
-          Price: s.Price,
-          TotalPrice: s.TotalPrice,
-          Created_at: s.Created_at,
-        };
-        reportsale.push(report);
+      // ตรวจสอบค่าของ Total ถ้ามีข้อมูล
+      if (paginate.value.Total === 0) {
+        salereport.value = []; // หากไม่มีข้อมูลให้รีเซ็ตผลลัพธ์
+      } else {
+        const reportsale: SaleReport[] = [];
+        console.log(data);
+        for (let i = 0; i < data.length; i++) {
+          const s = data[i];
+          const report: SaleReport = {
+            OrderID: s.OrderID,
+            UserName: s.UserName,
+            ProductName: s.ProductName,
+            Amount: s.Amount,
+            Price: s.Price,
+            TotalPrice: s.TotalPrice,
+            Created_at: s.Created_at,
+          };
+          reportsale.push(report);
+        }
+        salereport.value = reportsale;
       }
-      salereport.value = reportsale;
     })
     .catch((error: any) => {
       console.error("Error fetching order data:", error);
@@ -174,22 +182,20 @@ const getSaleReport = async () => {
 
 // ฟังก์ชันที่ใช้ในการเปลี่ยนหน้า
 const changePage = (pageNumber: number) => {
-  const totalPages = Math.ceil(paginate.value.Total / size.value); // คำนวณจำนวนหน้าทั้งหมด
+  const totalPages =
+    paginate.value.Total > 0 ? Math.ceil(paginate.value.Total / size.value) : 1;
+
   if (pageNumber < 1 || pageNumber > totalPages) {
-    return; // ถ้าหน้าเกินขอบเขตให้ไม่ทำอะไร
+    return;
   }
 
-  currentPage.value = pageNumber; // เปลี่ยนหน้า
+  currentPage.value = pageNumber;
 
-  // ส่งค่า param สำหรับการเรียกข้อมูลใหม่
-  const param: ParamsReport = {
-    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
-    size: size.value, // ใช้ .value ในการเข้าถึง size
-    month: month.value, //
-    year: selectedYear.value,
-  };
+  // ลองตรวจสอบค่าของ currentPage และ paginate.Total ก่อนที่จะเรียก getSaleReport
+  console.log("เปลี่ยนหน้าเป็นหน้า:", currentPage.value);
+  console.log("Total ที่มีทั้งหมด:", paginate.value.Total);
 
-  getSaleReport(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
+  getSaleReport();
 };
 
 const formatDate = (dateInput: string | number) => {
@@ -210,20 +216,21 @@ const formatDate = (dateInput: string | number) => {
   });
 };
 
-const selectedMonth = ref("");
 
-// Watch สำหรับปี
-watch(selectedYear, (newYear) => {
+watch(selectedYear, async (newYear) => {
   console.log("📅 ปีที่เลือก:", newYear);
-  getSaleReport(); // โหลดข้อมูลใหม่เมื่อเปลี่ยนปี
+  currentPage.value = 1;
+  await getSaleReport(); // ใช้ await เพื่อให้ข้อมูลถูกโหลดเสร็จ
 });
 
-// Watch สำหรับเดือน
-watch(month, (newMonth) => {
+watch(month, async (newMonth) => {
   console.log("📅 เดือนที่เลือก:", newMonth);
-  getSaleReport(); // โหลดข้อมูลใหม่เมื่อเปลี่ยนเดือน
+  currentPage.value = 1;
+  await getSaleReport(); // ใช้ await เพื่อให้ข้อมูลถูกโหลดเสร็จ
 });
 
+
+console.log("Total:", paginate.value.Total);
 
 onMounted(async () => {
   await getSaleReport();

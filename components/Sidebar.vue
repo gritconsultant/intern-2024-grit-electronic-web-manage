@@ -40,7 +40,7 @@
 
         <!-- DropdownProduct -->
 
-          <div class="flex gap-2 text-[15px]">
+          <!-- <div class="flex gap-2 text-[15px]">
             <NuxtLink
               to="/refund"
               :class="{
@@ -56,7 +56,7 @@
                 <span class="ml-[8px]">คืนสินค้า</span>
               </div>
             </NuxtLink>
-        </div>
+        </div> -->
 
         <!-- DropdownProduct -->
         <div class="relative group">
@@ -276,7 +276,7 @@
                   การขายสินค้า
                 </li>
               </NuxtLink>
-              <NuxtLink to="/refund/report">
+              <!-- <NuxtLink to="/refund/report">
                 <li
                   class="block px-4 py-2 text-[15px] hover:bg-gray-100"
                   :class="{
@@ -285,7 +285,7 @@
                 >
                   การคืนสินค้า
                 </li>
-              </NuxtLink>
+              </NuxtLink> -->
             </ul>
           </div>
         </div>

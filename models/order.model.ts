@@ -50,6 +50,7 @@ export interface OrderRes {
   status: string;
   created_at: number;
   updated_at: number;
+ 
 }
 
 export interface Product {
@@ -74,6 +75,7 @@ export interface Payment {
   account_name: string;
   account_number: string;
   status: string;
+  date:string;
 }
 
 export interface SystemBank {

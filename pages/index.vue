@@ -60,6 +60,8 @@
 import type { Dashboard } from "~/models/report.model";
 import service from "~/service";
 
+
+const loading = ref(false);
 const dashboard = ref<Dashboard[]>([]); // ใช้ ref สำหรับ array
 
 const getDashboard = () => {
