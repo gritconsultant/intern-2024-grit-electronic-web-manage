@@ -1,4 +1,4 @@
-import type { AddBanner, ParamsLogs, ParamsReport } from "~/models/report.model";
+import type { AddBanner, ParamsBanner, ParamsCategory, ParamsLogs, ParamsReport } from "~/models/report.model";
 import { client } from "./httpClient";
 
 export const getDashBoard = () => {
@@ -8,10 +8,11 @@ export const getDashBoard = () => {
     });
 }
 
-export const getDashBoardCategory = () => {
+export const getDashBoardCategory = (params: ParamsCategory) => {
     return client({
         url: "/dashboard/category",
         method: "GET",
+        params,
     });
 }
 
@@ -33,10 +34,11 @@ export const getListLogs = (params : ParamsLogs) => {
 }
 
 
-export const getBanner = () => {
+export const getBanner = (params: ParamsBanner) => {
     return client({
         url: "/banner",
         method: "GET",
+        params,
     });
 }
 

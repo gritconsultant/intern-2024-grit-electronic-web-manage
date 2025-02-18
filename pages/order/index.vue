@@ -497,7 +497,7 @@ const selectStatusOrder = (statusorder: StatusOrder) => {
 };
 
 const loading = ref(false);
-const search = ref<string>("z");
+const search = ref<string>("");
 const start = ref(null);
 const end = ref(null);
 const size = ref(8); // ทำให้เป็น ref

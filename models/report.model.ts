@@ -66,3 +66,8 @@ export interface Banner {
 export interface AddBanner {
   banner: string;
 }
+
+export interface ParamsBanner {
+  page: number;
+  size: number;
+}
