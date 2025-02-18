@@ -164,18 +164,18 @@
                   class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-blue-30 border-blue-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
-                ชำระเงินแล้ว
+                  ชำระเงินแล้ว
                 </div>
                 <div
                   v-else-if="order.status === 'prepare'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
+                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-slate-50 border-slate-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   เตรียมสินค้า
                 </div>
                 <div
                   v-else-if="order.status === 'ship'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
+                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   กำลังจัดส่ง
@@ -244,28 +244,28 @@
             </th>
           </tr>
           <tr v-if="orders.length === 0">
-            <td colspan="6" class="text-center text-[30px]  py-4 text-gray-500">
-              ไม่มีข้อมูลคำสั่งซื้อ
+            <td colspan="6" class="absolute left-[700px] top-[300px]">
+              <svg
+                aria-hidden="true"
+                class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                viewBox="0 0 100 101"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentFill"
+                />
+              </svg>
             </td>
           </tr>
         </tbody>
-        <div v-else class="absolute left-[600px] top-[200px]">
-          <svg
-          aria-hidden="true"
-          class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-          viewBox="0 0 100 101"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-            fill="currentColor"
-          />
-          <path
-            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-            fill="currentFill"
-          />
-        </svg>
+        <div v-else class="absolute left-[850px] top-[300px]">
+          ไม่มีข้อมูลคำสั่งซื้อ
         </div>
 
         <!-- Popup Tracking Number -->
@@ -274,23 +274,25 @@
           class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
         >
           <div class="bg-white p-5 rounded shadow-lg">
-            <h3 class="text-lg font-bold">กรอกเลขพัสดุ</h3>
+            <h3 class="text-lg font-bold flex justify-center mb-2">
+              กรอกเลขพัสดุ
+            </h3>
             <input
               type="text"
               v-model="trackingNumber"
-              class="border p-2 w-full"
+              class="border p-2 w-full rounded-lg"
               placeholder="ใส่เลขพัสดุ"
             />
-            <div class="flex justify-end mt-4">
+            <div class="flex justify-center mt-4">
               <button
                 @click="confirmTracking"
-                class="bg-blue-500 text-white px-4 py-2 rounded"
+                class="bg-blue-500 w-[60px] text-white p-2 rounded"
               >
                 ยืนยัน
               </button>
               <button
                 @click="popupVisible = false"
-                class="ml-2 bg-gray-300 px-4 py-2 rounded"
+                class="ml-2 bg-gray-300 w-[60px] p-2 rounded"
               >
                 ปิด
               </button>
@@ -342,6 +344,15 @@ import type {
 import Swal from "sweetalert2";
 import type { Params } from "~/models/order.model";
 import service from "~/service";
+
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
 
 const isMenuVisible = ref<Record<number, boolean>>({}); // Store visibility state per order
 const popupVisible = ref(false);
@@ -395,9 +406,8 @@ const changeStatus = async (orderId: number, status: string) => {
     await updatestatus(orderId, order);
     Swal.fire("สำเร็จ!", "เปลี่ยนสถานะเรียบร้อย", "success");
 
-
     // โหลดข้อมูลคำสั่งซื้อใหม่
-    getOrderList(); 
+    getOrderList();
   }
 };
 
@@ -414,12 +424,19 @@ const confirmTracking = async () => {
       order.status = "ship"; // ต้องเปลี่ยนเป็น 'ship' แทน 'prepare'
 
       await updatestatus(selectedOrderId.value, order);
-      Swal.fire("สำเร็จ!", "บันทึกเลขพัสดุและเปลี่ยนสถานะเรียบร้อย", "success");
+      Swal.fire(
+        "สำเร็จ!",
+        "บันทึกเลขพัสดุและเปลี่ยนสถานะเรียบร้อย",
+        "success"
+      ).then(() => {
+        window.location.reload(); // รีเฟรชหน้าหลังจากกด OK
+      });
     }
   }
 
   popupVisible.value = false;
   trackingNumber.value = ""; // รีเซ็ตค่า
+  // โหลดข้อมูลคำสั่งซื้อใหม่
 };
 
 // Selected status order
@@ -443,26 +460,31 @@ const Statusorders = ref<StatusOrder[]>([
   },
   {
     id: 3,
+    name: "ชำระแล้ว",
+    status: "paid",
+  },
+  {
+    id: 4,
     name: "เตรียมสินค้า",
     status: "prepare",
   },
   {
-    id: 4,
+    id: 5,
     name: "กำลังจัดส่ง",
     status: "ship",
   },
   {
-    id: 5,
+    id: 6,
     name: "จัดส่งเรียบร้อย",
     status: "success",
   },
   {
-    id: 6,
+    id: 7,
     name: "ชำระล้มเหลว",
     status: "failed",
   },
   {
-    id: 7,
+    id: 8,
     name: "ยกเลิก",
     status: "cancelled",
   },
@@ -475,7 +497,7 @@ const selectStatusOrder = (statusorder: StatusOrder) => {
 };
 
 const loading = ref(false);
-const search = ref<string>("");
+const search = ref<string>("z");
 const start = ref(null);
 const end = ref(null);
 const size = ref(8); // ทำให้เป็น ref
@@ -488,13 +510,16 @@ const getOrderList = async () => {
 
   // แปลงค่า start และ end เป็น Unix timestamp
   const startTimestamp = start.value
-  ? Math.floor(new Date(new Date(start.value).setHours(0, 0, 0, 0)).getTime() / 1000)
-  : 0;
+    ? Math.floor(
+        new Date(new Date(start.value).setHours(0, 0, 0, 0)).getTime() / 1000
+      )
+    : 0;
 
-const endTimestamp = end.value
-  ? Math.floor(new Date(new Date(end.value).setHours(23, 59, 59, 999)).getTime() / 1000)
-  : 0;
-
+  const endTimestamp = end.value
+    ? Math.floor(
+        new Date(new Date(end.value).setHours(23, 59, 59, 999)).getTime() / 1000
+      )
+    : 0;
 
   const param: Params = {
     page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
@@ -624,8 +649,6 @@ watch([start, end], async () => {
   console.log("Start:", start.value, "End:", end.value);
   await getOrderList();
 });
-
-
 
 onMounted(async () => {
   await getOrderList();

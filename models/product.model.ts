@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   price: number;
   stock: number;
- image: string;
+  image: string;
   category: Category;
   Review: Review[];
   is_active: boolean;
@@ -77,6 +77,7 @@ export interface Category {
   name: string;
   is_active: boolean;
   image: string;
+  TotalProduct:number;
 }
 
 export interface ImageCategories {

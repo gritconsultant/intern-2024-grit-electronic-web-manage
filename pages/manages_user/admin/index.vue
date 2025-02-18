@@ -1,5 +1,5 @@
 <template>
-  <div class="defaultpages flex flex-col gap-4 p-6 bg-gray-50">
+  <div class="defaultpages flex flex-col gap-2 p-6 bg-gray-50">
     <!-- Header Section -->
     <div
       class="flex items-center justify-between bg-white rounded-lg dropshadowbox pl-[10px] h-[10%]"
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Search and Add Admin Section -->
-    <div class="flex justify-between gap-2 w-full">
+    <div class="flex justify-between gap-2 w-full mt-8">
       <!-- Search Box -->
       <div class="w-[40%]">
         <!-- Search Bar -->
@@ -81,7 +81,7 @@
             </td>
           </tr>
         </tbody>
-        <div v-else class="absolute left-[600px] top-[200px]">
+        <div v-else class="absolute left-[850px] top-[300px]">
           <svg
           aria-hidden="true"
           class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -147,6 +147,14 @@ import Swal from "sweetalert2";
 import type { Params } from "~/models/client.model";
 import type { Admin } from "~/models/user.model"; // ใช้ AdminUpdate
 import service from "~/service";
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
 
 const route = useRoute();
 
@@ -162,25 +170,24 @@ const Category = ref();
 const getAdminlist = async () => {
   loading.value = true;
   const param: Params = {
-    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
-    size: size.value, // ใช้ .value ในการเข้าถึง size
-    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    page: currentPage.value,
+    size: size.value,
+    search: search.value || "",
     category: Category.value,
   };
 
   await service.user
     .getAdmintList(param)
     .then((resp: any) => {
+      console.log("Response from API:", resp); // แสดงข้อมูลตอบกลับจาก API
       const data = resp.data.data;
       paginate.value = resp.data.paginate;
-      console.log("Data from API:", data); // ตรวจสอบข้อมูลทั้งหมดที่ได้จาก API
-
       const adminlist: Admin[] = [];
       for (let i = 0; i < data.length; i++) {
         const a = data[i];
         if (!a.id || typeof a.id !== "number") {
-          console.error("Invalid admin data:", a); // แสดงข้อมูล admin ที่ไม่มี id ถูกต้อง
-          continue; // ข้าม admin ที่ไม่มี id
+          console.error("Invalid admin data:", a);
+          continue;
         }
         const admin: Admin = {
           id: a.id,
@@ -203,24 +210,15 @@ const getAdminlist = async () => {
     });
 };
 
+
 const changePage = (pageNumber: number) => {
-  const totalPages = Math.ceil(paginate.value.Total / size.value); // คำนวณจำนวนหน้าทั้งหมด
-  if (pageNumber < 1 || pageNumber > totalPages) {
-    return; // ถ้าหน้าเกินขอบเขตให้ไม่ทำอะไร
-  }
+  const totalPages = Math.ceil(paginate.value.Total / size.value);
+  if (pageNumber < 1 || pageNumber > totalPages) return;
 
-  currentPage.value = pageNumber; // เปลี่ยนหน้า
-
-  // ส่งค่า param สำหรับการเรียกข้อมูลใหม่
-  const param: Params = {
-    page: currentPage.value,
-    size: size.value,
-    search: search.value || "",
-    category: Category.value,
-  };
-
-  getAdminlist(); // รีเฟรชข้อมูลเมื่อเปลี่ยนหน้า
+  currentPage.value = pageNumber;
+  getAdminlist(); // รีเฟรชข้อมูลเมื่อหน้าเปลี่ยน
 };
+
 
 const deleteAdmin = async (id: number) => {
   if (id === undefined || id === null) {
@@ -257,23 +255,18 @@ const closeForm = () => {
   showEditAdmin.value = false;
 };
 
-// เมื่อมีการอัปเดตประเภทสินค้า จะเรียกฟังก์ชัน categoryUpdated
-const handleAdminUpdate = (updatedAdmin: Admin) => {
-  adminUpdated(updatedAdmin);
-  window.location.reload(); // รีเฟรชทั้งหน้า
+const handleAdminAdded = async (newAdmin: Admin) => {
+  admins.value.push(newAdmin); // เพิ่ม admin ใหม่ใน list
+  // ใช้ window.location.reload() เพื่อรีเฟรชหน้า
+  window.location.reload(); 
 };
 
-const handleAdminAdded = () => {
-  window.location.reload();
-};
-
-const adminUpdated = (updatedAdmin: Admin) => {
-  // ค้นหาประเภทสินค้าที่มี id ตรงกับข้อมูลที่อัปเดต
-  const index = admins.value.findIndex(
-    (category) => category.id === updatedAdmin.id
-  );
+const handleAdminUpdate = async (updatedAdmin: Admin) => {
+  const index = admins.value.findIndex(admin => admin.id === updatedAdmin.id);
   if (index !== -1) {
-    admins.value[index] = updatedAdmin; // แทนที่ข้อมูลประเภทสินค้าตัวเก่าด้วยข้อมูลที่อัปเดต
+    admins.value[index] = updatedAdmin; // อัปเดตข้อมูล admin
+    // รีเฟรชหน้าหลังจากอัปเดต
+    window.location.reload();
   }
 };
 
@@ -312,12 +305,14 @@ const toggleModal = (type: "add", state = true) => {
 };
 
 
-
 onMounted(async () => {
-  await getAdminlist();
-  const adminId = route.params.id; // เข้าถึงค่า adminId จาก params
-  console.log("Admin ID from route:", adminId); // แสดงค่าใน console เพื่อตรวจสอบว่าได้ค่าถูกต้องหรือไม่
+  await getAdminlist(); 
+  if (route.params.id) {
+    const adminId = route.params.id; // เข้าถึงค่า adminId จาก params
+    console.log("Admin ID from route:", adminId);
+  }
 });
+
 </script>
 
 <style scoped>

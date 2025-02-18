@@ -1,9 +1,9 @@
 <template>
   <div class="defaultpages flex flex-col gap-4 p-6">
     <div
-      class="flex items-center justify-between pl-[10px] bg-white dropshadowbox rounded-lg h-[8%]"
+      class="flex items-center justify-between pl-[10px] bg-white dropshadowbox rounded-lg h-[10%] p-5"
     >
-      <h1 class="text-2xl font-bold">รายงานการทำงาน</h1>
+      <h1 class="text-2xl font-bold">บันทึกการทำงานของระบบ</h1>
     </div>
     <div class="flex gap-4 flex-1 items-end h-full">
       <!-- Search Bar -->
@@ -65,7 +65,7 @@
             <th class="w-[40%] text-start py-2">รายละเอียด</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="!loading">
           <tr
             v-for="(logs, index) in logsadmin"
             :key="index"
@@ -81,6 +81,25 @@
             <td class="w-[40%] text-start py-3">{{ logs.description }}</td>
           </tr>
         </tbody>
+        <div v-else class="absolute left-[750px] top-[300px]">
+          <svg
+                aria-hidden="true"
+                class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                viewBox="0 0 100 101"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentFill"
+                />
+              </svg>
+        </div>
+        
       </table>
 
       <!-- Pagination -->
@@ -120,18 +139,27 @@
 <script lang="ts" setup>
 import service from "~/service";
 import type { LogsAdmin, ParamsLogs } from "~/models/report.model";
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
 
 const loading = ref(false);
 const search = ref<string>("");
 const start = ref(null);
 const end = ref(null);
-const size = ref(10); // ทำให้เป็น ref
+const size = ref(11); // ทำให้เป็น ref
 const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 const paginate = ref<{ Total: number }>({ Total: 0 });
 
 const logsadmin = ref<LogsAdmin[]>([]);
 
 const getLogsAdmin = async () => {
+  loading.value = true;
   // แปลงค่า start และ end เป็น Unix timestamp
   const startTimestamp = start.value
     ? Math.floor(
@@ -154,29 +182,37 @@ const getLogsAdmin = async () => {
   };
   console.log("Sending param:", param);
 
-  await service.report.getListLogs(param).then((resp: any) => {
-    const data = resp.data?.data || [];
-    // ตรวจสอบว่า paginate มีอยู่ใน resp.data หรือไม่
-    if (resp.data?.paginate) {
-      paginate.value = resp.data.paginate;
-    } else {
-      paginate.value = { Total: 0 }; // กำหนดเป็นค่า default ถ้าไม่มีข้อมูล
-    }
+  await service.report
+    .getListLogs(param)
+    .then((resp: any) => {
+      const data = resp.data?.data || [];
+      // ตรวจสอบว่า paginate มีอยู่ใน resp.data หรือไม่
+      if (resp.data?.paginate) {
+        paginate.value = resp.data.paginate;
+      } else {
+        paginate.value = { Total: 0 }; // กำหนดเป็นค่า default ถ้าไม่มีข้อมูล
+      }
 
-    const logsAdminData: LogsAdmin[] = [];
-    for (let i = 0; i < data.length; i++) {
-      const l = data[i];
-      const log: LogsAdmin = {
-        id: l.id,
-        Admin: { id: l.Admin.id, name: l.Admin.name },
-        action: l.action,
-        description: l.description,
-        created_at: l.created_at,
-      };
-      logsAdminData.push(log); // Add the constructed log to the array
-    }
-    logsadmin.value = logsAdminData;
-  });
+      const logsAdminData: LogsAdmin[] = [];
+      for (let i = 0; i < data.length; i++) {
+        const l = data[i];
+        const log: LogsAdmin = {
+          id: l.id,
+          Admin: { id: l.Admin.id, name: l.Admin.name },
+          action: l.action,
+          description: l.description,
+          created_at: l.created_at,
+        };
+        logsAdminData.push(log); // Add the constructed log to the array
+      }
+      logsadmin.value = logsAdminData;
+    })
+    .catch((error: any) => {
+      console.error("Error fetching order data:", error);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 const changePage = async (pageNumber: number) => {

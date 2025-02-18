@@ -1,7 +1,7 @@
 <template>
   <div class="defaultpages p-6 pl-7" v-if="order">
     <!-- Order Header -->
-    <div class="bg-white rounded-xl p-4 flex flex-col dropshadowbox">
+    <div class="bg-white rounded-lg p-4 flex flex-col dropshadowbox">
       <h1 class="text-3xl font-semibold text-gray-800">
         คำสั่งซื้อ #{{ order.id }}
       </h1>
@@ -11,9 +11,9 @@
       </h5>
     </div>
 
-    <div class="flex gap-8 justify-center w-full h-[80%] mt-8">
+    <div class="flex gap-8 justify-center w-full h-[80%] mt-8" v-if="!loading">
       <!-- Product Details Section -->
-      <div class="w-[70%] bg-white rounded-xl dropshadowbox p-6">
+      <div class="w-[70%] bg-white rounded-lg dropshadowbox p-6">
         <h3 class="text-xl font-semibold text-gray-800 mb-4">ผลิตภัณฑ์</h3>
         <div class="flex flex-col justify-between h-[95%]">
           <table class="w-full h-[90%]">
@@ -27,7 +27,7 @@
             </thead>
             <tbody class="flex flex-col h-full w-full mt-2 overflow-y-scroll">
               <tr
-                class="w-full text-sm font-normal text-gray-600"
+                class="w-full text-sm font-normal text-gray-600 border-b-[1px]"
                 v-for="(product, index) in order.products"
                 :key="index"
               >
@@ -75,40 +75,43 @@
       </div>
 
       <!-- Shipping Information Section -->
-      <div class="w-[30%] flex flex-col gap-6 items-center">
-        <div class="w-full bg-white rounded-xl dropshadowbox p-6">
+      <div class="w-[30%]   flex flex-col gap-6 items-center">
+        <div class=" w-full h-[35%] bg-white rounded-lg dropshadowbox p-6">
           <h3 class="text-xl font-semibold text-center text-gray-800 mb-6">
             ข้อมูลการจัดส่ง
           </h3>
-          <div class="flex flex-col gap-2">
-            <p class="text-sm text-gray-700">
+          <div class="flex flex-col gap-4">
+            <p class="text-[15px] font-medium ">
               <span class="mr-[10px]">ชื่อ:</span>
               {{ order.Shipment.firstname }} {{ order.Shipment.lastname }}
             </p>
-            <p class="text-sm text-gray-700">
+            <p class="text-[15px] font-medium ">
               ที่อยู่: {{ order.Shipment.address }}
               {{ order.Shipment.district }} {{ order.Shipment.sub_district }}
               {{ order.Shipment.province }}
               {{ order.Shipment.zip_code }}
             </p>
-            <p class="text-sm text-gray-700">
+            <p class="text-[15px] font-medium ">
               เบอร์โทรศัพท์: {{ order.User.phone }}
+            </p>
+            <p class="text-[15px] font-medium ">
+              ติดตามสินค้า: {{ order.tracking_number }}
             </p>
           </div>
         </div>
 
-        <div class="w-full bg-white rounded-xl dropshadowbox p-6">
+        <div class="w-full bg-white rounded-lg dropshadowbox p-6">
           <h3 class="text-xl font-semibold text-center text-gray-800 mb-6">
             ข้อมูลการการชำระ
           </h3>
-          <div class="flex flex-col justify-center items-center   gap-2">
-              <span class="mr-[10px]">วันเ/วลาการโอน </span>
-              {{ formatDateTime(order.Payment.date) }}
+          <div class="flex flex-col justify-center items-center gap-2">
+            <span class="mr-[10px]">วันเ/วลาการโอน </span>
+            {{ formatDateTime(order.Payment.date) }}
           </div>
         </div>
 
         <!-- Order Status Section -->
-        <div class="w-full bg-white rounded-xl dropshadowbox p-6">
+        <div class="w-full bg-white rounded-lg dropshadowbox p-6">
           <h3 class="text-xl font-semibold text-center text-gray-800 mb-5">
             สถานะคำสั่งซื้อ
           </h3>
@@ -121,15 +124,22 @@
               รอการชำระ
             </div>
             <div
+              v-else-if="order.status === 'paid'"
+              class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-blue-30 border-blue-400 text-center font-medium"
+              @click="toggleMenu(order.id)"
+            >
+              ชำระเงินแล้ว
+            </div>
+            <div
               v-else-if="order.status === 'prepare'"
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
+              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-slate-50 border-slate-400 text-center font-medium"
               @click="toggleMenu(order.id)"
             >
               เตรียมสินค้า
             </div>
             <div
               v-else-if="order.status === 'ship'"
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
+              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50  border-orange-400  text-center font-medium"
               @click="toggleMenu(order.id)"
             >
               กำลังจัดส่ง
@@ -190,29 +200,47 @@
         </div>
       </div>
     </div>
+    <div v-else class="absolute left-[1000px] top-[550px]">
+      <svg
+        aria-hidden="true"
+        class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        viewBox="0 0 100 101"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor"
+        />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill"
+        />
+      </svg>
+    </div>
     <!-- Popup Tracking Number -->
     <div
       v-if="popupVisible"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
       <div class="bg-white p-5 rounded shadow-lg">
-        <h3 class="text-lg font-bold">กรอกเลขพัสดุ</h3>
+        <h3 class="text-lg font-bold flex justify-center mb-2 ">กรอกเลขพัสดุ</h3>
         <input
           type="text"
           v-model="trackingNumber"
-          class="border p-2 w-full"
+          class="border p-2 w-full rounded-lg"
           placeholder="ใส่เลขพัสดุ"
         />
-        <div class="flex justify-end mt-4">
+        <div class="flex justify-center mt-4">
           <button
             @click="confirmTracking"
-            class="bg-blue-500 text-white px-4 py-2 rounded"
+            class="bg-blue-500 w-[60px] text-white p-2  rounded"
           >
             ยืนยัน
           </button>
           <button
             @click="popupVisible = false"
-            class="ml-2 bg-gray-300 px-4 py-2 rounded"
+            class="ml-2 bg-gray-300 w-[60px] p-2 rounded"
           >
             ปิด
           </button>
@@ -227,7 +255,17 @@ import type { OrderRes, UpdateStatusOrder } from "~/models/order.model";
 import Swal from "sweetalert2";
 import service from "~/service";
 
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
+
 const route = useRoute();
+const loading = ref(false);
 
 const order = ref<OrderRes>({
   id: 0,
@@ -253,7 +291,7 @@ const order = ref<OrderRes>({
     account_name: "",
     account_number: "",
     status: "",
-    date:"",
+    date: "",
   },
   SystemBank: {
     id: 0,
@@ -282,6 +320,7 @@ const order = ref<OrderRes>({
 });
 
 const getOrderById = async () => {
+  loading.value = true;
   await service.order
     .getOrderById(route.params.id)
     .then((resp: any) => {
@@ -321,7 +360,7 @@ const getOrderById = async () => {
           account_name: data.Payment?.account_name ?? "",
           account_number: data.Payment?.account_number ?? "",
           status: data.Payment?.status ?? "",
-          date: data.Payment?.date?? "",
+          date: data.Payment?.date ?? "",
         },
         SystemBank: {
           id: data.SystemBank?.id ?? 0, // เปลี่ยนจาก `data.system_bank` เป็น `data.SystemBank`
@@ -353,7 +392,9 @@ const getOrderById = async () => {
     .catch((error: any) => {
       console.log(error.response);
     })
-    .finally(() => {});
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 const status = ref<UpdateStatusOrder>({
@@ -449,7 +490,6 @@ const confirmTracking = async () => {
   trackingNumber.value = ""; // Reset tracking number
 };
 
-
 const formatDateTime = (dateInput: string | number) => {
   let date: Date;
 
@@ -461,16 +501,21 @@ const formatDateTime = (dateInput: string | number) => {
 
   if (isNaN(date.getTime())) return "ไม่มีข้อมูล"; // ตรวจสอบค่า
 
-  return date.toLocaleDateString("th-TH", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }) + ` เวลา ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")} น.`;
+  return (
+    date.toLocaleDateString("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }) +
+    ` เวลา ${date.getHours().toString().padStart(2, "0")}:${date
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")} น.`
+  );
 };
 
 // ตัวอย่างการใช้งาน
 console.log(formatDateTime("2025-02-13T12:37")); // 13 กุมภาพันธ์ 2025 เวลา 12:37 น.
-
 
 const updatestatus = async (orderId: number, order: any) => {
   await service.order

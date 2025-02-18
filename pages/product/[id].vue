@@ -45,8 +45,8 @@
                       @change="product.category_id = Number(product.category_id)"
                     >
                       <option value="">กรุณาเลือกประเภท</option>
-                      <option value="2">อาหาร</option>
-                      <option value="1">เครื่องดื่ม</option>
+                      <option value="1">อาหาร</option>
+                      <option value="">เครื่องดื่ม</option>
                       <option value="">สมุนไพร</option>
                       <option value="">ผ้าและเครื่องแต่งกาย</option>
                       <option value="5">ของใช้ ของตกแต่ง</option>
@@ -187,6 +187,16 @@ import type {
 } from "~/models/product.model";
 import service from "~/service";
 
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
+
+
 const route = useRoute();
 
 const product = ref<ProductUpdate>({
@@ -211,6 +221,7 @@ const productRes = ref<ProductRes>({
   is_active: true,
   image: "",
 });
+
 
 const getProductById = async () => {
   await service.product

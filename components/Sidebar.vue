@@ -1,7 +1,7 @@
 <template>
   <!-- Desktop -->
   <div
-    class="w-[220px] h-full border-r-[1px] bg-white border-gray-400 "
+    class="w-[230px] h-full border-r-[1px] bg-white border-gray-400 "
   >
     <div class="flex flex-col">
       <!-- menu -->

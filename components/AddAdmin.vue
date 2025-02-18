@@ -141,6 +141,7 @@ const addAdmin = async () => {
           text: "เพิ่มผู้ดูแล",
           icon: "success",
         }).then(() => {
+          window.location.reload();
           emit("close"); // ปิดฟอร์มหลังจากแสดงสำเร็จ
         });
       }
@@ -184,8 +185,6 @@ const props = defineProps({
 // Emits for communication
 const emit = defineEmits(["close", "addAdmin"]);
 
-
-
 // Confirm password model
 const confirmPassword = ref("");
 
@@ -221,8 +220,6 @@ const closeModal = () => {
   emit("close");
   // resetForm();
 };
-
-
 
 // Method to handle form submission
 const submitForm = () => {

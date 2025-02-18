@@ -4,7 +4,7 @@ import { useIndexStore } from "~/store/main";
 const store = useIndexStore();
 
 export const verify = async () => {
-    await service.user.getUserInfo()
+    await service.user.getAdminInfo()
     .then((resp: any) => {
       const data = resp.data.data;
       console.log(data.ID);

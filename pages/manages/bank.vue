@@ -132,7 +132,7 @@
         </button>
       </div>
     </div>
-    <div v-else class="absolute left-[600px] top-[200px]">
+    <div v-else class="absolute left-[1000px] top-[500px]">
       <svg
           aria-hidden="true"
           class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -158,9 +158,17 @@
 import Swal from "sweetalert2";
 import type { BankRes, BankUpdate } from "~/models/order.model";
 import service from "~/service";
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
 
 const route = useRoute();
-const loading = ref(false);
+const loading = ref<boolean>(false);
 
 const bank = ref<BankUpdate>({
   id: 0,
@@ -275,6 +283,7 @@ const confirmBank = () => {
       "warning"
     );
   }
+  
 };
 
 const isValidUrl = (url: string) => {
@@ -284,22 +293,8 @@ const isValidUrl = (url: string) => {
 
 // Handle file input change (image)
 const imageUrl = ref<string | null>(null);
-const fileInput = ref<HTMLInputElement | null>(null);
 
-// Handle file input change (image)
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      imageUrl.value = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  } else {
-    imageUrl.value = target.value; // อัปเดตกับ URL ที่ใส่ใน input text
-  }
-};
+
 
 // ฟังก์ชันบันทึกข้อมูล
 const saveData = () => {
@@ -314,7 +309,9 @@ const saveData = () => {
     if (result.isConfirmed) {
       try {
         await updateBank(); // เรียกใช้ฟังก์ชันอัปเดตข้อมูล
-        Swal.fire("สำเร็จ!", "ข้อมูลถูกบันทึกเรียบร้อย", "success");
+        Swal.fire("สำเร็จ!", "ข้อมูลถูกบันทึกเรียบร้อย", "success").then(() => {
+          window.location.reload(); // รีเฟรชหน้าหลังจากกด OK
+        });
       } catch (error) {
         console.error("Error saving bank data:", error);
         Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้", "error");

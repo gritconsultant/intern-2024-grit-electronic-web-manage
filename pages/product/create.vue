@@ -179,6 +179,15 @@ import type {
 } from "~/models/product.model";
 import service from "~/service";
 
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
+
 const Category = ref();
 
 const product = ref<ProductCreate>({
@@ -335,6 +344,7 @@ const getCategorylist = async () => {
           name: c.name,
           is_active: c.is_active,
           image: c.image,
+          TotalProduct: c.TotalProduct
         };
         categoryList.push(category);
       }
@@ -380,6 +390,7 @@ const getProductList = async () => {
             name: e.category?.name ?? "",
             is_active: e.category?.is_active ?? true,
             image: e.category?.image ?? [], // Default to empty string if category name is missing
+            TotalProduct: e.category?.TotalProduct?? 0, // Default to 0 if category name is missing
           },
           Review:
             e.Review?.map((r: any) => ({

@@ -45,7 +45,7 @@
           class="bg-slate-50 flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
         >
           <img
-          v-if="category.image && isValidUrl(category.image)"
+            v-if="category.image && isValidUrl(category.image)"
             :src="category.image"
             alt="Preview"
             class="w-[400px] h-[400px] rounded-[5px] object-cover"
@@ -174,7 +174,19 @@ const confirm = () => {
     cancelButtonText: "ยกเลิก",
   }).then(async (result) => {
     if (result.isConfirmed) {
-      await updateCategory();
+      try {
+        await updateCategory(); // อัปเดตข้อมูลประเภทสินค้า
+        Swal.fire({
+          title: "สำเร็จ!",
+          text: "ข้อมูลประเภทสินค้าถูกแก้ไขแล้ว",
+          icon: "success",
+          confirmButtonText: "ตกลง",
+        }).then(() => {
+          window.location.reload(); // รีเฟรชหน้าหลังจากกด "ตกลง"
+        });
+      } catch (error) {
+        Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถแก้ไขข้อมูลได้", "error");
+      }
     }
   });
   emit("close");
@@ -205,27 +217,6 @@ const isValidUrl = (url: string) => {
 const imageUrl = ref<string | null>(null);
 
 const fileInput = ref<HTMLInputElement | null>(null);
-
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      category.value.image = e.target?.result as string;
-      imageUrl.value = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
-};
-
-const clearImage = () => {
-  imageUrl.value = null;
-  category.value.image = ""; // ลบค่าของ image_categories
-  if (fileInput.value) {
-    fileInput.value.value = ""; // ลบค่าใน input file
-  }
-};
 
 onMounted(() => {
   // ดึงข้อมูลเมื่อ component ถูกโหลด

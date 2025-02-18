@@ -1,13 +1,13 @@
 <template>
   <div class="chart-container">
     <canvas ref="chartCanvas"></canvas>
-    <!-- ใส่ selector ในวงกลม -->
+    <!-- Update selector position and shape -->
     <div class="month-selector">
-      <!-- <select v-model="selectedMonth" @change="updateChart">
+      <select v-model="selectedMonth" @change="updateChart">
         <option v-for="(month, index) in months" :key="index" :value="month">
           {{ month }}
         </option>
-      </select> -->
+      </select>
     </div>
   </div>
 </template>
@@ -32,6 +32,7 @@ const props = defineProps<{
 
 // Local states
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
+
 const selectedMonth = ref("January"); // Initial month
 const months = ref([
   "January",
@@ -62,8 +63,26 @@ const updateChart = () => {
 
 onMounted(() => {
   if (chartCanvas.value) {
-    chartCanvas.value.width = 600;
-    chartCanvas.value.height = 600;
+    chartCanvas.value.width = 500;
+    chartCanvas.value.height = 500;
+
+    // สร้างสีสำหรับ backgroundColor โดยการใช้ฟังก์ชัน
+    const generateColors = (count: number) => {
+      const colors = [];
+      const baseColors = [
+        "#EF4444", "#3B82F6", "#FBBF24", "#10B981", "#8B5CF6",
+        "#F472B6", "#6B7280", "#9333EA", "#F59E0B", "#34D399", // เพิ่มสีที่สามารถใช้
+      ];
+      
+      for (let i = 0; i < count; i++) {
+        colors.push(baseColors[i % baseColors.length]);
+      }
+      return colors;
+    };
+
+    // จำนวนสีจะถูกกำหนดตามจำนวนข้อมูลที่ส่งมา
+    const salesDataCount = Object.keys(props.salesData).length;
+    const chartColors = generateColors(salesDataCount);
 
     chartInstance = new ChartJS(chartCanvas.value, {
       type: "doughnut",
@@ -71,27 +90,23 @@ onMounted(() => {
         labels: Object.keys(props.salesData),
         datasets: [
           {
-            label: "Sales",
+            label: "ยอดขาย",
             data: Object.values(props.salesData),
-            backgroundColor: [
-              "#EF4444",
-              "#3B82F6",
-              "#FBBF24",
-              "#10B981",
-              "#8B5CF6",
-            ],
+            backgroundColor: chartColors, // ใช้สีที่ถูกคำนวณ
             hoverOffset: 10,
+            
           },
         ],
       },
       options: {
-        responsive: false,
+        responsive: true,
         maintainAspectRatio: false,
         cutout: "50%", // เพิ่มรูตรงกลาง
       },
     });
   }
 });
+
 
 // Watch for changes to the selected month and update the chart accordingly
 watch(selectedMonth, () => {
@@ -102,93 +117,53 @@ watch(selectedMonth, () => {
 <style scoped>
 .chart-container {
   position: relative;
-  max-width: 800px;
-  margin: 0 auto;
+  width: 700px; /* เพิ่มขนาด max-width ให้ใหญ่ขึ้น */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 50px; /* เพิ่มระยะห่างด้านบน */
+  height: 650px; /* เพิ่มความสูง */
 }
 
+
 canvas {
-  width: 600px;
-  height: 600px;
+  width: 100%;
+  height: auto;
+  max-width: 500px; /* Adjusted for better fit */
+  z-index: 1; /* Make sure canvas stays behind */
 }
 
 .month-selector {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 100; /* ตั้งค่าให้ selector อยู่เหนือกราฟ */
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.7
-  ); /* เพิ่มพื้นหลังให้ selector เห็นชัดขึ้น */
-  padding: 20px;
-  border-radius: 50%; /* เปลี่ยนให้เป็นวงกลม */
+  top: 0px; /* ปรับระยะห่างจากด้านบน */
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px; /* ลดขนาด padding */
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 120px;
-  height: 120px;
+  width: 180px; /* ลดขนาด width */
+  box-shadow: 0px 0px 2px rgb(190, 190, 190);
 }
 
 select {
-  font-size: 1.2em;
-  padding: 10px; /* เพิ่ม padding */
+  font-size: 1em; /* ลดขนาดตัวอักษร */
+  padding: 8px; /* ลดขนาด padding ใน select */
   border: none;
   outline: none;
-  background-color: orange;
-  text-align: center; /* กำหนดความกว้างให้มากขึ้น */
-  height: 250px; /* ปรับความสูงให้เหมาะสม */
-  display: inline-block; /* ใช้ inline-block เพื่อให้สามารถปรับขนาดได้ */
-  margin-top: 33px;
-  border-radius: 100%;
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
-  min-width: 250px; /* เพิ่ม min-width ให้มีความยืดหยุ่น */
-  max-width: 100%; /* ใช้ max-width 100% เพื่อให้มันปรับตามพื้นที่ */
-}
-.dropdown {
-  position: absolute;
-  top: 100%; /* แสดงผลทันทีด้านล่างของ custom-select */
-  left: 50%;
-  transform: translateX(-50%);
+  background-color: #ffffff;
+  text-align: center; /* จัดข้อความใน select ให้ตรงกลาง */
+  height: 35px; /* ลดความสูง */
+  display: inline-block;
+  border-radius: 5px;
   width: 100%;
-  background-color: #f7f7f7;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 100; /* ให้ dropdown อยู่เหนือเนื้อหาอื่น */
+  color: rgb(1, 1, 1);
 }
 
-.dropdown ul {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
+option {
+  text-align: center; /* จัดข้อความใน option ให้ตรงกลาง */
 }
 
-.dropdown li {
-  padding: 10px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 1.1em;
-}
-
-.dropdown li:hover {
-  background-color: #ddd;
-}
-
-.custom-select::after {
-  content: "▼"; /* ลูกศร */
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.5em;
-  color: #333;
-}
 </style>

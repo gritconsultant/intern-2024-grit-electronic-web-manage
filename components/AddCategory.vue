@@ -162,10 +162,14 @@ const confirm = () => {
     cancelButtonText: "ยกเลิก",
   }).then(async (result) => {
     if (result.isConfirmed) {
-      await addCategory();
+      await addCategory();  // เรียกฟังก์ชันสำหรับเพิ่มข้อมูลประเภท
+      Swal.fire("สำเร็จ!", "ประเภทสินค้าได้ถูกเพิ่มแล้ว", "success").then(() => {
+        window.location.reload(); // รีเฟรชหน้าหลังจากกด "ตกลง"
+      });
     }
   });
-  emit("close");
+
+  emit("close");  // ปิดฟอร์ม
 };
 
 const emit = defineEmits(["close", "addCategory"]);
@@ -188,33 +192,7 @@ const confirmCancel = () => {
 
 // เพิ่มอีเวนต์ emit
 
-const imageUrl = ref<string | null>(null);
 
-const fileInput = ref<HTMLInputElement | null>(null);
-
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      // เก็บ URL ของภาพลงใน category.value.imageCategory
-      category.value.image = e.target?.result as string;
-      // ตั้งค่า imageUrl ด้วย URL ของไฟล์
-      imageUrl.value = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
-};
-
-const clearImage = () => {
-  // ตั้งค่า imageUrl และ imageCategory ให้เป็น null หรือค่าว่าง
-  imageUrl.value = null;
-  category.value.image = ""; // ทำให้ตัวแปร imageCategory เป็นค่าว่าง
-  if (fileInput.value) {
-    fileInput.value.value = ""; // เคลียร์ค่าของ input file
-  }
-};
 </script>
 
 <style></style>

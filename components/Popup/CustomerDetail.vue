@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showCustomerDetail"
-    class="w-[800px] p-5 bg-white absolute top-[200px] left-[650px] rounded-lg dropshadowbox"
+    class="w-[400px] p-5 bg-white absolute top-[300px] left-[900px] rounded-lg dropshadowbox"
   >
     <div class="h-[8%] flex justify-center">
       <!-- แสดง Customer ID -->
@@ -40,13 +40,6 @@
             <span class="text-[20px] font-semibold">เบอร์</span>
             <div class="text-[20px] pl-[20px] w-full">
               {{ customers.phone }}
-            </div>
-          </div>
-          <div class="flex gap-2 h-full">
-            <span class="text-[20px] font-semibold w-[50px]">ที่อยู่</span>
-            <div class="text-[20px] pl-[20px] h-full text-wrap w-full">
-              บ้านเลขที่ 123 หมู่ที่ 4 ตำบลในเมือง อำเภอเมือง จังหวัดอุบลราชธานี
-              34000
             </div>
           </div>
         </div>

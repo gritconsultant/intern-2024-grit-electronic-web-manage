@@ -38,7 +38,7 @@
           />
         </div>
 
-        <div class="mb-4" >
+        <div class="mb-4">
           <label for="confirmPassword" class="block text-[15px]"
             >ยืนยันรหัสผ่าน</label
           >
@@ -146,7 +146,6 @@ const getadminById = async () => {
     });
 };
 
-
 const updateAdmin = async () => {
   if (!isFormChanged.value) {
     Swal.fire("ไม่มีการเปลี่ยนแปลง", "ไม่พบข้อมูลที่ต้องการอัปเดต", "info");
@@ -176,16 +175,18 @@ const updateAdmin = async () => {
       "ข้อมูลผู้ดูแลถูกอัปเดตแล้ว",
       "ข้อมูลผู้ดูแลได้รับการแก้ไขสำเร็จ",
       "success"
-    );
-    emit("close");
+    ).then(() => {
+      window.location.reload(); // รีเฟรชหน้าหลังจากกด "OK"
+    });
+    
   } catch (error: any) {
     console.error("❌ Error Response:", error.response);
     const errorMessage =
       error.response?.data?.message || "ไม่สามารถอัปเดตข้อมูลผู้ดูแลได้";
     Swal.fire("ข้อผิดพลาด", errorMessage, "error");
   }
+  emit("close");
 };
-
 
 const askForConfirmation = () => {
   // ตรวจสอบหากมีข้อผิดพลาดเรื่องรหัสผ่าน

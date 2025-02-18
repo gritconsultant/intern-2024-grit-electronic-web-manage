@@ -65,12 +65,7 @@
           </tr>
           <tr v-if="customers.length === 0">
             <td colspan="6" class="absolute left-[700px] top-[300px] text-[30px]  py-4 text-gray-500">
-              ไม่มีข้อมูล
-            </td>
-          </tr>
-        </tbody>
-        <div v-else class="absolute left-[800px] top-[300px]">
-          <svg
+              <svg
           aria-hidden="true"
           class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
           viewBox="0 0 100 101"
@@ -86,6 +81,12 @@
             fill="currentFill"
           />
         </svg>
+            </td>
+          </tr>
+        </tbody>
+        <div v-else class="absolute left-[800px] top-[300px]">
+          ไม่มีข้อมูล
+          
         </div>
       </table>
       <!-- Pagination -->
@@ -133,6 +134,14 @@
 import type { Params } from "~/models/client.model";
 import type { Customer } from "~/models/user.model";
 import service from "~/service";
+
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
 
 
 const loading = ref(false);

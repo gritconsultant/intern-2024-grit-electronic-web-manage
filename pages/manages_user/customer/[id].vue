@@ -116,13 +116,6 @@
             <span class="text-[20px] font-semibold">เบอร์</span>
             <div class="text-[20px] pl-[20px] w-full">{{ phonenumber }}</div>
           </div>
-          <div class="flex flex-col gap-2 h-full">
-            <span class="text-[20px] font-semibold">ที่อยู่</span>
-            <div class="text-[20px] px-8 h-full text-wrap w-full">
-              บ้านเลขที่ 123 หมู่ที่ 4 ตำบลในเมือง อำเภอเมือง จังหวัดอุบลราชธานี
-              34000
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -131,6 +124,15 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+
+import { useIndexStore } from "~/store/main"
+
+definePageMeta({
+  middleware: "auth",
+});
+
+const store = useIndexStore();
+
 
 // ข้อมูลลูกค้า
 const email = ref("john_Do@gamil.com");
@@ -154,19 +156,6 @@ const handleConfirm = () => {
 // ข้อมูล customerId
 const customerId = ref("");
 
-// ฟังก์ชันดึงข้อมูล customerId จาก API
-const fetchCustomerId = async () => {
-  try {
-    const response = await fetch("https://api.example.com/getCustomerId");
-    const data = await response.json();
-    customerId.value = data.id; // สมมุติว่า API ส่งข้อมูล customerId
-  } catch (error) {
-    console.error("ไม่สามารถดึงข้อมูลลูกค้าได้", error);
-  }
-};
-
-// คำนวณจำนวนเงินรวมทั้งหมด
-const totalAmount = ref(0);
 
 </script>
 
