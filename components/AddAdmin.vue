@@ -43,9 +43,8 @@
           />
           <!-- Password length validation -->
           <div v-if="passwordTooShort" class="text-red-500 text-sm mt-2">
-            รหัสผ่านต้องมีความยาวอย่างน้อย 10 ตัว
-            <span v-if="missingChars > 0">
-              (ขาดอีก {{ missingChars }} ตัว)</span
+            รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว
+            <span v-if="missingChars > 0"></span
             >
           </div>
         </div>
