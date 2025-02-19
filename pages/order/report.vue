@@ -8,13 +8,13 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="flex gap-6 p-2 rounded-lg">
-      <div class="space-x-4">
+    <div class="flex gap-16 p-2 rounded-lg">
+      <div class="">
         <label for="year" class="font-semibold">เลือกปี:</label>
         <select
           id="year"
           v-model="selectedYear"
-          class="border px-4 py-2 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          class="border px-4 py-2  dropshadowboxabsolut focus:ring-orange-500 focus:border-orange-500"
         >
           <option v-for="year in years" :key="year" :value="year">
             {{ year }}
@@ -22,12 +22,12 @@
         </select>
       </div>
 
-      <div class="space-x-4">
+      <div class="">
         <label for="month" class="font-semibold">เลือกเดือน:</label>
         <select
           id="month"
           v-model="month"
-          class="border px-4 py-2 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          class="border px-4 py-2 rounded-md dropshadowboxabsolut focus:ring-orange-500 focus:border-orange-500"
         >
           <option
             v-for="(monthName, index) in months"

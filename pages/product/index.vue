@@ -149,9 +149,9 @@
               </button>
             </td>
           </tr>
-          <!-- <tr v-if="filteredProducts.length === 0">
+          <tr v-if="filteredProducts.length === 0">
             <td colspan="6" class="absolute left-[850px] top-[350px]"></td>
-          </tr> -->
+          </tr>
         </tbody>
         <div v-else class="absolute left-[850px] top-[350px]">
           <svg

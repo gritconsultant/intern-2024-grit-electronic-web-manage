@@ -1,9 +1,9 @@
 <template>
   <!-- Desktop -->
   <div
-    class="w-[230px] h-full border-r-[1px] bg-white border-gray-400 "
+    class="w-[230px] h-full border-r-[1px] bg-white border-gray-400 pt-2"
   >
-    <div class="flex flex-col">
+    <div class="flex flex-col ">
       <!-- menu -->
       <div
         class="flex flex-col gap-2 mt-1 pl-[30px] text-gray-600 text-[15px] mr-5"
@@ -26,7 +26,7 @@
               :class="{
                 'text-orange-500':
                   route.path === '/order' ||
-                  route.path === `/order/${id}`,
+                  route.path === `/order/`+ route.params.id,
               }"
             >
               <div class="flex gap-2 text-[15px]">
@@ -69,7 +69,7 @@
               :class="{
                 'text-orange-500':
                   route.path === '/product' ||
-                  route.path === `/product/${id}` ||
+                  route.path.startsWith('/product/')||
                   route.path === '/product/category' ||
                   route.path === '/product/create',
               }"
@@ -97,8 +97,8 @@
                 <li
                   class="block px-4 py-2 text-[15px] hover:bg-gray-100"
                   :class="{
-                    'text-orange-500': route.path === '/product'||
-                    route.path === '/product/create'||  route.path === `/product/${id}`,
+                    'text-orange-500': route.path === '/product' ||
+                    route.path === '/product/create'||  route.path === `/product/` + route.params.id,
                   }"
                 >
                   สินค้า

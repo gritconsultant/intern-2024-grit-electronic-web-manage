@@ -52,8 +52,8 @@
                     <label class="block">ประเภท</label>
                     <select
                       v-model="product.category_id"
-                      id="product-category"
-                      class="w-full  h-[66%] 0 pr-5 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                      id="product-category" 
+                      class="w-full  h-[66%]  border border-gray-300  dropshadowboxabsolut  bg-white   focus:ring-2 focus:ring-orange-500 focus:outline-none dropshadowboxabsolute"
                     >
                       <option
                         v-for="(category, index) in categories"

@@ -31,11 +31,11 @@
             for="product-category"
             class="block text-lg font-medium text-gray-700"
             >ประเภทสินค้า</label
-          >
+          > 
           <select
             v-model="product.category_id"
             id="product-category"
-            class="w-full mt-2 rounded-lg p-4 pr-5 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+            class="w-full h-[60%] mt-2 dropshadowboxabsolut rounded-lg  pr-5 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
           >
             <option
               v-for="(category, index) in categories"

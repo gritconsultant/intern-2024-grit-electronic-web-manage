@@ -40,8 +40,8 @@ const router = useRouter();
 // ฟังก์ชัน logout
 const logout = () => {
   // ลบข้อมูลใน store
-  store.$state.token = null;
-  store.$state.userId = null;
+  store.$state.token = '';
+  store.$state.userId = '';
 
   // ลบคุกกี้จาก sessionStorage หรือ localStorage
   sessionStorage.removeItem("token");
