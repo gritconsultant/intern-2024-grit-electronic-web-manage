@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showCustomerDetail"
-    class="w-[400px] p-5 bg-white absolute top-[300px] left-[900px] rounded-lg dropshadowbox"
+    class="w-[600px] p-5 bg-white absolute top-[300px] left-[700px] rounded-lg dropshadowbox"
   >
     <div class="h-[8%] flex justify-center">
       <!-- แสดง Customer ID -->
@@ -42,6 +42,12 @@
               {{ customers.phone }}
             </div>
           </div>
+          <div class="flex gap-2 ">
+            <span class="text-[18px] font-semibold bg-white w-[10%]">ที่อยู่</span>
+            <div class="text-[20px] pl-[23px] w-full">
+              {{ customers.shipment.address }}  {{ customers.shipment.sub_district }} {{ customers.shipment.district }} {{ customers.shipment.province }} {{ customers.shipment.zip_code }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +71,16 @@ const customers = ref<CustomerRes>({
   email: "",
   phone: "",
   password: "", // Avoid showing password
+  shipment: {
+    id: 0,
+    firstname: "",
+    lastname: "",
+    address:"",
+    zip_code:0,
+    sub_district: "",
+    district: "",
+    province: "",
+  }
 });
 
 const emit = defineEmits(["close", "customerdetails"]);
@@ -89,15 +105,27 @@ const getCustomerById = async () => {
   try {
     const response = await service.user.getCustomerById(customersId);
     const data = response.data.data; // Access the nested 'data' object
+    console.log(data);
+    
     if (data) {
       customers.value = {
-        id: data.ID || 0, // Map correctly according to the response
-        firstname: data.FirstName || "ไม่มีข้อมูล",
-        lastname: data.LastName || "ไม่มีข้อมูล",
-        username: data.Username || "ไม่มีข้อมูล",
-        email: data.Email || "ไม่มีข้อมูล",
-        phone: data.Phone || "ไม่มีข้อมูล",
+        id: data.id || 0, // Map correctly according to the response
+        firstname: data.firstname || "ไม่มีข้อมูล",
+        lastname: data.lastname || "ไม่มีข้อมูล",
+        username: data.username || "ไม่มีข้อมูล",
+        email: data.email || "ไม่มีข้อมูล",
+        phone: data.phone || "ไม่มีข้อมูล",
         password: "", // Avoid showing password
+        shipment: {
+          id: data.shipment.id || 0,
+          firstname: data.shipment.firstname || "ไม่มีข้อมูล",
+          lastname: data.shipment.lastname || "ไม่มีข้อมูล",
+          address: data.shipment.address || "ไม่มีข้อมูล",
+          zip_code: data.shipment.zip_code || 0,
+          sub_district: data.shipment.sub_district || "ไม่มีข้อมูล",
+          district: data.shipment.district || "ไม่มีข้อมูล",
+          province: data.shipment.province || "ไม่มีข้อมูล",
+        }
       };
       console.log("Customer Data:", customers.value);
       showCustomerDetail.value = true; // Show the customer detail modal

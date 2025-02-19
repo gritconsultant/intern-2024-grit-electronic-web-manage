@@ -1,7 +1,9 @@
 <template>
   <div class="defaultpages p-8 pb-16">
     <div v-if="product.id !== 0" class="h-full">
-      <div class="header mb-8 bg-white h-[10%] flex items-center justify-between pl-[10px] dropshadowbox rounded-lg">
+      <div
+        class="header mb-8 bg-white h-[10%] flex items-center justify-between pl-[10px] dropshadowbox rounded-lg"
+      >
         <h1 class="text-3xl font-bold text-gray-800">
           สินค้า #{{ product.id }}
         </h1>
@@ -9,11 +11,18 @@
 
       <div class="flex gap-4 h-[90%]">
         <!-- Product List Section -->
-        <div class="flex flex-col bg-white dropshadowbox rounded-lg p-4 w-[70%] h-full">
+        <div
+          class="flex flex-col bg-white dropshadowbox rounded-lg p-4 w-[70%] h-full"
+        >
           <div class="flex gap-8 p-6 w-full">
             <div class="product-image flex flex-col gap-4 w-80">
-              <div class="h-60 w-full bg-gray-300 rounded-lg flex items-center justify-center relative">
-                <img :src="product.image" class="object-cover h-full w-full rounded-lg" />
+              <div
+                class="h-60 w-full bg-gray-300 rounded-lg flex items-center justify-center relative"
+              >
+                <img
+                  :src="product.image"
+                  class="object-cover h-full w-full rounded-lg"
+                />
               </div>
               <input
                 type="text"
@@ -24,7 +33,9 @@
               />
             </div>
 
-            <div class="product-info flex flex-col justify-between gap-6 w-full">
+            <div
+              class="product-info flex flex-col justify-between gap-6 w-full"
+            >
               <div class="product-details flex flex-col gap-6">
                 <div class="product-name text-xl font-semibold">
                   <label class="block">ชื่อ</label>
@@ -40,16 +51,17 @@
                   <div class="product-category text-xl font-semibold w-1/2">
                     <label class="block">ประเภท</label>
                     <select
-                      class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
                       v-model="product.category_id"
-                      @change="product.category_id = Number(product.category_id)"
+                      id="product-category"
+                      class="w-full  h-[66%] 0 pr-5 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
                     >
-                      <option value="">กรุณาเลือกประเภท</option>
-                      <option value="1">อาหาร</option>
-                      <option value="">เครื่องดื่ม</option>
-                      <option value="">สมุนไพร</option>
-                      <option value="">ผ้าและเครื่องแต่งกาย</option>
-                      <option value="5">ของใช้ ของตกแต่ง</option>
+                      <option
+                        v-for="(category, index) in categories"
+                        :key="index"
+                        :value="category.id"
+                      >
+                        {{ category.name }}
+                      </option>
                     </select>
                   </div>
 
@@ -67,7 +79,9 @@
                 <div class="product-quantity flex items-center gap-4">
                   <label class="text-xl font-semibold">จำนวนสินค้า</label>
                   <div class="flex items-center gap-4">
-                    <div class="quantity-display bg-gray-100 p-2 rounded-md w-[40px] flex items-center justify-center">
+                    <div
+                      class="quantity-display bg-gray-100 p-2 rounded-md w-[40px] flex items-center justify-center"
+                    >
                       {{ product.stock }}
                     </div>
                     <div class="flex items-center gap-2">
@@ -97,15 +111,23 @@
               <div class="product-status flex justify-between items-center">
                 <div class="status flex gap-4">
                   <span class="text-lg font-semibold">สถานะสินค้า</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
+                  <label
+                    class="relative inline-flex items-center cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       class="sr-only peer"
                       :checked="product.is_active"
-                      @click="confirmStatusChange(product.id, product.is_active)"
+                      @click="
+                        confirmStatusChange(product.id, product.is_active)
+                      "
                     />
-                    <div class="w-16 h-8 bg-orange-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"></div>
-                    <div class="absolute w-7 h-7 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-8 transition-transform"></div>
+                    <div
+                      class="w-16 h-8 bg-orange-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
+                    ></div>
+                    <div
+                      class="absolute w-7 h-7 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-8 transition-transform"
+                    ></div>
                   </label>
                 </div>
               </div>
@@ -134,10 +156,14 @@
         </div>
 
         <!-- Customer Reviews -->
-        <div class="w-[30%] pt-4 px-2 h-full bg-white flex flex-col gap-5 dropshadowbox rounded-lg">
+        <div
+          class="w-[30%] pt-4 px-2 h-full bg-white flex flex-col gap-5 dropshadowbox rounded-lg"
+        >
           <h3 class="text-2xl font-semibold text-center flex flex-col gap-2">
             รีวิวจากลูกค้า
-            <span class="text-sm text-gray-600">{{ reviewCount }} รีวิว {{ averageRating }} คะแนน</span>
+            <span class="text-sm text-gray-600"
+              >{{ reviewCount }} รีวิว {{ averageRating }} คะแนน</span
+            >
           </h3>
 
           <div class="reviews-container">
@@ -147,7 +173,9 @@
               :key="index"
             >
               <div class="flex justify-between gap-8">
-                <span class="flex items-end truncate w-[60%]">ชื่อ {{ review.username }}</span>
+                <span class="flex items-end truncate w-[60%]"
+                  >ชื่อ {{ review.username }}</span
+                >
                 <div class="flex gap-4 w-[40%]">
                   <div class="flex gap-1">
                     <span
@@ -162,7 +190,9 @@
                       <i class="fas fa-star"></i>
                     </span>
                   </div>
-                  <div class="text-[15px] font-bold flex items-center pt-[5px] place-content-center">
+                  <div
+                    class="text-[15px] font-bold flex items-center pt-[5px] place-content-center"
+                  >
                     {{ review.rating }}
                   </div>
                 </div>
@@ -173,21 +203,40 @@
         </div>
       </div>
     </div>
+    <div v-else class="absolute left-[1000px] top-[500px]">
+      <svg
+        aria-hidden="true"
+        class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        viewBox="0 0 100 101"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor"
+        />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill"
+        />
+      </svg>
+    </div>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import Swal from "sweetalert2";
 import type {
+  Category,
   Product,
   ProductRes,
   ProductUpdate,
 } from "~/models/product.model";
 import service from "~/service";
 
-import { useIndexStore } from "~/store/main"
+import { useIndexStore } from "~/store/main";
+import type { Params } from "~/models/client.model";
 
 definePageMeta({
   middleware: "auth",
@@ -195,8 +244,7 @@ definePageMeta({
 
 const store = useIndexStore();
 
-
-
+const loading = ref(false);
 const route = useRoute();
 
 const product = ref<ProductUpdate>({
@@ -222,8 +270,8 @@ const productRes = ref<ProductRes>({
   image: "",
 });
 
-
 const getProductById = async () => {
+  loading.value = true;
   await service.product
     .getProductById(route.params.id)
     .then((resp: any) => {
@@ -249,6 +297,9 @@ const getProductById = async () => {
     })
     .catch((error: any) => {
       console.error(error.response);
+    })
+    .finally(() => {
+      loading.value = false;
     });
 };
 
@@ -368,9 +419,50 @@ const confirmStatusChange = (productId: number, currentStatus: boolean) => {
   });
 };
 
-onMounted(() => {
+const categories = ref<Category[]>([]);
+const search = ref<string>("");
+const size = ref(6); // ทำให้เป็น ref
+const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
+const Category = ref();
+
+const getCategorylist = async () => {
+  const param: Params = {
+    page: currentPage.value, // ใช้ .value ในการเข้าถึง currentPage
+    size: size.value, // ใช้ .value ในการเข้าถึง size
+    search: search.value || "", // ใช้ค่าป้องกันถ้า search เป็น null หรือ undefined
+    category: Category.value,
+  };
+
+  await service.product
+    .getCategoryList(param)
+    .then((resp: any) => {
+      const data = resp.data.data;
+      const categoryList: Category[] = [];
+
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const c = data[i];
+        const category: Category = {
+          id: c.id,
+          name: c.name,
+          is_active: c.is_active,
+          image: c.image,
+          TotalProduct: c.TotalProduct,
+        };
+        categoryList.push(category);
+      }
+      categories.value = categoryList;
+    })
+    .catch((error: any) => {
+      console.log("Error loading product list:", error.response || error);
+    })
+    .finally(() => {});
+};
+
+onMounted( async () => {
   // use function
-  getProductById();
+   await getCategorylist();
+   await getProductById();
 });
 
 console.log("Updating product:", route.params.id, product.value);

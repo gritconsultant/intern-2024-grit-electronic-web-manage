@@ -74,11 +74,11 @@
             <td class="w-[20%] text-start py-3">
               {{ formatDate(logs.created_at) }}
             </td>
-            <td class="w-[20%] text-start py-3">
+            <td class="w-[20%] text-start py-2">
               {{ logs.Admin?.name ?? "-" }}
             </td>
-            <td class="w-[20%] text-start py-3">{{ logs.action }}</td>
-            <td class="w-[40%] text-start py-3">{{ logs.description }}</td>
+            <td class="w-[20%] text-start py-2">{{ logs.action }}</td>
+            <td class="w-[40%] text-start py-2">{{ logs.description }}</td>
           </tr>
         </tbody>
         <div v-else class="absolute left-[750px] top-[300px]">
@@ -152,7 +152,7 @@ const loading = ref(false);
 const search = ref<string>("");
 const start = ref(null);
 const end = ref(null);
-const size = ref(11); // ทำให้เป็น ref
+const size = ref(10); // ทำให้เป็น ref
 const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 const paginate = ref<{ Total: number }>({ Total: 0 });
 

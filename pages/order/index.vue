@@ -243,9 +243,14 @@
               </NuxtLink>
             </th>
           </tr>
-          <tr v-if="orders.length === 0">
+          <!-- <tr v-if="orders.length === 0">
             <td colspan="6" class="absolute left-[700px] top-[300px]">
-              <svg
+             
+            </td>
+          </tr> -->
+        </tbody>
+        <div v-else class="absolute left-[850px] top-[300px]">
+          <svg
                 aria-hidden="true"
                 class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                 viewBox="0 0 100 101"
@@ -261,11 +266,6 @@
                   fill="currentFill"
                 />
               </svg>
-            </td>
-          </tr>
-        </tbody>
-        <div v-else class="absolute left-[850px] top-[300px]">
-          ไม่มีข้อมูลคำสั่งซื้อ
         </div>
 
         <!-- Popup Tracking Number -->

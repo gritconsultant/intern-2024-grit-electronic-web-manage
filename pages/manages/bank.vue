@@ -51,9 +51,9 @@
             </h2>
             <div class="grid grid-cols-1 pr-[70px] gap-4">
               <!-- Bank Name -->
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 ">
                 <label class="text-lg font-semibold">ชื่อธนาคาร</label>
-                <div class="flex gap-4">
+                <div class="flex gap-4 border rounded-md">
                   <!-- รายการเลือกธนาคาร -->
                   <select
                     v-model="bank.bank_name"

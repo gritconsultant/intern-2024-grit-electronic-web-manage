@@ -60,6 +60,7 @@ export interface ProductUpdate {
   description: string;
   stock: number;
   category_id: number;
+  //  category_id: category;
   is_active: boolean;
   Review: Review[];
   image: string;
@@ -69,6 +70,11 @@ export interface Status {
   code: number;
   message: string;
 }
+
+// export interface category {
+//   id: number;
+//   name: string;
+// }
 
 ////////////////////////////////////////////////////////////////////////
 

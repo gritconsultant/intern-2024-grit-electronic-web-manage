@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from "vue";
 import {
   Chart as ChartJS,
   DoughnutController,
@@ -58,7 +57,7 @@ onMounted(() => {
     chartCanvas.value.width = 500;
     chartCanvas.value.height = 500;
 
-    // สร้างสีสำหรับ backgroundColor โดยการใช้ฟังก์ชัน
+    // ฟังก์ชันสำหรับสร้างสี
     const generateColors = (count: number) => {
       const colors = [];
       const baseColors = [
@@ -80,31 +79,56 @@ onMounted(() => {
       return colors;
     };
 
-    // จำนวนสีจะถูกกำหนดตามจำนวนข้อมูลที่ส่งมา
     const salesDataCount = Object.keys(props.salesData).length;
-    const chartColors = generateColors(salesDataCount);
 
-    chartInstance = new ChartJS(chartCanvas.value, {
-      type: "doughnut",
-      data: {
-        labels: Object.keys(props.salesData),
-        datasets: [
-          {
-            label: "ยอดขาย",
-            data: Object.values(props.salesData),
-            backgroundColor: chartColors, // ใช้สีที่ถูกคำนวณ
-            hoverOffset: 10,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: "50%",
-      },
-    });
+    // ถ้าไม่มีข้อมูล
+    if (salesDataCount === 0) {
+      chartInstance = new ChartJS(chartCanvas.value, {
+        type: "doughnut",
+        data: {
+          labels: ["ไม่มีข้อมูล"], // ใช้ข้อความแสดงว่าไม่มีข้อมูล
+          datasets: [
+            {
+              label: "ยอดขาย",
+              data: [1], // ใส่ข้อมูลขั้นต่ำ เพื่อให้แสดงกราฟเป็นวง
+              backgroundColor: ["#d3d3d3"], // สีเทา
+              hoverOffset: 10,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "50%",
+        },
+      });
+    } else {
+      // กรณีมีข้อมูล
+      const chartColors = generateColors(salesDataCount);
+      chartInstance = new ChartJS(chartCanvas.value, {
+        type: "doughnut",
+        data: {
+          labels: Object.keys(props.salesData),
+          datasets: [
+            {
+              label: "ยอดขาย",
+              data: Object.values(props.salesData),
+              backgroundColor: chartColors,
+              hoverOffset: 10,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "50%",
+        },
+      });
+    }
   }
 });
+
+
 </script>
 
 <style scoped>
@@ -126,35 +150,4 @@ canvas {
   z-index: 1;
 }
 
-.month-selector {
-  position: absolute;
-  top: 0px;
-  z-index: 100;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 2px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 180px;
-  box-shadow: 0px 0px 2px rgb(190, 190, 190);
-}
-
-select {
-  font-size: 1em;
-  padding: 8px;
-  border: none;
-  outline: none;
-  background-color: #ffffff;
-  text-align: center;
-  height: 35px;
-  display: inline-block;
-  border-radius: 5px;
-  width: 100%;
-  color: rgb(1, 1, 1);
-}
-
-option {
-  text-align: center;
-}
 </style>

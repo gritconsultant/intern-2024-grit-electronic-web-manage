@@ -45,7 +45,7 @@
                 <img
                   :src="banner.banner"
                   alt="Preview"
-                  class="w-[90%] h-[200px] object-cover rounded-md"
+                  class="w-[90%] h-[180px] object-cover rounded-md"
                 />
               </td>
               <td class="px-4 py-2">
@@ -192,7 +192,7 @@ const addbanner = ref<AddBanner>({
   banner: "",
 });
 
-const size = ref(8); // ทำให้เป็น ref
+const size = ref(3); // ทำให้เป็น ref
 const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 const paginate = ref<{ Total: number }>({ Total: 0 });
 

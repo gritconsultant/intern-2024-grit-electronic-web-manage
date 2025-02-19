@@ -26,7 +26,7 @@
               :class="{
                 'text-orange-500':
                   route.path === '/order' ||
-                  route.path === '/order/[id]' ,
+                  route.path === `/order/${id}`,
               }"
             >
               <div class="flex gap-2 text-[15px]">
@@ -69,7 +69,7 @@
               :class="{
                 'text-orange-500':
                   route.path === '/product' ||
-                  route.path === '/product/[id]' ||
+                  route.path === `/product/${id}` ||
                   route.path === '/product/category' ||
                   route.path === '/product/create',
               }"
@@ -98,7 +98,7 @@
                   class="block px-4 py-2 text-[15px] hover:bg-gray-100"
                   :class="{
                     'text-orange-500': route.path === '/product'||
-                    route.path === '/product/create'||  route.path === '/product/id',
+                    route.path === '/product/create'||  route.path === `/product/${id}`,
                   }"
                 >
                   สินค้า
@@ -314,6 +314,7 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const dropdownState = ref<string | null>(null);
+  const id = route.params.id as string // บังคับให้เป็น string
 
 const toggleDropdown = (dropdown: string) => {
   dropdownState.value = dropdownState.value === dropdown ? null : dropdown;

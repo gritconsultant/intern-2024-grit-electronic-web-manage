@@ -434,14 +434,6 @@ const onFileChange = (event: Event) => {
   }
 };
 
-// Clear image
-const clearImage = () => {
-  imageUrl.value = null;
-  if (fileInput.value) {
-    fileInput.value.value = "";
-  }
-};
-
 const router = useRouter();
 
 // Confirm cancellation

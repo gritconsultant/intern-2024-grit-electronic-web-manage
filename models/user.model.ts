@@ -72,6 +72,17 @@ export interface CustomerRes{
   password: string;
   email: string;
   phone: string;
+  shipment: shipment;
 }
 
+export interface shipment {
+  id: number;
+  firstname: string;
+  lastname: string;
+  address: string;
+  zip_code: number;
+  sub_district: string;
+  district: string;
+  province: string;
+}
 
