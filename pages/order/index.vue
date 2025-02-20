@@ -56,37 +56,39 @@
 
         <!-- Status Filter -->
         <div class=" ">
-          <label for=""  class="block text-sm font-medium text-black mb-1">สถานะคำสั่งซื้อ</label>
+          <label for="" class="block text-sm font-medium text-black mb-1"
+            >สถานะคำสั่งซื้อ</label
+          >
           <div class="relative group h-10">
-          <div
-            class="flex items-center gap-2 w-[150px] px-2 h-10 bg-orange-400 text-white rounded-full shadow hover:bg-orange-600"
-          >
             <div
-              class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[10px]"
+              class="flex items-center gap-2 w-[150px] px-2 h-10 bg-orange-400 text-white rounded-full shadow hover:bg-orange-600"
             >
-              {{ selectedStatusOrder.name }}
-            </div>
-            <div class="mt-[2px] ">
-              <i class="fa-solid fa-filter"></i>
-            </div>
-          </div>
-
-          <!-- Dropdown Menu -->
-          <div
-            class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
-          >
-            <ul class="py-2 text-sm text-gray-700">
-              <li
-                v-for="(statusorder, i) in Statusorders"
-                :key="i"
-                class="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                @click="selectStatusOrder(statusorder)"
+              <div
+                class="flex justify-center items-center font-bold text-[14px] w-[80%] pr-[10px]"
               >
-                {{ statusorder.name }}
-              </li>
-            </ul>
+                {{ selectedStatusOrder.name }}
+              </div>
+              <div class="mt-[2px]">
+                <i class="fa-solid fa-filter"></i>
+              </div>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <div
+              class="absolute bg-white rounded-lg border shadow w-44 z-10 hidden group-hover:block"
+            >
+              <ul class="py-2 text-sm text-gray-700">
+                <li
+                  v-for="(statusorder, i) in Statusorders"
+                  :key="i"
+                  class="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  @click="selectStatusOrder(statusorder)"
+                >
+                  {{ statusorder.name }}
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
@@ -154,52 +156,73 @@
               <div class="flex flex-col items-center cursor-pointer">
                 <div
                   v-if="order.status === 'pending'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium"
+                  class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   รอการชำระ
+                  <div class="w-[30px] flex justify-end items-center">
+                    <i class="fa-solid fa-caret-down text-[15px]"></i>
+                  </div>
                 </div>
                 <div
                   v-else-if="order.status === 'paid'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-blue-30 border-blue-400 text-center font-medium"
+                  class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-blue-30 border-blue-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   ชำระเงินแล้ว
+                  <div class="w-[20px] flex justify-end items-center">
+                    <i class="fa-solid fa-caret-down text-[15px]"></i>
+                  </div>
                 </div>
                 <div
                   v-else-if="order.status === 'prepare'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-slate-50 border-slate-400 text-center font-medium"
+                  class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-slate-50 border-slate-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   เตรียมสินค้า
+                  <div class="w-[24px] flex justify-end items-center">
+                    <i class="fa-solid fa-caret-down text-[15px]"></i>
+                  </div>
                 </div>
                 <div
                   v-else-if="order.status === 'ship'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
+                  class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   กำลังจัดส่ง
+                  <div class="w-[30px] flex justify-end items-center">
+                    <i class="fa-solid fa-caret-down text-[15px]"></i>
+                  </div>
                 </div>
                 <div
                   v-else-if="order.status === 'success'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
+                  class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
-                  จัดส่งเรียบร้อย
+                  <span class=""> จัดส่งเรียบร้อย </span>
+                  <div class=" flex justify-end items-center">
+                    <i class="fa-solid fa-caret-down text-[15px] "></i>
+                  </div>
                 </div>
                 <div
                   v-else-if="order.status === 'cancelled'"
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-400 text-center font-medium"
+                  class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-400 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   ยกเลิก
+                  <div class="w-[55px] flex justify-end items-center">
+                    <i class="fa-solid fa-caret-down text-[15px]"></i>
+                  </div>
                 </div>
                 <div
                   v-else
-                  class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-600 text-center font-medium"
+                  class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-600 text-center font-medium"
                   @click="toggleMenu(order.id)"
                 >
                   ชำระล้มเหลว
+                  <div class="w-[16px] flex justify-end items-center">
+                    <i class="fa-solid fa-caret-down text-[15px]"></i>
+                  </div>
                 </div>
                 <div>
                   <ul

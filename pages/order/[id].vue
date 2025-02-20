@@ -1,38 +1,148 @@
 <template>
   <div class="defaultpages p-6 pl-7" v-if="order">
     <!-- Order Header -->
-    <div class="bg-white rounded-lg p-4 flex flex-col dropshadowbox">
-      <h1 class="text-3xl font-semibold text-gray-800">
-        คำสั่งซื้อ #{{ order.id }}
-      </h1>
-      <h5 class="text-lg text-gray-600 mt-2">
-        ลูกค้า : {{ order.User.id }} {{ order.User.firstname }}
-        {{ order.User.lastname }}
-      </h5>
+    <div class="bg-white rounded-lg p-4 flex justify-between dropshadowbox">
+      <div>
+        <h1 class="text-3xl font-semibold text-gray-800">
+          คำสั่งซื้อ #{{ order.id }}
+        </h1>
+        <h5 class="text-lg text-gray-800 mt-2">
+          ลูกค้า : {{ order.User.firstname }}
+          {{ order.User.lastname }}
+        </h5>
+      </div>
+      <div class="flex justify-center items-center">
+        <!-- Order Status Section -->
+        <label for=""></label>
+        <div class="flex flex-col items-center cursor-pointer">
+          <div
+            v-if="order.status === 'pending'"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium"
+            @click="toggleMenu(order.id)"
+          >
+            รอการชำระ
+            <div class="w-[25px] flex justify-end items-center">
+              <i class="fa-solid fa-caret-down text-[15px]"></i>
+            </div>
+          </div>
+          <div
+            v-else-if="order.status === 'paid'"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-blue-30 border-blue-400 text-center font-medium"
+            @click="toggleMenu(order.id)"
+          >
+            ชำระเงินแล้ว
+            <div class="w-[16px] flex justify-end items-center">
+              <i class="fa-solid fa-caret-down text-[15px]"></i>
+            </div>
+          </div>
+          <div
+            v-else-if="order.status === 'prepare'"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-slate-50 border-slate-400 text-center font-medium"
+            @click="toggleMenu(order.id)"
+          >
+            เตรียมสินค้า
+            <div class="w-[20px] flex justify-end items-center">
+              <i class="fa-solid fa-caret-down text-[15px]"></i>
+            </div>
+          </div>
+          <div
+            v-else-if="order.status === 'ship'"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
+            @click="toggleMenu(order.id)"
+          >
+            กำลังจัดส่ง
+            <div class="w-[25px] flex justify-end items-center">
+              <i class="fa-solid fa-caret-down text-[15px]"></i>
+            </div>
+          </div>
+          <div
+            v-else-if="order.status === 'success'"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
+            @click="toggleMenu(order.id)"
+          >
+            <span> จัดส่งเรียบร้อย </span>
+            <div class="w-[25px] flex justify-end items-center">
+              <i class="fa-solid fa-caret-down text-[15px]"></i>
+            </div>
+          </div>
+          <div
+            v-else-if="order.status === 'cancelled'"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-600 text-center font-medium"
+            @click="toggleMenu(order.id)"
+          >
+            ยกเลิก
+            <div class="w-full flex justify-end items-center">
+              <i class="fa-solid fa-caret-down text-[15px]"></i>
+            </div>
+          </div>
+          <div
+            v-else
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-600 text-center font-medium"
+            @click="toggleMenu(order.id)"
+          >
+            ชำระล้มเหลว
+            <div class="w-[13px] flex justify-end items-center">
+              <i class="fa-solid fa-caret-down text-[15px]"></i>
+            </div>
+          </div>
+          <div class="  ">
+            <ul
+              class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] -translate-x-[70px] flex flex-col gap-2 mt-[1px] z-[9999]"
+              v-show="isMenuVisible[order.id]"
+            >
+              <li
+                class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
+                @click="changeStatus(order.id, 'prepare')"
+                :class="{ 'bg-gray-200': order.status === 'prepare' }"
+                v-if="order.status !== 'prepare'"
+              >
+                เตรียมสินค้า
+              </li>
+              <li
+                class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
+                @click="changeStatus(order.id, 'ship')"
+                :class="{ 'bg-gray-200': order.status === 'ship' }"
+                v-if="order.status !== 'ship'"
+              >
+                กำลังจัดส่ง
+              </li>
+              <li
+                class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
+                @click="changeStatus(order.id, 'failed')"
+                :class="{ 'bg-gray-200': order.status === 'failed' }"
+                v-if="order.status !== 'failed'"
+              >
+                ชำระล้มเหลว
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="flex gap-8 justify-center w-full h-[80%] mt-8" v-if="!loading">
+    <div class="flex gap-8 justify-center w-full h-[82%] mt-8" v-if="!loading">
       <!-- Product Details Section -->
       <div class="w-[70%] bg-white rounded-lg dropshadowbox p-6">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4">ผลิตภัณฑ์</h3>
+        <h3 class="text-2xl font-semibold text-gray-800 mb-4">ผลิตภัณฑ์</h3>
         <div class="flex flex-col justify-between h-[95%]">
-          <table class="w-full h-[90%]">
+          <table class="w-full h-[85%]">
             <thead class="w-full">
-              <tr class="flex gap-12 border-b-2 border-gray-300">
-                <th class="text-gray-600 text-sm w-[20%]">รูป</th>
-                <th class="text-gray-600 text-sm w-[20%]">ชื่อ</th>
-                <th class="text-gray-600 text-sm w-[20%]">ราคา</th>
-                <th class="text-gray-600 text-sm w-[20%]">จำนวน</th>
+              <tr class="flex gap-10 border-b-2 border-gray-500 pr-[10px]">
+                <th class="text-gray-800 text-lg w-[20%] ">รูป</th>
+                <th class="text-gray-800 text-lg w-[20%] ">ชื่อ</th>
+                <th class="text-gray-800 text-lg w-[20%] ">ราคา</th>
+                <th class="text-gray-800 text-lg w-[20%] ">จำนวน</th>
+                <th class="text-gray-800 text-lg w-[20%] ">รวม</th>
               </tr>
             </thead>
             <tbody class="flex flex-col h-full w-full mt-2 overflow-y-scroll">
               <tr
-                class="w-full text-sm font-normal text-gray-600 border-b-[1px]"
+                class="w-full text-[15px] font-normal text-gray-800 border-b-[1px]"
                 v-for="(product, index) in order.products"
                 :key="index"
               >
                 <div class="py-2 w-full flex gap-12">
-                  <th class="w-[20%]">
+                  <th class="w-[20%] ">
                     <div class="flex justify-center items-center object-cover">
                       <img
                         :src="product.image"
@@ -43,17 +153,20 @@
                   </th>
                   <NuxtLink
                     :to="`/product/${product.product_id}`"
-                    class="hover:text-orange-600 cursor-pointer w-[20%] flex justify-center items-center"
+                    class="hover:text-orange-600 cursor-pointer w-[20%] flex justify-center items-center "
                   >
                     <th>
                       {{ product.product_name }}
                     </th>
                   </NuxtLink>
-                  <th class="w-[20%] flex justify-center items-center">
+                  <th class="w-[20%] flex justify-center items-center ">
                     {{ product.price }}
                   </th>
-                  <th class="w-[20%] flex justify-center items-center">
+                  <th class="w-[20%] flex justify-center items-center ">
                     {{ product.total_product_amount }}
+                  </th>
+                  <th class="w-[20%] flex justify-center items-center ">
+                    {{ product.price * product.total_product_amount }}
                   </th>
                 </div>
               </tr>
@@ -61,141 +174,65 @@
           </table>
 
           <div
-            class="mt-6 border-t-2 border-gray-300 pt-2 flex justify-between items-center text-sm text-gray-700"
+            class="mt-6 border-t-2 border-gray-500 pt-2 flex justify-between items-center text-lg text-gray-700"
           >
-            <span>รวมทั้งหมด</span>
-            <div class="w-[45%] flex gap-[160px]">
-              <span class="ml-[20px]"
+            <span class="font-bold ">รวมทั้งหมด</span>
+            <div class="w-[45%] flex justify-end  gap-[85px]  ">
+              <span class="">จำนวนรวม : {{ order.total_amount }} ชิ้น</span>
+              <span class="mr-[60px]"
                 >ราคารวม : {{ order.total_price }} บาท</span
               >
-              <span class="">จำนวนรวม : {{ order.total_amount }} ชิ้น</span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Shipping Information Section -->
-      <div class="w-[30%]   flex flex-col gap-6 items-center">
-        <div class=" w-full h-[35%] bg-white rounded-lg dropshadowbox p-6">
-          <h3 class="text-xl font-semibold text-center text-gray-800 mb-6">
+      <div class="w-[30%] flex flex-col gap-6 items-center">
+        <div class="w-full h-[60%] bg-white rounded-lg dropshadowbox p-6">
+          <h3 class="text-2xl font-semibold text-center text-gray-800 mb-10">
             ข้อมูลการจัดส่ง
           </h3>
-          <div class="flex flex-col gap-4">
-            <p class="text-[15px] font-medium ">
+          <div class="flex flex-col gap-8 px-5">
+            <p class="text-[20px] font-medium">
               <span class="mr-[10px]">ชื่อ:</span>
               {{ order.Shipment.firstname }} {{ order.Shipment.lastname }}
             </p>
-            <p class="text-[15px] font-medium ">
+            <p class="text-[20px] font-medium">
               ที่อยู่: {{ order.Shipment.address }}
               {{ order.Shipment.district }} {{ order.Shipment.sub_district }}
               {{ order.Shipment.province }}
               {{ order.Shipment.zip_code }}
             </p>
-            <p class="text-[15px] font-medium ">
+            <p class="text-[20px] font-medium">
               เบอร์โทรศัพท์: {{ order.User.phone }}
             </p>
-            <p class="text-[15px] font-medium ">
-              ติดตามสินค้า: {{ order.tracking_number }}
-            </p>
+            <div class="text-[20px] font-medium flex justify-between">
+              <div class="w-[90%]">
+                ติดตามสินค้า:
+                <span class="w-full">
+                  {{ order.tracking_number }}
+                </span>
+              </div>
+              <div>
+                <i
+                  class="fa-solid fa-pen-to-square text-orange-500 cursor-pointer"
+                  @click="popupVisible = true"
+                ></i>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="w-full bg-white rounded-lg dropshadowbox p-6">
-          <h3 class="text-xl font-semibold text-center text-gray-800 mb-6">
+        <div class="w-full h-[40%] bg-white rounded-lg dropshadowbox p-6">
+          <h3 class="text-2xl font-semibold text-center text-gray-800 mb-10">
             ข้อมูลการการชำระ
           </h3>
-          <div class="flex flex-col justify-center items-center gap-2">
-            <span class="mr-[10px]">วันเ/วลาการโอน </span>
+          <div
+            class="flex flex-col justify-center items-center gap-4 text-[20px]"
+          >
+            <span class="mr-[10px]">วันเวลาการโอน </span>
             {{ formatDateTime(order.Payment.date) }}
-          </div>
-        </div>
-
-        <!-- Order Status Section -->
-        <div class="w-full bg-white rounded-lg dropshadowbox p-6">
-          <h3 class="text-xl font-semibold text-center text-gray-800 mb-5">
-            สถานะคำสั่งซื้อ
-          </h3>
-          <div class="flex flex-col items-center cursor-pointer">
-            <div
-              v-if="order.status === 'pending'"
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium"
-              @click="toggleMenu(order.id)"
-            >
-              รอการชำระ
-            </div>
-            <div
-              v-else-if="order.status === 'paid'"
-              class="w-[125px] p-[6px] px-4 border-[1px] rounded-[5px] bg-blue-30 border-blue-400 text-center font-medium"
-              @click="toggleMenu(order.id)"
-            >
-              ชำระเงินแล้ว
-            </div>
-            <div
-              v-else-if="order.status === 'prepare'"
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-slate-50 border-slate-400 text-center font-medium"
-              @click="toggleMenu(order.id)"
-            >
-              เตรียมสินค้า
-            </div>
-            <div
-              v-else-if="order.status === 'ship'"
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50  border-orange-400  text-center font-medium"
-              @click="toggleMenu(order.id)"
-            >
-              กำลังจัดส่ง
-            </div>
-            <div
-              v-else-if="order.status === 'success'"
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
-              @click="toggleMenu(order.id)"
-            >
-              จัดส่งเรียบร้อย
-            </div>
-            <div
-              v-else-if="order.status === 'cancelled'"
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
-              @click="toggleMenu(order.id)"
-            >
-              ยกเลิก
-            </div>
-            <div
-              v-else
-              class="w-[px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-600 text-center font-medium"
-              @click="toggleMenu(order.id)"
-            >
-              ชำระล้มเหลว
-            </div>
-            <div>
-              <ul
-                class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] -translate-x-[70px] flex flex-col gap-2 mt-[1px]"
-                v-show="isMenuVisible[order.id]"
-              >
-                <li
-                  class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
-                  @click="changeStatus(order.id, 'prepare')"
-                  :class="{ 'bg-gray-200': order.status === 'prepare' }"
-                  v-if="order.status !== 'prepare'"
-                >
-                  เตรียมสินค้า
-                </li>
-                <li
-                  class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
-                  @click="changeStatus(order.id, 'ship')"
-                  :class="{ 'bg-gray-200': order.status === 'ship' }"
-                  v-if="order.status !== 'ship'"
-                >
-                  กำลังจัดส่ง
-                </li>
-                <li
-                  class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
-                  @click="changeStatus(order.id, 'failed')"
-                  :class="{ 'bg-gray-200': order.status === 'failed' }"
-                  v-if="order.status !== 'failed'"
-                >
-                  ชำระล้มเหลว
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
@@ -203,7 +240,7 @@
     <div v-else class="absolute left-[1000px] top-[550px]">
       <svg
         aria-hidden="true"
-        class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-800 fill-blue-600"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +261,7 @@
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
       <div class="bg-white p-5 rounded shadow-lg">
-        <h3 class="text-lg font-bold flex justify-center mb-2 ">กรอกเลขพัสดุ</h3>
+        <h3 class="text-lg font-bold flex justify-center mb-2">กรอกเลขพัสดุ</h3>
         <input
           type="text"
           v-model="trackingNumber"
@@ -234,7 +271,7 @@
         <div class="flex justify-center mt-4">
           <button
             @click="confirmTracking"
-            class="bg-blue-500 w-[60px] text-white p-2  rounded"
+            class="bg-blue-500 w-[60px] text-white p-2 rounded" 
           >
             ยืนยัน
           </button>
@@ -255,14 +292,13 @@ import type { OrderRes, UpdateStatusOrder } from "~/models/order.model";
 import Swal from "sweetalert2";
 import service from "~/service";
 
-import { useIndexStore } from "~/store/main"
+import { useIndexStore } from "~/store/main";
 
 definePageMeta({
   middleware: "auth",
 });
 
 const store = useIndexStore();
-
 
 const route = useRoute();
 const loading = ref(false);
