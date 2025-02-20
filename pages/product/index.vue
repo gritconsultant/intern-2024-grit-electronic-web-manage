@@ -15,8 +15,8 @@
     </div>
 
     <!-- Search and Filter Section -->
-    <div class="flex justify-between items-center gap-4 mt-8">
-      <div class="flex gap-4 flex-1">
+    <div class="flex justify-between items-center gap-4 mt-4">
+      <div class="flex gap-4 items-end  flex-1">
         <!-- Search Bar -->
         <div class="relative w-1/2">
           <input
@@ -31,45 +31,48 @@
           ></i>
         </div>
 
-        <!-- Filter Dropdown -->
-        <div class="relative">
-          <!-- ปุ่ม Filter -->
-          <button
-            @click="toggleDropdown"
-            class="flex items-center gap-2 w-[210px] px-2 h-10 bg-orange-500 text-white rounded-full shadow hover:bg-orange-600"
-            type="button"
-          >
-            <div class="mt-[2px] pl-[2px]">
-              <i class="fa-solid fa-filter"></i>
-            </div>
-            <div class="flex justify-center w-full">
-              {{
-                selectedCategory ? selectedCategory.name : "เลือกประเภทสินค้า"
-              }}
-            </div>
-          </button>
+        <div>
+          <label for="" class="block text-sm font-medium text-black mb-1">ประเภทสินค้า</label>
+          <!-- Filter Dropdown -->
+          <div class="relative">
+            <!-- ปุ่ม Filter -->
+            <button
+              @click="toggleDropdown"
+              class="flex items-center gap-2 w-[210px] px-2 h-10 bg-orange-400 text-white rounded-full shadow hover:bg-orange-600"
+              type="button"
+            >
+              <div class="flex justify-center w-full">
+                {{
+                  selectedCategory ? selectedCategory.name : "เลือกประเภทสินค้า"
+                }}
+              </div>
+              <div class="mt-[2px] pr-2">
+                <i class="fa-solid fa-filter"></i>
+              </div>
+            </button>
 
-          <!-- Dropdown -->
-          <div
-            v-if="isDropdownVisible"
-            class="absolute mt-2 bg-white rounded-lg shadow-lg border w-48 z-10"
-          >
-            <ul class="py-2 text-sm text-gray-700">
-              <li
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                @click="selectCategory(null)"
-              >
-                ทั้งหมด
-              </li>
-              <li
-                v-for="(category, i) in categories"
-                :key="i"
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                @click="selectCategory(category)"
-              >
-                {{ category.name }}
-              </li>
-            </ul>
+            <!-- Dropdown -->
+            <div
+              v-if="isDropdownVisible"
+              class="absolute mt-2 bg-white rounded-lg shadow-lg border w-48 z-10"
+            >
+              <ul class="py-2 text-sm text-gray-700">
+                <li
+                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  @click="selectCategory(null)"
+                >
+                  ทั้งหมด
+                </li>
+                <li
+                  v-for="(category, i) in categories"
+                  :key="i"
+                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  @click="selectCategory(category)"
+                >
+                  {{ category.name }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

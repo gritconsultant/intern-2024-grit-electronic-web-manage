@@ -51,13 +51,11 @@ selectedMonth.value = getCurrentMonth();
 // Chart data
 let chartInstance: ChartJS | null = null;
 
-
 onMounted(() => {
   if (chartCanvas.value) {
     chartCanvas.value.width = 500;
     chartCanvas.value.height = 500;
 
-    // ฟังก์ชันสำหรับสร้างสี
     const generateColors = (count: number) => {
       const colors = [];
       const baseColors = [
@@ -79,56 +77,54 @@ onMounted(() => {
       return colors;
     };
 
-    const salesDataCount = Object.keys(props.salesData).length;
+    const salesValues = Object.values(props.salesData);
+    const salesLabels = Object.keys(props.salesData);
 
-    // ถ้าไม่มีข้อมูล
-    if (salesDataCount === 0) {
-      chartInstance = new ChartJS(chartCanvas.value, {
-        type: "doughnut",
-        data: {
-          labels: ["ไม่มีข้อมูล"], // ใช้ข้อความแสดงว่าไม่มีข้อมูล
-          datasets: [
-            {
-              label: "ยอดขาย",
-              data: [1], // ใส่ข้อมูลขั้นต่ำ เพื่อให้แสดงกราฟเป็นวง
-              backgroundColor: ["#d3d3d3"], // สีเทา
-              hoverOffset: 10,
+    // เปลี่ยนค่าที่เป็น 0 เป็น 1 เพื่อให้แสดงในกราฟ
+    const chartData = salesValues.map((value) => (value === 0 ? 5 : value));
+
+    // สร้างสีสำหรับแต่ละหมวดหมู่
+    const chartColors = generateColors(salesLabels.length);
+
+    // ตรวจสอบว่ามีข้อมูลที่เป็น 0 หรือไม่
+    const allZero = salesValues.every((value) => value === 0);
+
+    // สร้างกราฟ
+    chartInstance = new ChartJS(chartCanvas.value, {
+      type: "doughnut",
+      data: {
+        labels: salesLabels,
+        datasets: [
+          {
+            label: "ยอดขาย",
+            data: allZero ? [1] : chartData, // ถ้ามีแต่ 0 ให้ใส่แค่ 1 เพื่อให้แสดงกราฟ
+            backgroundColor: allZero ? ["#d3d3d3"] : chartColors, // ใช้สีเทา ถ้ามีแต่ 0
+            hoverOffset: 10,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "50%",
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const label = context.label || "";
+                const value = props.salesData[label] ?? 0;
+                // ถ้าค่าเป็น 0 จะแสดงว่า "ไม่มีข้อมูล" ใน tooltip
+                return value === 0
+                  ? `${label}: ไม่มีข้อมูล`
+                  : `${label}: ${value}`;
+              },
             },
-          ],
+          },
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "50%",
-        },
-      });
-    } else {
-      // กรณีมีข้อมูล
-      const chartColors = generateColors(salesDataCount);
-      chartInstance = new ChartJS(chartCanvas.value, {
-        type: "doughnut",
-        data: {
-          labels: Object.keys(props.salesData),
-          datasets: [
-            {
-              label: "ยอดขาย",
-              data: Object.values(props.salesData),
-              backgroundColor: chartColors,
-              hoverOffset: 10,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "50%",
-        },
-      });
-    }
+      },
+    });
   }
 });
-
-
 </script>
 
 <style scoped>
@@ -149,5 +145,4 @@ canvas {
   max-width: 500px;
   z-index: 1;
 }
-
 </style>
