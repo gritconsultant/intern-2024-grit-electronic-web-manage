@@ -2,7 +2,7 @@
   <div class="defaultpages p-8 pb-16">
     <div v-if="product.id !== 0" class="h-full">
       <div
-        class="header mb-8 bg-white h-[10%] flex items-center justify-between pl-[10px] dropshadowbox rounded-lg"
+        class="header mb-8 bg-white h-[10%] flex items-center justify-between pl-[10px] border-[1px] drop-shadow-lg rounded-lg"
       >
         <h1 class="text-3xl font-bold text-gray-800">
           สินค้า #{{ product.id }}

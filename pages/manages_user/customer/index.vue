@@ -2,7 +2,7 @@
   <div class="defaultpages flex flex-col gap-2 p-6 bg-gray-50">
     <!-- Header Section -->
     <div
-      class="flex items-center justify-between h-[10%] bg-white pl-[10px] rounded-lg dropshadowbox"
+      class="flex items-center justify-between h-[10%] bg-white pl-[10px] rounded-lg border-[1px] drop-shadow-lg"
     >
       <h1 class="text-[25px] font-bold">รายการบัญชีลูกค้า</h1>
     </div>

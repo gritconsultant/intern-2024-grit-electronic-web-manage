@@ -1,7 +1,7 @@
 <template>
   <div class="defaultpages flex flex-col gap-4 p-6">
     <div
-      class="flex items-center justify-between pl-[10px] bg-white dropshadowbox rounded-lg h-[10%] p-5"
+      class="flex items-center justify-between pl-[10px] bg-white border-[1px] drop-shadow-lg  rounded-lg h-[10%] p-5"
     >
       <h1 class="text-2xl font-bold">บันทึกการทำงานของระบบ</h1>
     </div>

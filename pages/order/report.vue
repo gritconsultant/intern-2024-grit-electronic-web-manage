@@ -2,7 +2,7 @@
   <div class="defaultpages flex flex-col gap-6 p-6">
     <!-- Header -->
     <div
-      class="flex justify-between items-center bg-white p-5 rounded-lg dropshadowbox"
+      class="flex justify-between items-center bg-white p-5 rounded-lg  border-[1px] drop-shadow-lg"
     >
       <h1 class="text-2xl font-bold text-gray-800">รายงานการขายสินค้า</h1>
     </div>

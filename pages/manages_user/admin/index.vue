@@ -2,7 +2,7 @@
   <div class="defaultpages flex flex-col gap-2 p-6 bg-gray-50">
     <!-- Header Section -->
     <div
-      class="flex items-center justify-between bg-white rounded-lg dropshadowbox pl-[10px] h-[10%]"
+      class="flex items-center justify-between bg-white rounded-lg border-[1px] drop-shadow-lg pl-[10px] h-[10%]"
     >
       <h1 class="text-[25px] font-bold">รายการบัญชีผู้ดูแล</h1>
 

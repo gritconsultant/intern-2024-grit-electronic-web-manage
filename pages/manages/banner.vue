@@ -2,9 +2,9 @@
   <div class="defaultpages flex flex-col gap-4 p-6">
     <!-- Header Section -->
     <div
-      class="flex items-center justify-between bg-white rounded-lg dropshadowbox p-5 h-[10%]"
+      class="flex items-center justify-between bg-white rounded-lg border-[1px] drop-shadow-lg px-6 h-[10%]"
     >
-      <h1 class="text-2xl font-bold">แบนเนอร์</h1>
+      <h1 class="text-2xl font-bold ">แบนเนอร์</h1>
 
       <button
         @click="popupVisible = true"

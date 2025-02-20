@@ -3,7 +3,7 @@
     <!-- Header Section -->
     <div class="w-full flex items-center justify-center h-[10%]">
       <div
-        class="flex items-center justify-center h-full w-[100%] rounded-lg bg-white dropshadowbox"
+        class="flex items-center pl-6 h-full w-[100%] rounded-lg bg-white border-[1px] drop-shadow-lg"
       >
         <h1 class="text-[26px] font-bold text-gray-800 mr-[90 px]">ธนาคาร</h1>
       </div>

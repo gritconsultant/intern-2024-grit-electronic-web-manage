@@ -1,11 +1,11 @@
 <template>
   <div class="defaultpages">
-    <div class="w-full h-full p-8 space-y-6"
+    <div class="w-full h-full p-6 space-y-6"
     v-if="!loading"
     >
       <!-- Header -->
       <div
-        class="flex items-center h-[10%] px-12 bg-white rounded-lg shadow-md"
+        class="flex items-center h-[10%] pl-6 bg-white rounded-lg border-[1px] drop-shadow-lg"
       >
         <h1 class="text-3xl font-bold">แดชบอร์ด</h1>
       </div>

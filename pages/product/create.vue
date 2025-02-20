@@ -1,168 +1,159 @@
 <template>
-  <div class="defaultpages px-8 py-10">
+  <div class="defaultpages px-8 py-8">
     <div
-      class="flex items-center justify-between mb-4 bg-white p-4 dropshadowbox rounded-lg"
+      class="mb-10 bg-white h-[10%] flex items-center justify-between pl-[10px] border-[1px] drop-shadow-lg   rounded-lg"
     >
       <h1 class="text-3xl font-bold text-gray-800">เพิ่มสินค้า</h1>
     </div>
 
-    <div class="grid gap-4">
-      <!-- Product Name -->
-      <div>
-        <label
-          for="product-name"
-          class="block text-lg font-medium text-gray-700"
-          >ชื่อสินค้า</label
-        >
-        <input
-          type="text"
-          id="product-name"
-          placeholder="กรอกชื่อสินค้า"
-          class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
-          v-model="product.name"
-        />
-      </div>
-
-      <!-- Product Category, Price, and Status -->
-      <div class="grid grid-cols-2 gap-8">
-        <!-- Left Column -->
-        <div>
-          <label
-            for="product-category"
-            class="block text-lg font-medium text-gray-700"
-            >ประเภทสินค้า</label
-          > 
-          <select
-            v-model="product.category_id"
-            id="product-category"
-            class="w-full h-[60%] mt-2 dropshadowboxabsolut rounded-lg  pr-5 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
-          >
-            <option
-              v-for="(category, index) in categories"
-              :key="index"
-              :value="category.id"
-            >
-              {{ category.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label
-            for="product-price"
-            class="block text-lg font-medium text-gray-700"
-            >ราคา</label
-          >
-          <input
-            type="number"
-            id="product-price"
-            placeholder="กรอกราคา"
-            class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
-            v-model="product.price"
-          />
-        </div>
-      </div>
-
-      <!-- Product Status and Quantity -->
-      <div class="grid grid-cols-2 gap-8">
-        <div>
-          <label
-            for="product-status"
-            class="block text-lg font-medium text-gray-700"
-            >สถานะสินค้า</label
-          >
-          <label class="relative inline-flex items-center mt-2">
-            <input
-              type="checkbox"
-              id="product-status"
-              v-model="product.is_active"
-              class="sr-only peer"
-              @change="onStatusChange"
-            />
+    <div class="bg-slate-400 h-[85%]">
+      <!-- Product List Section -->
+      <div
+        class="flex flex-col bg-white dropshadowbox rounded-lg p-4 w-[100%] h-full"
+      >
+        <div class="flex gap-8 p-6 w-full">
+          <div class="product-image flex flex-col gap-4 w-80">
             <div
-              class="w-14 h-8 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 transition-colors"
-            ></div>
-            <div
-              class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md peer-checked:translate-x-6 transition-transform"
-            ></div>
-          </label>
-        </div>
-        <div>
-          <label
-            for="product-quantity"
-            class="block text-lg font-medium text-gray-700"
-            >จำนวน</label
-          >
-          <input
-            type="number"
-            id="product-quantity"
-            placeholder="กรอกจำนวน"
-            class="w-full mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
-            v-model="product.stock"
-          />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-8">
-        <!-- Product Image -->
-        <div>
-          <h3 class="text-lg font-medium text-gray-700">รูปสินค้า</h3>
-          <div
-            class="flex flex-col items-center justify-center mt-4 rounded-lg border border-dashed border-gray-300 p-6 bg-gray-50"
-          >
-            <!-- กล่องแสดงรูป -->
-            <div
-              class="w-48 h-48 flex items-center justify-center rounded-lg shadow-md bg-white"
+              class="h-60 w-full bg-gray-300 rounded-lg flex items-center justify-center relative"
             >
               <img
                 v-if="imageUrl"
                 :src="imageUrl"
                 alt="Preview"
-                class="w-full h-full object-cover rounded-lg"
+                class="object-cover h-full w-full rounded-lg border-[1px]"
               />
-              <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
             </div>
-            <!-- ปุ่ม Input -->
             <input
               type="text"
               ref="fileInput"
               @change="onFileChange"
               accept="image/*"
-              class="mt-4 w-[50%] text-center border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
-              placeholder="กรุณาใส่ลิ้งรูปสินค้า"
+              placeholder="กรอก URL รูปภาพ"
+              class="w-full rounded-lg p-3 pl-3 text-gray-700 dropshadowboxsub"
             />
           </div>
+
+          <div class="product-info flex flex-col justify-between gap-6 w-full">
+            <div class="product-details flex flex-col gap-6">
+              <div class="product-name text-xl font-semibold">
+                <label for="product-name" class="block">ชื่อ</label>
+                <input
+                  type="text"
+                  id="product-name"
+                  v-model="product.name"
+                  placeholder="กรุณากรอกชื่อสินค้า"
+                  class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                />
+              </div>
+
+              <div class="product-type-price flex gap-6 justify-between">
+                <div class="product-category text-xl font-semibold w-1/2">
+                  <label for="product-category" class="block">ประเภท</label>
+                  <select
+                    v-model="product.category_id"
+                    id="product-category"
+                    class="w-full h-[66%] border border-gray-300 dropshadowboxabsolut bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none dropshadowboxabsolute"
+                  >
+                    <option
+                      v-for="(category, index) in categories"
+                      :key="index"
+                      :value="category.id"
+                    >
+                      {{ category.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="product-price text-xl font-semibold w-1/2">
+                  <label for="product-price" class="block">ราคา</label>
+                  <input
+                    type="number"
+                    v-model="product.price"
+                    placeholder="กรุณากรอกราคา"
+                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  />
+                </div>
+              </div>
+
+              <div class="product-quantity flex items-center gap-4">
+                <label class="text-xl font-semibold">จำนวนสินค้า</label>
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-2">
+                    <button
+                      class="bg-orange-500 text-white text-[20px] px-2 py-1 h-[25px] rounded-md flex items-center justify-center"
+                      @click="decreaseAmount"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      id="product-quantity"
+                      v-model="product.stock"
+                      class="w-10 p-1 h-[25px] text-center border border-gray-300 rounded-md"
+                    />
+                    <button
+                      class="bg-orange-500 text-white px-2 py-1 h-[25px] rounded-md flex items-center justify-center"
+                      @click="increaseAmount"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-status flex justify-between items-center">
+              <div class="status flex gap-4">
+                <span for="product-status" class="text-lg font-semibold"
+                  >สถานะสินค้า</span
+                >
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="product-status"
+                    v-model="product.is_active"
+                    class="sr-only peer"
+                    @change="onStatusChange"
+                  />
+                  <div
+                    class="w-16 h-8 bg-orange-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-600/70 rounded-full peer-checked:bg-orange-500 transition-colors"
+                  ></div>
+                  <div
+                    class="absolute w-7 h-7 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-8 transition-transform"
+                  ></div>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- Product Details -->
-        <div class="">
-          <label
-            for="product-details"
-            class="block text-lg font-medium text-gray-700 mb-2"
-            >รายละเอียด</label
-          >
+
+        <!-- Product Description -->
+        <div class="product-description mt-4 px-6 w-full">
+          <h3 class="text-2xl font-semibold">รายละเอียด</h3>
           <textarea
             id="product-details"
-            rows="4"
-            placeholder="ระบุรายละเอียดสินค้า"
-            class="w-full h-[87%] mt-2 rounded-lg p-4 border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+            class="w-full p-5 mt-2 border border-gray-300 rounded-md"
+            rows="6"
             v-model="product.description"
+            placeholder="กรุณากรอกรายละเอียดสินค้า"
           ></textarea>
         </div>
-      </div>
 
-      <!-- Action Buttons -->
-      <div class="flex justify-center gap-8 mt-2">
-        <button
-          @click.prevent="confirmCancel"
-          class="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
-        >
-          ยกเลิก
-        </button>
-        <button
-          @click="confirmSubmit"
-          class="px-6 py-3 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors"
-        >
-          ยืนยัน
-        </button>
+        <!-- Action Buttons -->
+        <div class="flex justify-center gap-8 mt-8">
+          <button
+            @click.prevent="confirmCancel"
+            class="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
+          >
+            ยกเลิก
+          </button>
+          <button
+            @click="confirmSubmit"
+            class="px-6 py-3 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors"
+          >
+            ยืนยัน
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -179,14 +170,13 @@ import type {
 } from "~/models/product.model";
 import service from "~/service";
 
-import { useIndexStore } from "~/store/main"
+import { useIndexStore } from "~/store/main";
 
 definePageMeta({
   middleware: "auth",
 });
 
 const store = useIndexStore();
-
 
 const Category = ref();
 
@@ -344,7 +334,7 @@ const getCategorylist = async () => {
           name: c.name,
           is_active: c.is_active,
           image: c.image,
-          TotalProduct: c.TotalProduct
+          TotalProduct: c.TotalProduct,
         };
         categoryList.push(category);
       }
@@ -390,7 +380,7 @@ const getProductList = async () => {
             name: e.category?.name ?? "",
             is_active: e.category?.is_active ?? true,
             image: e.category?.image ?? [], // Default to empty string if category name is missing
-            TotalProduct: e.category?.TotalProduct?? 0, // Default to 0 if category name is missing
+            TotalProduct: e.category?.TotalProduct ?? 0, // Default to 0 if category name is missing
           },
           Review:
             e.Review?.map((r: any) => ({
@@ -476,6 +466,18 @@ const onStatusChange = () => {
   });
 };
 
+const inputAmount = ref<number>(0); // ค่าที่จะเพิ่ม/ลด
+
+const increaseAmount = () => {
+  product.value.stock += 1;  // Directly modify product.stock
+};
+
+const decreaseAmount = () => {
+  if (product.value.stock > 0) {  // Ensure stock doesn't go below 0
+    product.value.stock -= 1;
+  }
+};
+
 onMounted(async () => {
   await getCategorylist();
   await getProductList();
@@ -488,5 +490,10 @@ input,
 select,
 textarea {
   transition: all 0.3s ease-in-out;
+}
+
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

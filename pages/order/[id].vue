@@ -1,7 +1,7 @@
 <template>
   <div class="defaultpages p-6 pl-7" v-if="order">
     <!-- Order Header -->
-    <div class="bg-white rounded-lg p-4 flex justify-between dropshadowbox">
+    <div class="bg-white rounded-lg p-4 flex justify-between border-[1px] drop-shadow-lg">
       <div>
         <h1 class="text-3xl font-semibold text-gray-800">
           คำสั่งซื้อ #{{ order.id }}
