@@ -110,7 +110,7 @@
 
               <div class="product-status flex justify-between items-center">
                 <div class="status flex gap-4">
-                  <span class="text-lg font-semibold">สถานะสินค้า</span>
+                  <span class="text-lg font-semibold">แสดงสินค้า</span>
                   <label
                     class="relative inline-flex items-center cursor-pointer"
                   >

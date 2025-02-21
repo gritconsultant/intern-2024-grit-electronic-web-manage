@@ -15,7 +15,7 @@
     </div>
 
     <!-- Search and Filter Section -->
-    <div class="flex justify-between items-center gap-4 mt-4">
+    <div class="flex justify-between items-center gap-4 mt-2">
       <div class="flex gap-4 items-end  flex-1">
         <!-- Search Bar -->
         <div class="relative w-1/2">
@@ -91,7 +91,7 @@
             <th class="px-4 py-2 w-[15%]">ประเภท</th>
             <th class="px-4 py-2 w-[15%]">ราคา</th>
             <th class="px-4 py-2 w-[15%]">จำนวน</th>
-            <th class="px-4 py-2 w-[15%]">สถานะสินค้า</th>
+            <th class="px-4 py-2 w-[15%]">แสดงสินค้า</th>
             <th class="px-4 py-2 w-[15%]">การจัดการ</th>
           </tr>
         </thead>

@@ -160,14 +160,12 @@
       v-if="showAddCategory"
       @close="closeForm"
       @categoryAdded="handleCategoryAdd"
-      class="absolute top-[200px] left-[700px]"
     />
     <EditCategory
       v-if="showEditCategory && selectedCategoryId !== null"
       :categoryId="selectedCategoryId"
       @categoryUpdated="handleCategoryUpdate"
       @close="closeForm"
-      class="absolute top-[200px] left-[700px]"
     />
   </div>
 </template>

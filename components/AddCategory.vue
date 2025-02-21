@@ -1,70 +1,74 @@
 <template>
   <div
-    class="bg-white shadow-md rounded-lg p-8  h-[700px] w-[800px] max-w-3xl mx-auto dropshadowboxabsolute"
+    class="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center"
   >
-    <div class="flex items-center justify-between mb-10">
-      <h1 class="text-4xl font-bold text-gray-800">เพิ่มประเภทสินค้า</h1>
-    </div>
-    <div class="flex flex-col gap-6">
-      <!-- ชื่อประเภทสินค้า -->
-      <div class="flex flex-col gap-2">
-        <label for="category-name" class="text-lg font-medium text-gray-700"
-          >ชื่อประเภทสินค้า</label
-        >
-        <input
-          type="text"
-          id="category-name"
-          v-model="category.name"
-          class="rounded-md border-gray-300 w-full p-3 text-gray-700 dropshadowboxsub"
-          placeholder="กรอกชื่อประเภทสินค้า"
-        />
+    <div
+      class="bg-white shadow-md rounded-lg p-8 h-[700px] w-[800px] max-w-3xl mx-auto dropshadowboxabsolute"
+    >
+      <div class="flex items-center justify-between mb-10">
+        <h1 class="text-4xl font-bold text-gray-800">เพิ่มประเภทสินค้า</h1>
       </div>
-
-      <!-- อัพโหลดไฟล์และแสดงภาพ -->
-      <div class="flex flex-col gap-4  items-center justify-between  h-[350px]">
-        <div class="flex flex-col items-start gap-2 w-full">
-          <label for="image-url" class="text-lg font-medium text-gray-700"
-            >อัพโหลดรูปภาพ</label
+      <div class="flex flex-col gap-6">
+        <!-- ชื่อประเภทสินค้า -->
+        <div class="flex flex-col gap-2">
+          <label for="category-name" class="text-lg font-medium text-gray-700"
+            >ชื่อประเภทสินค้า</label
           >
-          <div class="flex items-end h-full w-full">
-            <div class="flex flex-col gap-5  w-full">
-              <input
-                type="text"
-                id="image-url"
-                v-model="category.image"
-                placeholder="กรอก URL รูปภาพ"
-                class="w-full rounded-lg  p-3 pl-3 text-gray-700 dropshadowboxsub"
-              />
+          <input
+            type="text"
+            id="category-name"
+            v-model="category.name"
+            class="rounded-md border-gray-300 w-full p-3 text-gray-700 dropshadowboxsub"
+            placeholder="กรอกชื่อประเภทสินค้า"
+          />
+        </div>
+
+        <!-- อัพโหลดไฟล์และแสดงภาพ -->
+        <div class="flex flex-col gap-4 items-center justify-between h-[350px]">
+          <div class="flex flex-col items-start gap-2 w-full">
+            <label for="image-url" class="text-lg font-medium text-gray-700"
+              >อัพโหลดรูปภาพ</label
+            >
+            <div class="flex items-end h-full w-full">
+              <div class="flex flex-col gap-5 w-full">
+                <input
+                  type="text"
+                  id="image-url"
+                  v-model="category.image"
+                  placeholder="กรอก URL รูปภาพ"
+                  class="w-full rounded-lg p-3 pl-3 text-gray-700 dropshadowboxsub"
+                />
+              </div>
             </div>
           </div>
+          <div
+            class="flex justify-center items-center w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
+          >
+            <img
+              v-if="category.image"
+              :src="category.image"
+              alt="Preview"
+              class="w-[400px] h-[400px] rounded-[5px] object-cover"
+            />
+            <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
+          </div>
         </div>
-        <div
-          class="flex justify-center items-center  w-64 h-64 border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
-        >
-          <img
-            v-if="category.image"
-            :src="category.image"
-            alt="Preview"
-            class="w-[400px] h-[400px] rounded-[5px] object-cover"
-          />
-          <span v-else class="text-gray-500">ไม่มีรูปที่เลือก</span>
-        </div>
-      </div>
 
-      <!-- ปุ่มยืนยันและยกเลิก -->
-      <div class="flex justify-center gap-6 mt-6">
-        <button
-          @click="confirmCancel"
-          class="px-6 py-3 rounded-md bg-red-600 text-white font-medium hover:bg-red-700 transition"
-        >
-          ยกเลิก
-        </button>
-        <button
-          @click="confirm"
-          class="px-6 py-3 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition"
-        >
-          ยืนยัน
-        </button>
+        <!-- ปุ่มยืนยันและยกเลิก -->
+        <div class="flex justify-center gap-6 mt-6">
+          <button
+            @click="confirmCancel"
+            class="px-6 py-3 rounded-md bg-red-600 text-white font-medium hover:bg-red-700 transition"
+          >
+            ยกเลิก
+          </button>
+          <button
+            @click="confirm"
+            class="px-6 py-3 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition"
+          >
+            ยืนยัน
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -162,14 +166,16 @@ const confirm = () => {
     cancelButtonText: "ยกเลิก",
   }).then(async (result) => {
     if (result.isConfirmed) {
-      await addCategory();  // เรียกฟังก์ชันสำหรับเพิ่มข้อมูลประเภท
-      Swal.fire("สำเร็จ!", "ประเภทสินค้าได้ถูกเพิ่มแล้ว", "success").then(() => {
-        window.location.reload(); // รีเฟรชหน้าหลังจากกด "ตกลง"
-      });
+      await addCategory(); // เรียกฟังก์ชันสำหรับเพิ่มข้อมูลประเภท
+      Swal.fire("สำเร็จ!", "ประเภทสินค้าได้ถูกเพิ่มแล้ว", "success").then(
+        () => {
+          window.location.reload(); // รีเฟรชหน้าหลังจากกด "ตกลง"
+        }
+      );
     }
   });
 
-  emit("close");  // ปิดฟอร์ม
+  emit("close"); // ปิดฟอร์ม
 };
 
 const emit = defineEmits(["close", "addCategory"]);
@@ -191,8 +197,6 @@ const confirmCancel = () => {
 };
 
 // เพิ่มอีเวนต์ emit
-
-
 </script>
 
 <style></style>

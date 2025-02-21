@@ -35,10 +35,10 @@
           <tr
             class="flex gap-5 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]"
           >
-            <th class="w-[20%] text-start">หมายเลขผู้ใช้งาน</th>
-            <th class="w-[20%]">ชื่อ</th>
-            <th class="w-[30%]">อีเมล</th>
-            <th class="w-[25%]">รายละเอียดเพิ่มเติม</th>
+            <th class="w-[20%] text-start  ">หมายเลขผู้ใช้งาน</th>
+            <th class="w-[25%] text-start ">ชื่อ</th>
+            <th class="w-[25%] text-start ">อีเมล</th>
+            <th class="w-[25%] text-start ">รายละเอียดเพิ่มเติม</th>
           </tr>
         </thead>
         <tbody class="w-full text-[15px]" v-if="!loading">
@@ -47,16 +47,16 @@
             :key="index"
             class="flex gap-5 py-[8px] border-b-[1px]"
           >
-            <th class="w-[20%] font-medium truncate flex gap-2">
+            <th class="w-[20%] font-medium truncate flex text-start  gap-2">
               {{ customer.id }}
             </th>
-            <th class="w-[20%] font-medium flex justify-center truncate">
+            <th class="w-[25%] font-medium text-start  flex truncate">
               {{ customer.firstname }} {{ customer.lastname }}
             </th>
-            <th class="w-[30%] font-medium truncate">
+            <th class="w-[25%] font-medium text-start  truncate">
               {{ customer.email }}
             </th>
-            <th class="w-[25%] font-medium flex justify-center truncate">
+            <th class="w-[25%] font-medium flex text-start pl-[50px]  truncate">
               <i
                 class="fa-regular fa-eye text-[20px] cursor-pointer"
                 @click="openEditCustomer(customer.id)"

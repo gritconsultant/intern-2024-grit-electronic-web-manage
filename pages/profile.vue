@@ -63,7 +63,7 @@
             @click="updateAdmin"
             class="bg-orange-300 text-white p-2 rounded-md w-[200px] hover:bg-orange-500 trallansition-"
           >
-            แก้ไขข้อมูล
+            บันทึกข้อมูล
           </button>
         </div>
       </div>

@@ -194,7 +194,7 @@ const passwordMismatch = computed(() => {
 
 // Check if password is long enough
 const passwordTooShort = computed(() => {
-  return admin.value.password.length < 10;
+  return admin.value.password.length < 8;
 });
 
 // Calculate how many characters are missing for the password to be 10 characters long

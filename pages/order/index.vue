@@ -15,7 +15,7 @@
           <input
             type="search"
             class="w-full h-10 pl-12 pr-4 rounded-full border border-orange-400 focus:ring-2 focus:ring-orange-500 outline-none text-gray-800"
-            placeholder="ค้นหาคำสั่งซื้อ"
+            placeholder="ค้นหาคำสั่งซื้อและชื่อลูกค้า"
             v-model="search"
             @keyup.enter="getOrderList"
           />

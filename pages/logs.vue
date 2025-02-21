@@ -1,7 +1,7 @@
 <template>
   <div class="defaultpages flex flex-col gap-4 p-6">
     <div
-      class="flex items-center justify-between pl-[10px] bg-white border-[1px] drop-shadow-lg  rounded-lg h-[10%] p-5"
+      class="flex items-center justify-between pl-6 bg-white border-[1px] drop-shadow-lg  rounded-lg h-[10%] p-5"
     >
       <h1 class="text-2xl font-bold">บันทึกการทำงานของระบบ</h1>
     </div>
@@ -238,12 +238,16 @@ const formatDate = (dateInput: string | number) => {
 
   if (isNaN(date.getTime())) return "Invalid Date"; // ตรวจสอบค่า
 
-  return date.toLocaleDateString("th-TH", {
+  return date.toLocaleString("th-TH", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false, // ถ้าต้องการให้เวลาเป็น AM/PM
   });
 };
+
 
 // เพิ่ม watch สำหรับ start และ end (ให้แสดงข้อมูลใหม่เมื่อเลือกวันที่ใหม่)
 watch([start, end], async () => {

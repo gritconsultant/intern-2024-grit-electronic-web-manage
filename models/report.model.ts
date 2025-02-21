@@ -6,14 +6,22 @@ export interface Dashboard {
 }
 
 export interface SaleReport {
-  OrderID: number;
-  UserName: string;
-  ProductName: string;
-  Amount: number;
-  Price: number;
-  TotalPrice: number;
-  Created_at: number;
+  order_id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  total_amount: number;
+  total_price: number;
+  products: Product[];
+  created_at: number;
 }
+
+interface Product {
+  product_name: string;
+  price: number;
+  total_product_amount: number;
+}
+
 
 export interface ParamsReport {
   page: number;

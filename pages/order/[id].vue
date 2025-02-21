@@ -87,7 +87,7 @@
           </div>
           <div class="  ">
             <ul
-              class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] -translate-x-[70px] flex flex-col gap-2 mt-[1px] z-[9999]"
+              class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] -translate-x-[70px] flex flex-col gap-2 mt-[1px] z-10"
               v-show="isMenuVisible[order.id]"
             >
               <li

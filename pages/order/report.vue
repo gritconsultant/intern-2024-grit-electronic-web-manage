@@ -2,7 +2,7 @@
   <div class="defaultpages flex flex-col gap-6 p-6">
     <!-- Header -->
     <div
-      class="flex justify-between items-center bg-white p-5 rounded-lg  border-[1px] drop-shadow-lg"
+      class="flex justify-between items-center bg-white p-5 rounded-lg border-[1px] drop-shadow-lg"
     >
       <h1 class="text-2xl font-bold text-gray-800">รายงานการขายสินค้า</h1>
     </div>
@@ -14,7 +14,7 @@
         <select
           id="year"
           v-model="selectedYear"
-          class="border px-4 py-2  dropshadowboxabsolut focus:ring-orange-500 focus:border-orange-500"
+          class="border px-4 py-2 dropshadowboxabsolut focus:ring-orange-500 focus:border-orange-500"
         >
           <option v-for="year in years" :key="year" :value="year">
             {{ year }}
@@ -42,18 +42,17 @@
 
     <!-- Sales Table -->
     <div
-      class="bg-white p-4 rounded-lg dropshadowbox h-[80%] flex flex-col justify-between"
+      class="bg-white py-3 p-4 rounded-lg dropshadowbox h-[80%] flex flex-col justify-between"
     >
       <table class="w-full">
         <thead class="w-full">
           <tr class="border-b-2 mb-[8px] mt-[8px] w-full">
-            <th class="text-center">หมายเลขคำสั่งซื้อ</th>
-            <th class="text-center">ชื่อผู้ซื้อ</th>
-            <th class="text-center">รายการสินค้า</th>
-            <th class="text-center r">จำนวน</th>
-            <th class="text-center">ราคา</th>
-            <th class="text-center">ยอดรวม</th>
-            <th class="text-center">วันที่สั่งซื้อ</th>
+            <th class="w-[15%] text-start pl-8">หมายเลขคำสั่งซื้อ</th>
+            <th class="w-[15%] text-start">วันที่สั่งซื้อ</th>
+            <th class="w-[15%] text-start">ชื่อผู้ซื้อ</th>
+            <th class="w-[15%] text-start">จำนวน</th>
+            <th class="w-[15%] text-start">ราคา</th>
+            <th class="w-[5%] text-start">สินค้า</th>
           </tr>
         </thead>
         <tbody v-if="!loading">
@@ -62,13 +61,55 @@
             :key="index"
             class="border-b hover:bg-orange-50 text-[15px] font-medium"
           >
-            <td class="p-4 text-center">{{ report.OrderID }}</td>
-            <td class="p-4 text-center">{{ report.UserName }}</td>
-            <td class="p-4 text-center">{{ report.ProductName }}</td>
-            <td class="p-4 text-center">{{ report.Amount }}</td>
-            <td class="p-4 text-center">{{ report.Price }}</td>
-            <td class="p-4 text-center">{{ report.TotalPrice }}</td>
-            <td class="p-4 text-center">{{ formatDate(report.Created_at) }}</td>
+            <td class="py-3 pl-10 w-[15%] text-start">
+              {{ report.order_id }}
+            </td>
+            <td class="py-3 w-[15%] text-start">
+              {{ formatDate(report.created_at) }}
+            </td>
+            <td class="py-3 w-[15%] text-start">
+              {{ report.firstname }}
+            </td>
+            <td class="py-3 w-[15%] text-start">
+              {{ report.total_amount }}
+            </td>
+            <td class="py-3 w-[15%] text-start">
+              {{ report.total_price }}
+            </td>
+            <td class="py-3 w-[5%] text-start pl-4">
+              <i
+                v-if="popupVisible[report.order_id] === true"
+                class="fa-solid fa-caret-down cursor-pointer"
+                @click="togglePopup(report.order_id)"
+              ></i>
+              <i
+                v-else
+                class="fa-solid fa-caret-up cursor-pointer"
+                @click="togglePopup(report.order_id)"
+              ></i>
+
+              <!-- dropdown detail product -->
+              <div
+                v-show="popupVisible[report.order_id]"
+                class=" h-[138px] bg-white border-b-[1px] border-r-[1px] border-l-[1px] drop-shadow-lg border-gray-300  w-[98%] absolute -translate-x-[1541px] translate-y-[13px]"
+              >
+                <div class="p-3 h-full">
+                  <!-- เนื้อหาของ dropdown -->
+                  <p class="font-medium text-[15px]">รายละเอียดของสินค้า</p>
+                  <div class=" w-full h-[80%] p-2 flex gap-4 ">
+                    <div
+                      class="bg-white border-[1px] border-gray-400 p-[1px] px-2 rounded-lg h-[28px] flex justify-center items-center gap-5"
+                      v-for="(product, index) in report.products"
+                      :key="index"
+                    >
+                      <div>{{ product.product_name }}</div>
+                      <div>{{ product.total_product_amount }} ชิ้น</div>
+                      <div>{{ product.price }} บาท</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
           </tr>
           <!-- <tr v-if="salereport.length === 0">
             <td colspan="6" class="absolute left-[700px] top-[300px]">
@@ -124,7 +165,7 @@
           <button
             @click="changePage(currentPage - 1)"
             :disabled="currentPage === 1"
-            class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50"
+            class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
             ก่อนหน้า
           </button>
@@ -132,7 +173,7 @@
           <button
             @click="changePage(currentPage + 1)"
             :disabled="currentPage >= Math.ceil(paginate.Total / size)"
-            class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50"
+            class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300"
           >
             ถัดไป
           </button>
@@ -154,7 +195,7 @@ definePageMeta({
 
 const store = useIndexStore();
 
-const size = ref(9); // ทำให้เป็น ref
+const size = ref(10); // ทำให้เป็น ref
 const currentPage = ref(1); // ตั้งค่า currentPage เริ่มต้นที่ 1
 const paginate = ref<{ Total: number }>({ Total: 0 });
 const loading = ref(false);
@@ -209,13 +250,20 @@ const getSaleReport = async () => {
         for (let i = 0; i < data.length; i++) {
           const s = data[i];
           const report: SaleReport = {
-            OrderID: s.OrderID,
-            UserName: s.UserName,
-            ProductName: s.ProductName,
-            Amount: s.Amount,
-            Price: s.Price,
-            TotalPrice: s.TotalPrice,
-            Created_at: s.Created_at,
+            order_id: s.order_id,
+            username: s.username,
+            firstname: s.firstname,
+            lastname: s.lastname,
+            total_amount: s.total_amount,
+            total_price: s.total_price,
+            created_at: s.created_at,
+            products: s.products
+              ? s.products.map((product: any) => ({
+                  product_name: product.product_name,
+                  price: product.price,
+                  total_product_amount: product.total_product_amount,
+                }))
+              : [],
           };
           reportsale.push(report);
         }
@@ -266,6 +314,23 @@ const formatDate = (dateInput: string | number) => {
   });
 };
 
+const popupVisible = reactive<{ [key: number]: boolean }>({});
+
+const togglePopup = (orderId: number) => {
+  // ถ้า orderId ที่คลิกเปิดอยู่แล้ว จะปิด
+  if (popupVisible[orderId]) {
+    popupVisible[orderId] = false;
+  } else {
+    // ปิดทุกตัวก่อน แล้วเปิดตัวใหม่
+    for (const key in popupVisible) {
+      popupVisible[key] = false; // ปิดทุก orderId
+    }
+    popupVisible[orderId] = true; // เปิดตัวใหม่
+  }
+};
+
+console.log(popupVisible);
+
 watch(selectedYear, async (newYear) => {
   console.log("📅 ปีที่เลือก:", newYear);
   currentPage.value = 1;
@@ -285,6 +350,4 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
-/* สไตล์เพิ่มเติมสำหรับสีส้ม */
-</style>
+<style scoped></style>

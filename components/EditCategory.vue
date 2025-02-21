@@ -1,6 +1,7 @@
 <template>
-  <div
-    class="bg-white shadow-md rounded-lg p-8 h-[700px] w-[800px] max-w-3xl mx-auto dropshadowboxabsolute"
+  <div class="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center">
+    <div
+    class="bg-white shadow-md rounded-lg p-8 h-[700px] w-[800px]  dropshadowboxabsolute"
   >
     <div class="flex items-center justify-between mb-10">
       <h1 class="text-4xl font-bold text-gray-800">แก้ไขประเภทสินค้า</h1>
@@ -69,6 +70,7 @@
         </button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

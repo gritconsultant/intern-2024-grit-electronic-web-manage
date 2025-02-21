@@ -47,9 +47,9 @@
             class="flex gap-2 border-b-[2px] border-gray-400 pb-[8px] pt-[8px]"
           >
             <th class="w-[20%] text-start">หมายเลขผู้ใช้งาน</th>
-            <th class="w-[20%]">ชื่อ</th>
-            <th class="w-[30%]">อีเมล</th>
-            <th class="w-[30%]">การจัดการ</th>
+            <th class="w-[25%] text-start">ชื่อ</th>
+            <th class="w-[25%] text-start">อีเมล</th>
+            <th class="w-[25%] ">การจัดการ</th>
           </tr>
         </thead>
         <tbody class="w-full" v-if="!loading">
@@ -61,9 +61,9 @@
             <th class="w-[20%] truncate text-start">
               {{ admin.id }}
             </th>
-            <th class="w-[20%] truncate">{{ admin.name }}</th>
-            <th class="w-[30%] truncate">{{ admin.email }}</th>
-            <th class="w-[30%] flex justify-center gap-8 truncate">
+            <th class="w-[25%] text-start truncate">{{ admin.name }}</th>
+            <th class="w-[25%] text-start truncate">{{ admin.email }}</th>
+            <th class="w-[25%] text-start flex justify-center gap-8 truncate">
               <i
                 @click="openEditAdmin(admin.id)"
                 class="fa-solid fa-pen-to-square text-[20px] text-orange-400 cursor-pointer"
