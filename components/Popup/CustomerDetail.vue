@@ -11,25 +11,29 @@
         <i class="fa-solid fa-circle-xmark"></i>
       </button>
       <div class="p-6">
-        <h2 class="text-[20px] font-semibold mb-4">
-          ข้อมูลบัญชีลูกค้า
-        </h2>
+        <h2 class="text-[20px] font-semibold mb-4">ข้อมูลบัญชีลูกค้า</h2>
         <form action="">
           <div class="mb-4">
             <label for="name" class="block text-[15px]">ชื่อ</label>
-            <div class="text-[20px] pl-[20px] w-full py-1 border-b-[1px] border-gray-500 ">
+            <div
+              class="text-[20px] pl-[20px] w-full py-1 border-b-[1px] border-gray-500"
+            >
               {{ customers.firstname }} {{ customers.lastname }}
             </div>
           </div>
           <div class="mb-4">
             <label for="name" class="block text-[15px]">อีเมล</label>
-            <div class="text-[20px] pl-[20px] w-full border-b-[1px] border-gray-500">
+            <div
+              class="text-[20px] pl-[20px] w-full border-b-[1px] border-gray-500"
+            >
               {{ customers.email }}
             </div>
           </div>
           <div class="mb-4">
             <label for="name" class="block text-[15px]">เบอร์โทรศัพท์</label>
-            <div class="text-[20px] pl-[20px] w-full border-b-[1px] border-gray-500">
+            <div
+              class="text-[20px] pl-[20px] w-full border-b-[1px] border-gray-500"
+            >
               {{ customers.phone }}
             </div>
           </div>
@@ -45,11 +49,12 @@
           </div>
           <div class="flex justify-end">
             <button
-            type="button"
-            class="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            แก้ไขรหัสผ่าน
-          </button>
+              type="button"
+              class="px-4 py-2 bg-blue-500 text-white rounded-md"
+              @click="updatepassword"
+            >
+              แก้ไขรหัสผ่าน
+            </button>
           </div>
         </form>
       </div>
@@ -120,13 +125,13 @@ const getCustomerById = async () => {
         password: "", // Avoid showing password
         shipment: {
           id: data.shipment.id,
-          firstname: data.shipment.firstname ,
-          lastname: data.shipment.lastname ,
-          address: data.shipment.address  || "ไม่มีข้อมูล" ,
-          zip_code: data.shipment.zip_code ,
-          sub_district: data.shipment.sub_district ,
-          district: data.shipment.district ,
-          province: data.shipment.province ,
+          firstname: data.shipment.firstname,
+          lastname: data.shipment.lastname,
+          address: data.shipment.address || "ไม่มีข้อมูล",
+          zip_code: data.shipment.zip_code,
+          sub_district: data.shipment.sub_district,
+          district: data.shipment.district,
+          province: data.shipment.province,
         },
       };
       console.log("Customer Data:", customers.value);
@@ -136,6 +141,43 @@ const getCustomerById = async () => {
     console.error("ไม่สามารถดึงข้อมูลลูกค้าได้:", error);
   }
 };
+
+const updatepassword = async () => {
+  const customerId = props.customersId || route.params.id;
+
+  if (!customerId) {
+    console.error("ไม่พบ customerId");
+    alert("เกิดข้อผิดพลาด: ไม่พบรหัสลูกค้า");
+    return;
+  }
+
+  if (!customers.value.phone || customers.value.phone === "ไม่มีข้อมูล") {
+    alert("ไม่พบเบอร์โทรศัพท์ของลูกค้า ไม่สามารถอัปเดตรหัสผ่านได้");
+    return;
+  }
+
+  try {
+    const newPassword = customers.value.phone;
+    const customerIdNumber = Number(customerId); // ✅ แปลงเป็น number
+
+    console.log("📌 กำลังอัปเดตรหัสผ่าน...");
+    console.log("🔹 Customer ID:", customerIdNumber);
+    console.log("🔹 New Password:", newPassword);
+
+    const response = await service.user.UpdatePasswordCustomer(customerIdNumber, {
+      id: customerIdNumber, // ✅ ส่งเป็น number
+      password: newPassword,
+    });
+
+    console.log("✅ อัปเดตรหัสผ่านสำเร็จ:", response.data);
+    alert("อัปเดตรหัสผ่านสำเร็จ!");
+  } catch (error: any) {
+    console.error("❌ เกิดข้อผิดพลาดในการอัปเดตรหัสผ่าน:", error);
+    alert("เกิดข้อผิดพลาดในการอัปเดตรหัสผ่าน กรุณาลองใหม่อีกครั้ง");
+  }
+};
+
+
 
 const closeCustomerDetail = () => {
   showCustomerDetail.value = false;
