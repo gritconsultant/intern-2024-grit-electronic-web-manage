@@ -75,6 +75,12 @@ export interface CustomerRes{
   shipment: shipment;
 }
 
+
+export interface UpdatePassword {
+  id: number;
+  password: string;
+}
+
 export interface shipment {
   id: number;
   firstname: string;

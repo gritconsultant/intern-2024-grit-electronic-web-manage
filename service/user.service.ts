@@ -1,6 +1,6 @@
 import type { Params } from "~/models/client.model";
 import { client } from "./httpClient";
-import type { AdminUpdate } from "~/models/user.model";
+import type { AdminUpdate, UpdatePassword } from "~/models/user.model";
 
 export const getAdminInfo = () => {
   return client({
@@ -61,3 +61,11 @@ export const getCustomerById = (id: any) => {
     method: "GET",
   });
 };
+
+export const UpdatePasswordCustomer =(id: any, datas: UpdatePassword) => {
+  return client({
+    url: `/user/${id}`,
+    method: "PATCH",
+    data: datas,
+  });
+}
