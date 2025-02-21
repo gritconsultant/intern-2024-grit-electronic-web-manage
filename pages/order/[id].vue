@@ -14,10 +14,10 @@
       <div class="flex justify-center items-center">
         <!-- Order Status Section -->
         <label for=""></label>
-        <div class="flex flex-col items-center cursor-pointer">
+        <div class="flex flex-col items-center cursor-pointer ">
           <div
             v-if="order.status === 'pending'"
-            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium "
             @click="toggleMenu(order.id)"
           >
             รอการชำระ
@@ -189,7 +189,7 @@
 
       <!-- Shipping Information Section -->
       <div class="w-[30%] flex flex-col gap-6 items-center">
-        <div class="w-full h-[60%] bg-white rounded-lg dropshadowbox p-6">
+        <div class="w-full h-[60%] bg-white rounded-lg dropshadowbox p-6 ship-container ">
           <h3 class="text-2xl font-semibold text-center text-gray-800 mb-10">
             ข้อมูลการจัดส่ง
           </h3>
@@ -577,4 +577,14 @@ onMounted(() => {
 });
 </script>
 
-<style></style>
+<style>
+.ship-container {
+  z-index: -1;
+}
+
+.status-dropdown {
+  z-index: 50;
+}
+
+
+</style>
