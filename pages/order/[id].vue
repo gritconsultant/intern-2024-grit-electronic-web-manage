@@ -1,7 +1,9 @@
 <template>
   <div class="defaultpages p-6 pl-7" v-if="order">
     <!-- Order Header -->
-    <div class="bg-white rounded-lg p-4 flex justify-between border-[1px] drop-shadow-lg">
+    <div
+      class="bg-white rounded-lg p-4 flex justify-between border-[1px] drop-shadow-lg"
+    >
       <div>
         <h1 class="text-3xl font-semibold text-gray-800">
           คำสั่งซื้อ #{{ order.id }}
@@ -14,10 +16,10 @@
       <div class="flex justify-center items-center">
         <!-- Order Status Section -->
         <label for=""></label>
-        <div class="flex flex-col items-center cursor-pointer ">
+        <div class="flex flex-col items-center cursor-pointer">
           <div
             v-if="order.status === 'pending'"
-            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium "
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium"
             @click="toggleMenu(order.id)"
           >
             รอการชำระ
@@ -128,11 +130,11 @@
           <table class="w-full h-[85%]">
             <thead class="w-full">
               <tr class="flex gap-10 border-b-2 border-gray-500 pr-[10px]">
-                <th class="text-gray-800 text-lg w-[20%] ">รูป</th>
-                <th class="text-gray-800 text-lg w-[20%] ">ชื่อ</th>
-                <th class="text-gray-800 text-lg w-[20%] ">ราคา</th>
-                <th class="text-gray-800 text-lg w-[20%] ">จำนวน</th>
-                <th class="text-gray-800 text-lg w-[20%] ">รวม</th>
+                <th class="text-gray-800 text-lg w-[20%]">รูป</th>
+                <th class="text-gray-800 text-lg w-[20%]">ชื่อ</th>
+                <th class="text-gray-800 text-lg w-[20%]">ราคา</th>
+                <th class="text-gray-800 text-lg w-[20%]">จำนวน</th>
+                <th class="text-gray-800 text-lg w-[20%]">รวม</th>
               </tr>
             </thead>
             <tbody class="flex flex-col h-full w-full mt-2 overflow-y-scroll">
@@ -142,7 +144,7 @@
                 :key="index"
               >
                 <div class="py-2 w-full flex gap-12">
-                  <th class="w-[20%] ">
+                  <th class="w-[20%]">
                     <div class="flex justify-center items-center object-cover">
                       <img
                         :src="product.image"
@@ -153,19 +155,19 @@
                   </th>
                   <NuxtLink
                     :to="`/product/${product.product_id}`"
-                    class="hover:text-orange-600 cursor-pointer w-[20%] flex justify-center items-center "
+                    class="hover:text-orange-600 cursor-pointer w-[20%] flex justify-center items-center"
                   >
                     <th>
                       {{ product.product_name }}
                     </th>
                   </NuxtLink>
-                  <th class="w-[20%] flex justify-center items-center ">
+                  <th class="w-[20%] flex justify-center items-center">
                     {{ product.price }}
                   </th>
-                  <th class="w-[20%] flex justify-center items-center ">
+                  <th class="w-[20%] flex justify-center items-center">
                     {{ product.total_product_amount }}
                   </th>
-                  <th class="w-[20%] flex justify-center items-center ">
+                  <th class="w-[20%] flex justify-center items-center">
                     {{ product.price * product.total_product_amount }}
                   </th>
                 </div>
@@ -176,8 +178,8 @@
           <div
             class="mt-6 border-t-2 border-gray-500 pt-2 flex justify-between items-center text-lg text-gray-700"
           >
-            <span class="font-bold ">รวมทั้งหมด</span>
-            <div class="w-[45%] flex justify-end  gap-[85px]  ">
+            <span class="font-bold">รวมทั้งหมด</span>
+            <div class="w-[45%] flex justify-end gap-[85px]">
               <span class="">จำนวนรวม : {{ order.total_amount }} ชิ้น</span>
               <span class="mr-[60px]"
                 >ราคารวม : {{ order.total_price }} บาท</span
@@ -189,7 +191,9 @@
 
       <!-- Shipping Information Section -->
       <div class="w-[30%] flex flex-col gap-6 items-center">
-        <div class="w-full h-[60%] bg-white rounded-lg dropshadowbox p-6 ship-container ">
+        <div
+          class="w-full h-[60%] bg-white rounded-lg dropshadowbox p-6 ship-container"
+        >
           <h3 class="text-2xl font-semibold text-center text-gray-800 mb-10">
             ข้อมูลการจัดส่ง
           </h3>
@@ -271,7 +275,7 @@
         <div class="flex justify-center mt-4">
           <button
             @click="confirmTracking"
-            class="bg-blue-500 w-[60px] text-white p-2 rounded" 
+            class="bg-blue-500 w-[60px] text-white p-2 rounded"
           >
             ยืนยัน
           </button>
@@ -500,22 +504,35 @@ const confirmTracking = async () => {
   }
 
   if (selectedOrderId.value !== null) {
-    const currentOrder = order.value; // ใช้ตัวแปรที่ชัดเจนเพื่อเข้าถึง order
-
+    const currentOrder = order.value;
     if (currentOrder) {
-      // ตรวจสอบว่า currentOrder ไม่เป็น null หรือ undefined
-      console.log("Selected order for tracking:", currentOrder); // ตรวจสอบค่าของ order
+      console.log("Selected order for tracking:", currentOrder);
 
       if (currentOrder.id === selectedOrderId.value) {
-        currentOrder.tracking_number = trackingNumber.value.trim(); // ใช้ .value ในการเข้าถึง order
-        currentOrder.status = "ship";
+        const isStatusChanged = currentOrder.status !== "ship";
+        const isTrackingChanged =
+          currentOrder.tracking_number !== trackingNumber.value.trim();
 
-        await updatestatus(selectedOrderId.value, currentOrder);
-        Swal.fire(
-          "สำเร็จ!",
-          "บันทึกเลขพัสดุและเปลี่ยนสถานะเรียบร้อย",
-          "success"
-        );
+        // ตรวจสอบว่ามีการเปลี่ยนเลขพัสดุ หรือสถานะ
+        if (isTrackingChanged || isStatusChanged) {
+          currentOrder.tracking_number = trackingNumber.value.trim();
+
+          if (isStatusChanged) {
+            currentOrder.status = "ship";
+          }
+
+          await updatestatus(selectedOrderId.value, currentOrder);
+
+          Swal.fire(
+            "สำเร็จ!",
+            isStatusChanged
+              ? "บันทึกเลขพัสดุและเปลี่ยนสถานะเรียบร้อย"
+              : "บันทึกเลขพัสดุเรียบร้อย",
+            "success"
+          );
+        } else {
+          Swal.fire("ไม่มีการเปลี่ยนแปลง", "ข้อมูลยังคงเดิม", "info");
+        }
       }
     } else {
       Swal.fire("ไม่พบข้อมูลคำสั่งซื้อ", "กรุณาลองใหม่อีกครั้ง", "error");
@@ -523,7 +540,7 @@ const confirmTracking = async () => {
   }
 
   popupVisible.value = false;
-  trackingNumber.value = ""; // Reset tracking number
+  trackingNumber.value = "";
 };
 
 const formatDateTime = (dateInput: string | number) => {
@@ -549,9 +566,6 @@ const formatDateTime = (dateInput: string | number) => {
       .padStart(2, "0")} น.`
   );
 };
-
-// ตัวอย่างการใช้งาน
-console.log(formatDateTime("2025-02-13T12:37")); // 13 กุมภาพันธ์ 2025 เวลา 12:37 น.
 
 const updatestatus = async (orderId: number, order: any) => {
   await service.order
@@ -579,12 +593,10 @@ onMounted(() => {
 
 <style>
 .ship-container {
-  z-index: -1;
+  z-index: 0;
 }
 
 .status-dropdown {
   z-index: 50;
 }
-
-
 </style>

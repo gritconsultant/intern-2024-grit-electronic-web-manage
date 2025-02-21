@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'gritElectronixManages',
+      title: 'BangkokbrandManages',
       script: [
         {
           src: 'https://kit.fontawesome.com/02a8dd6235.js',
