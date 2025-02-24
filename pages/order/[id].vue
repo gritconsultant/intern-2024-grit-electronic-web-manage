@@ -17,86 +17,105 @@
         <!-- Order Status Section -->
         <label for=""></label>
         <div class="flex flex-col items-center cursor-pointer">
+          <!-- Pending status -->
           <div
             v-if="order.status === 'pending'"
             class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-yellow-50 border-yellow-400 text-center font-medium"
             @click="toggleMenu(order.id)"
           >
             รอการชำระ
-            <div class="w-[25px] flex justify-end items-center">
+            <div class="w-[30px] flex justify-end items-center">
               <i class="fa-solid fa-caret-down text-[15px]"></i>
             </div>
           </div>
+
+          <!-- Paid status -->
           <div
             v-else-if="order.status === 'paid'"
             class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-blue-30 border-blue-400 text-center font-medium"
             @click="toggleMenu(order.id)"
           >
             ชำระเงินแล้ว
-            <div class="w-[16px] flex justify-end items-center">
+            <div class="w-[20px] flex justify-end items-center">
               <i class="fa-solid fa-caret-down text-[15px]"></i>
             </div>
           </div>
+
+          <!-- Prepare status -->
           <div
             v-else-if="order.status === 'prepare'"
             class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-slate-50 border-slate-400 text-center font-medium"
             @click="toggleMenu(order.id)"
           >
             เตรียมสินค้า
-            <div class="w-[20px] flex justify-end items-center">
+            <div class="w-[24px] flex justify-end items-center">
               <i class="fa-solid fa-caret-down text-[15px]"></i>
             </div>
           </div>
+
+          <!-- Ship status -->
           <div
             v-else-if="order.status === 'ship'"
             class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-orange-50 border-orange-400 text-center font-medium"
-            @click="toggleMenu(order.id)"
+            @click="handleStatusClick(order, 'ship')"
           >
             กำลังจัดส่ง
-            <div class="w-[25px] flex justify-end items-center">
+            <div class="w-[26px] flex justify-end items-center">
               <i class="fa-solid fa-caret-down text-[15px]"></i>
             </div>
           </div>
+
+          <!-- Success status -->
           <div
             v-else-if="order.status === 'success'"
             class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-green-50 border-green-400 text-center font-medium"
-            @click="toggleMenu(order.id)"
+            @click="handleStatusClick(order, 'success')"
           >
-            <span> จัดส่งเรียบร้อย </span>
-            <div class="w-[25px] flex justify-end items-center">
+            <span class=""> จัดส่งเรียบร้อย </span>
+            <div class="flex justify-end items-center">
               <i class="fa-solid fa-caret-down text-[15px]"></i>
             </div>
           </div>
+
+          <!-- Cancelled status -->
           <div
             v-else-if="order.status === 'cancelled'"
-            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-600 text-center font-medium"
-            @click="toggleMenu(order.id)"
+            class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-400 text-center font-medium"
+            @click="handleStatusClick(order, 'cancelled')"
           >
             ยกเลิก
-            <div class="w-full flex justify-end items-center">
+            <div class="w-[55px] flex justify-end items-center">
               <i class="fa-solid fa-caret-down text-[15px]"></i>
             </div>
           </div>
+
+          <!-- Failed status -->
           <div
             v-else
             class="flex gap-2 w-[140px] p-[6px] px-4 border-[1px] rounded-[5px] bg-red-50 border-red-600 text-center font-medium"
-            @click="toggleMenu(order.id)"
+            @click="handleStatusClick(order, 'failed')"
           >
             ชำระล้มเหลว
-            <div class="w-[13px] flex justify-end items-center">
+            <div class="w-[16px] flex justify-end items-center">
               <i class="fa-solid fa-caret-down text-[15px]"></i>
             </div>
           </div>
-          <div class="  ">
+
+          <!-- Status menu -->
+          <div>
             <ul
-              class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] -translate-x-[70px] flex flex-col gap-2 mt-[1px] z-10"
+              class="absolute bg-white border-[1px] rounded-[20px] border-gray-400 shadow-xl py-3 w-[140px] -translate-x-[70px] flex flex-col gap-2 mt-[1px]"
               v-show="isMenuVisible[order.id]"
             >
               <li
                 class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
                 @click="changeStatus(order.id, 'prepare')"
                 :class="{ 'bg-gray-200': order.status === 'prepare' }"
-                v-if="order.status !== 'prepare'"
+                v-if="
+                  order.status !== 'prepare' &&
+                  order.status !== 'ship' &&
+                  order.status !== 'success'
+                "
               >
                 เตรียมสินค้า
               </li>
@@ -104,7 +123,7 @@
                 class="h-[25%] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
                 @click="changeStatus(order.id, 'ship')"
                 :class="{ 'bg-gray-200': order.status === 'ship' }"
-                v-if="order.status !== 'ship'"
+                v-if="order.status !== 'ship' && order.status !== 'success'"
               >
                 กำลังจัดส่ง
               </li>
@@ -112,7 +131,11 @@
                 class="h-[25%] text-[14px] hover:bg-slate-300 flex items-center justify-center cursor-pointer"
                 @click="changeStatus(order.id, 'failed')"
                 :class="{ 'bg-gray-200': order.status === 'failed' }"
-                v-if="order.status !== 'failed'"
+                v-if="
+                  order.status !== 'failed' &&
+                  order.status !== 'ship' &&
+                  order.status !== 'success'
+                "
               >
                 ชำระล้มเหลว
               </li>
@@ -259,6 +282,7 @@
         />
       </svg>
     </div>
+
     <!-- Popup Tracking Number -->
     <div
       v-if="popupVisible"
@@ -270,8 +294,14 @@
           type="text"
           v-model="trackingNumber"
           class="border p-2 w-full rounded-lg"
-          placeholder="ใส่เลขพัสดุ"
+          placeholder="ใส่เลขพัสดุ "
+          maxlength="13"
         />
+        <label
+          for=""
+          class="text-[10px] flex justify-center mt-[2px] text-red-500"
+          >กรุณาใส่หมายเลขพัสดุที่มีความยาว 13 หลักและไม่มีตัวอักษร</label
+        >
         <div class="flex justify-center mt-4">
           <button
             @click="confirmTracking"
@@ -448,6 +478,30 @@ const popupVisible = ref(false);
 const trackingNumber = ref("");
 const selectedOrderId = ref<number | null>(null);
 
+// Arrow function for handleStatusClick
+const handleStatusClick = (order: OrderRes, status: string) => {
+  const handleStatusChange = (status: string) => {
+    if (
+      status === "ship" ||
+      status === "success" ||
+      status === "cancelled" ||
+      status === "failed"
+    ) {
+      // Show SweetAlert if the status is 'ship' or 'success'
+      Swal.fire({
+        icon: "warning",
+        title: "ไม่สามารถเปลี่ยนสถานะได้",
+        text: "สถานะนี้ไม่สามารถแก้ไขได้",
+      });
+    } else {
+      // Call toggleMenu function if status is changeable
+      toggleMenu(order.id);
+    }
+  };
+
+  handleStatusChange(status);
+};
+
 // Toggle the visibility of the menu for a specific order
 const toggleMenu = (orderId: number) => {
   isMenuVisible.value = {
@@ -498,22 +552,38 @@ const changeStatus = async (orderId: number, status: string) => {
 };
 
 const confirmTracking = async () => {
+  // ตรวจสอบว่าเลขพัสดุกรอกหรือยัง
   if (!trackingNumber.value.trim()) {
     Swal.fire("กรุณาใส่เลขพัสดุ", "", "warning");
     return;
   }
 
+  // ตรวจสอบความยาวและรูปแบบของหมายเลขพัสดุ
+  const trackingRegex = /^[A-Za-z]{2}\d{9}[A-Za-z]{2}$/; // ตัวอักษร 2 ตัว, ตัวเลข 9 ตัว, ตัวอักษร 2 ตัว
+  if (
+    trackingNumber.value.length !== 13 ||
+    !trackingRegex.test(trackingNumber.value)
+  ) {
+    Swal.fire({
+      icon: "error",
+      title: "หมายเลขพัสดุไม่ถูกต้อง",
+    });
+    return;
+  }
+
+  // ตรวจสอบว่าเลือกคำสั่งซื้อแล้วหรือไม่
   if (selectedOrderId.value !== null) {
     const currentOrder = order.value;
     if (currentOrder) {
       console.log("Selected order for tracking:", currentOrder);
 
+      // ตรวจสอบว่า ID ของคำสั่งซื้อตรงกับ selectedOrderId
       if (currentOrder.id === selectedOrderId.value) {
         const isStatusChanged = currentOrder.status !== "ship";
         const isTrackingChanged =
           currentOrder.tracking_number !== trackingNumber.value.trim();
 
-        // ตรวจสอบว่ามีการเปลี่ยนเลขพัสดุ หรือสถานะ
+        // ตรวจสอบว่ามีการเปลี่ยนแปลงหมายเลขพัสดุหรือสถานะหรือไม่
         if (isTrackingChanged || isStatusChanged) {
           currentOrder.tracking_number = trackingNumber.value.trim();
 
@@ -539,6 +609,7 @@ const confirmTracking = async () => {
     }
   }
 
+  // รีเซ็ตค่าฟอร์มและปิด Popup
   popupVisible.value = false;
   trackingNumber.value = "";
 };
