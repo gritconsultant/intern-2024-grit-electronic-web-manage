@@ -77,7 +77,7 @@
                       type="text"
                       v-model="otherBank"
                       placeholder="กรอกชื่อธนาคาร"
-                      class="p-2 border rounded-md w-[200px]"
+                      class="p-2 border-l-[1px]  w-[250px]"
                     />
                     <button
                       @click="confirmBank"
@@ -243,7 +243,7 @@ const updateBank = async () => {
       console.error("Error updating bank:", error);
     })
     .finally(() => {
-      console.log('Bank updated');
+      console.log("Bank updated");
     });
 };
 
@@ -299,6 +299,16 @@ const isValidUrl = (url: string) => {
 const imageUrl = ref<string | null>(null);
 
 const saveData = () => {
+  // ตรวจสอบว่าถ้าเลือก "อื่นๆ" แต่ไม่ได้กรอกชื่อธนาคาร
+  if (bank.value.bank_name === "อื่นๆ" && !otherBank.value.trim()) {
+    Swal.fire(
+      "กรุณากรอกชื่อธนาคาร",
+      "หากเลือก 'อื่นๆ' ต้องกรอกชื่อธนาคาร",
+      "warning"
+    );
+    return;
+  }
+
   // ตรวจสอบว่าทุกช่องที่จำเป็นถูกกรอกครบหรือไม่
   if (
     !bank.value.bank_name ||
@@ -334,19 +344,21 @@ const saveData = () => {
   });
 };
 
-
 // กำหนดตัวแปร isDataChanged
 const isDataChanged = ref(false);
 
-watch(bank, () => {
-  isDataChanged.value =
-    bank.value.bank_name !== bankRes.value.bank_name ||
-    bank.value.account_number !== bankRes.value.account_number ||
-    bank.value.account_name !== bankRes.value.account_name ||
-    bank.value.description !== bankRes.value.description ||
-    bank.value.image !== bankRes.value.image;
-}, { deep: true });
-
+watch(
+  bank,
+  () => {
+    isDataChanged.value =
+      bank.value.bank_name !== bankRes.value.bank_name ||
+      bank.value.account_number !== bankRes.value.account_number ||
+      bank.value.account_name !== bankRes.value.account_name ||
+      bank.value.description !== bankRes.value.description ||
+      bank.value.image !== bankRes.value.image;
+  },
+  { deep: true }
+);
 
 watch(
   () => bank.value.bank_name,
