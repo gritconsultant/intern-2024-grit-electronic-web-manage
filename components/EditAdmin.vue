@@ -55,12 +55,19 @@
         </div>
 
         <div v-if="isConfirming" class="mb-4">
-          <p><strong>ชื่อ:</strong> {{ admin.name }}</p>
-          <p><strong>อีเมล:</strong> {{ admin.email }}</p>
-          <p><strong>รหัสผ่าน:</strong> **********</p>
+          <p v-if="admin.name !== adminRes.name">
+            <strong>ชื่อ:</strong> {{ admin.name }}
+          </p>
+          <p v-if="admin.email !== adminRes.email">
+            <strong>อีเมล:</strong> {{ admin.email }}
+          </p>
+          <p v-if="admin.password && admin.password.trim() !== ''">
+            <strong>รหัสผ่าน:</strong> **********
+          </p>
         </div>
 
         <div class="flex justify-end gap-2">
+          <!-- ปุ่มปิด -->
           <button
             type="button"
             @click="askForConfirmation"
@@ -69,22 +76,28 @@
             ปิด
           </button>
 
+          <!-- ปุ่มบันทึก -->
           <button
             v-if="!isConfirming"
             type="submit"
-            class="px-4 py-2 bg-blue-500 text-white rounded-md"
-            :disabled="false"
+            :class="{
+              'bg-blue-500': isFormChanged, // สีฟ้าหากมีการเปลี่ยนแปลง
+              'bg-gray-300 cursor-not-allowed': !isFormChanged, // สีเทาและไม่สามารถกดได้ถ้าไม่มีการเปลี่ยนแปลง
+            }"
+            class="px-4 py-2 text-white rounded-md"
+            :disabled="!isFormChanged"
           >
-            ยืนยัน
+            บันทึก
           </button>
 
+          <!-- ปุ่มยืนยัน -->
           <button
             v-if="isConfirming"
             type="button"
             class="px-4 py-2 bg-green-500 text-white rounded-md"
             @click="updateAdmin"
           >
-            บันทึก
+            ยืนยัน
           </button>
         </div>
       </form>
@@ -151,36 +164,36 @@ const updateAdmin = async () => {
     Swal.fire("ไม่มีการเปลี่ยนแปลง", "ไม่พบข้อมูลที่ต้องการอัปเดต", "info");
     return;
   }
-
   const updatedAdmin = {
-    id: admin.value.id, // ตรวจสอบว่า admin.value.id เป็นตัวเลข
+    id: admin.value.id,
     name: admin.value.name || adminRes.value.name,
     email: admin.value.email || adminRes.value.email,
-    role_id: admin.value.role_id ?? 1,
+    role_id: admin.value.role_id ?? adminRes.value.role_id,
     is_active: admin.value.is_active ?? adminRes.value.is_active,
-    ...(admin.value.password && admin.value.password !== adminRes.value.password
-      ? { password: admin.value.password }
-      : {}),
+    password:
+      admin.value.password && admin.value.password.trim() !== ""
+        ? admin.value.password
+        : undefined, // ถ้าไม่ได้กรอกรหัสใหม่ก็ไม่ส่งค่า password
   };
 
-  // ตรวจสอบให้แน่ใจว่า admin.id เป็นตัวเลข
+  console.log("🔍 updatedAdmin:", updatedAdmin); // ตรวจสอบค่าก่อนส่ง API
+
   if (isNaN(updatedAdmin.id) || updatedAdmin.id <= 0) {
     Swal.fire("ข้อผิดพลาด", "ID ของผู้ดูแลไม่ถูกต้อง", "error");
     return;
   }
 
   try {
-    await service.user.updateAdmin(updatedAdmin.id, updatedAdmin); // ส่งข้อมูลที่ตรวจสอบแล้ว
+    await service.user.updateAdmin(updatedAdmin.id, updatedAdmin);
     Swal.fire(
       "ข้อมูลผู้ดูแลถูกอัปเดตแล้ว",
       "ข้อมูลผู้ดูแลได้รับการแก้ไขสำเร็จ",
       "success"
     ).then(() => {
-      window.location.reload(); // รีเฟรชหน้าหลังจากกด "OK"
+      window.location.reload();
     });
-    
   } catch (error: any) {
-    console.error("❌ Error Response:", error.response);
+    console.error(" Error Response:", error.response);
     const errorMessage =
       error.response?.data?.message || "ไม่สามารถอัปเดตข้อมูลผู้ดูแลได้";
     Swal.fire("ข้อผิดพลาด", errorMessage, "error");
@@ -251,11 +264,21 @@ const passwordTooShort = computed(() => {
 const isConfirming = ref(false);
 
 const isFormChanged = computed(() => {
+  console.log("isFormChanged", {
+    nameChanged: admin.value.name !== adminRes.value.name,
+    emailChanged: admin.value.email !== adminRes.value.email,
+    passwordChanged: admin.value.password !== adminRes.value.password,
+    confirmPasswordChanged:
+      confirmPassword.value && confirmPassword.value !== admin.value.password,
+    roleChanged: admin.value.role_id !== adminRes.value.role_id,
+    isActiveChanged: admin.value.is_active !== adminRes.value.is_active,
+  });
+
   return (
     admin.value.name !== adminRes.value.name ||
     admin.value.email !== adminRes.value.email ||
     admin.value.password !== adminRes.value.password ||
-    confirmPassword.value !== admin.value.password ||
+    (confirmPassword.value && confirmPassword.value !== admin.value.password) ||
     admin.value.role_id !== adminRes.value.role_id ||
     admin.value.is_active !== adminRes.value.is_active
   );

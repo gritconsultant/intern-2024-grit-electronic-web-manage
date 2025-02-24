@@ -141,7 +141,7 @@ const confirm = () => {
   if (category.value.name.trim() === "") {
     Swal.fire({
       title: "ข้อผิดพลาด",
-      text: "กรุณากรอกชื่อประเภทสินค้า",
+      text: "กรุณากรอกชื่อประเภทสินค้าและ URL รูปภาพก่อนบันทึก",
       icon: "error",
       confirmButtonText: "ตกลง",
     });

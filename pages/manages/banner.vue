@@ -4,7 +4,7 @@
     <div
       class="flex items-center justify-between bg-white rounded-lg border-[1px] drop-shadow-lg px-6 h-[10%]"
     >
-      <h1 class="text-2xl font-bold ">แบนเนอร์</h1>
+      <h1 class="text-2xl font-bold">แบนเนอร์</h1>
 
       <button
         @click="popupVisible = true"
@@ -261,29 +261,26 @@ const deletebanner = async (id: number) => {
 };
 
 const confirmDeleteBanner = async (id: number) => {
-  // Show the confirmation dialog
+  if (paginate.value.Total <= 1) {
+    Swal.fire("ไม่สามารถลบได้!", "ต้องมีแบนเนอร์อย่างน้อย 1 รูป", "warning");
+    return;
+  }
+
   const result = await Swal.fire({
-    title: "คุณแน่ใจหรือไม่?", // ข้อความในกล่องยืนยัน
-    text: "คุณต้องการลบรูปนี้หรือไม่?", // ข้อความเสริมในกล่อง
-    icon: "warning", // ไอคอนเตือน
-    showCancelButton: true, // แสดงปุ่มยกเลิก
-    confirmButtonText: "ยืนยัน", // ข้อความปุ่มยืนยัน
-    cancelButtonText: "ยกเลิก", // ข้อความปุ่มยกเลิก
+    title: "คุณแน่ใจหรือไม่?",
+    text: "คุณต้องการลบรูปนี้หรือไม่?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
   });
 
-  // If the user confirms the deletion
   if (result.isConfirmed) {
     try {
-      // Call the deleteCategory function to delete the category
       await deletebanner(id);
-
-      // Show success message after deletion
       Swal.fire("ลบสำเร็จ!", "รูปนี้ได้ถูกลบแล้ว", "success");
-
-      // รีโหลดข้อมูลใหม่หลังจากการลบแบนเนอร์
-      window.location.reload(); // รีเฟรชทั้งหน้า
+      await getbanner(); // โหลดข้อมูลใหม่หลังจากลบ
     } catch (error) {
-      // If an error occurs during deletion, show error message
       Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถลบรูปนี้ได้", "error");
     }
   }
@@ -304,7 +301,7 @@ const confirmaddbanner = async () => {
   if (result.isConfirmed) {
     try {
       await adddbanner(); // รอให้แบนเนอร์ถูกเพิ่มเสร็จ
-      Swal.fire("สำเร็จ!", "แบนเนอร์ถูกเพิ่มเรียบร้อย", "success");
+      Swal.fire("สำเร็จ!", "แบนเนอร์ถูกเพิ่มเรียบร้อย", "success")
       popupVisible.value = false;
 
       // รีเซ็ตค่า addbanner หลังจากการเพิ่มสำเร็จ

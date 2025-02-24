@@ -52,8 +52,8 @@
                     <label class="block">ประเภท</label>
                     <select
                       v-model="product.category_id"
-                      id="product-category" 
-                      class="w-full  h-[66%]  border border-gray-300  dropshadowboxabsolut  bg-white   focus:ring-2 focus:ring-orange-500 focus:outline-none dropshadowboxabsolute"
+                      id="product-category"
+                      class="w-full h-[66%] border border-gray-300 dropshadowboxabsolut bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none dropshadowboxabsolute"
                     >
                       <option
                         v-for="(category, index) in categories"
@@ -70,6 +70,7 @@
                     <input
                       type="number"
                       v-model="product.price"
+                      @input="validateNumber"
                       placeholder="กรุณากรอกราคา"
                       class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
                     />
@@ -94,6 +95,7 @@
                       <input
                         type="number"
                         v-model="inputAmount"
+                        @input="validateNumber"
                         placeholder="เพิ่มจำนวนสินค้า"
                         class="w-10 p-1 h-[25px] text-center border border-gray-300 rounded-md"
                       />
@@ -147,8 +149,15 @@
 
           <div class="actions flex justify-end gap-6 mt-4 px-6">
             <button
-              class="bg-orange-500 w-24 py-2 text-white rounded-md hover:bg-yellow-500 font-semibold"
+              v-if="!isConfirming"
+              type="submit"
+              :class="{
+                'bg-orange-500 hover:bg-yellow-500': isFormChanged,
+                'bg-gray-300 cursor-not-allowed': !isFormChanged,
+              }"
+              class="w-24 py-2 text-white rounded-md font-semibold"
               @click="confirmSave"
+              :disabled="!isFormChanged"
             >
               บันทึก
             </button>
@@ -282,18 +291,22 @@ const getProductById = async () => {
         price: data.price,
         description: data.description,
         stock: data.stock,
-        category_id: Number(data.category.id), // แปลงเป็นตัวเลข
+        category_id: Number(data.category.id),
         is_active: data.is_active,
         image: data.image,
         Review: data.Review
           ? data.Review.map((review: any) => ({
               id: review.id,
-              username: review.username || "Anonymous", // ถ้า username ว่าง ให้เป็น Anonymous
+              username: review.username || "Anonymous",
               rating: review.rating,
               description: review.description,
             }))
           : [],
       };
+      // อัปเดต originalProduct ด้วย deep copy ของ product.value
+      originalProduct.value = JSON.parse(JSON.stringify(product.value));
+      // รีเซ็ต inputAmount เป็น 0 เมื่อโหลดข้อมูล
+      inputAmount.value = 0;
     })
     .catch((error: any) => {
       console.error(error.response);
@@ -375,9 +388,14 @@ const confirmSave = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       updateProduct().then(() => {
-        Swal.fire("สำเร็จ!", "สินค้าของคุณได้ถูกบันทึกแล้ว", "success");
-        // รีเซ็ตค่า inputAmount เป็น 0 หลังจากบันทึกสำเร็จ
+        // หลังจากบันทึกให้รีเซ็ต inputAmount และอัปเดต originalProduct
         inputAmount.value = 0;
+        originalProduct.value = { ...product.value };
+        Swal.fire("สำเร็จ!", "สินค้าของคุณได้ถูกบันทึกแล้ว", "success").then(
+          () => {
+            window.location.reload();
+          }
+        );
       });
     }
   });
@@ -459,10 +477,39 @@ const getCategorylist = async () => {
     .finally(() => {});
 };
 
-onMounted( async () => {
+const validateNumber = () => {
+  // กรองให้เหลือแค่ตัวเลขแล้วแปลงกลับเป็น float
+  product.value.stock = parseFloat(
+    product.value.stock.toString().replace(/[^0-9.]/g, "")
+  );
+  product.value.price = parseFloat(
+    product.value.price.toString().replace(/[^0-9.]/g, "")
+  );
+};
+
+// เพิ่มตัวแปร originalProduct เพื่อเก็บข้อมูลสินค้าตอนที่โหลดครั้งแรก
+const originalProduct = ref<ProductUpdate>({ ...product.value });
+// เพิ่มตัวแปรสำหรับตรวจสอบสถานะยืนยัน (ในที่นี้เราตั้งไว้ false)
+const isConfirming = ref(false);
+
+const isFormChanged = computed(() => {
+  return (
+    product.value.name !== originalProduct.value.name ||
+    product.value.price !== originalProduct.value.price ||
+    product.value.description !== originalProduct.value.description ||
+    product.value.stock !== originalProduct.value.stock ||
+    product.value.category_id !== originalProduct.value.category_id ||
+    product.value.is_active !== originalProduct.value.is_active ||
+    product.value.image !== originalProduct.value.image ||
+    inputAmount.value !== 0
+  );
+});
+
+
+onMounted(async () => {
   // use function
-   await getCategorylist();
-   await getProductById();
+  await getCategorylist();
+  await getProductById();
 });
 
 console.log("Updating product:", route.params.id, product.value);

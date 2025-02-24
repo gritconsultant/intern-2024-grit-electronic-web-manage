@@ -120,9 +120,16 @@ const login = async () => {
         router.push("/");
       }
     })
-    .catch((err: any) => {
+      .catch((err: any) => {
       console.log("Login failed:", err);
-      alert(err.response?.message || "เข้าสู่ระบบล้มเหลว");
+      // ใช้ SweetAlert2 แสดงข้อความเมื่อเข้าสู่ระบบไม่สำเร็จ
+      Swal.fire({
+        icon: "error",
+        title: "เข้าสู่ระบบไม่สำเร็จ",
+        text:
+          err.response?.message ||
+          "เกิดข้อผิดพลาดในการเข้าสู่ระบบ โปรดลองใหม่อีกครั้ง",
+      });
     })
     .finally(() => {});
   // tast

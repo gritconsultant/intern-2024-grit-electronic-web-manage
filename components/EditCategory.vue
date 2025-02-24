@@ -167,6 +167,17 @@ const updateCategory = async () => {
 };
 
 const confirm = () => {
+  // ตรวจสอบว่ามีข้อมูลใน input หรือไม่
+  if (!category.value.name || !category.value.image) {
+    Swal.fire({
+      title: "กรุณากรอกข้อมูลให้ครบถ้วน",
+      text: "กรุณากรอกชื่อประเภทสินค้าและ URL รูปภาพก่อนบันทึก",
+      icon: "warning",
+      confirmButtonText: "ตกลง",
+    });
+    return; // หยุดการดำเนินการหากข้อมูลไม่ครบ
+  }
+
   Swal.fire({
     title: "คุณยืนยันการแก้ไขข้อมูลประเภทนี้หรือไม่?",
     text: "คุณต้องการยืนยันการแก้ไขข้อมูลประเภทสินค้านี้หรือไม่?",
@@ -193,6 +204,7 @@ const confirm = () => {
   });
   emit("close");
 };
+
 
 const confirmCancel = () => {
   console.log("Data to be sent for update:", category.value);

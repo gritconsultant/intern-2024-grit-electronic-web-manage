@@ -1,7 +1,7 @@
 <template>
   <div class="defaultpages px-8 py-8">
     <div
-      class="mb-10 bg-white h-[10%] flex items-center justify-between pl-[10px] border-[1px] drop-shadow-lg   rounded-lg"
+      class="mb-10 bg-white h-[10%] flex items-center justify-between pl-[10px] border-[1px] drop-shadow-lg rounded-lg"
     >
       <h1 class="text-3xl font-bold text-gray-800">เพิ่มสินค้า</h1>
     </div>
@@ -52,7 +52,7 @@
                   <select
                     v-model="product.category_id"
                     id="product-category"
-                    class="w-full h-[66%] border border-gray-300 dropshadowboxabsolut bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none dropshadowboxabsolute"
+                    class="w-full h-[66%] border-gray-300 dropshadowboxabsolut"
                   >
                     <option
                       v-for="(category, index) in categories"
@@ -71,6 +71,7 @@
                     v-model="product.price"
                     placeholder="กรุณากรอกราคา"
                     class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    @input="validateNumber"
                   />
                 </div>
               </div>
@@ -89,6 +90,7 @@
                       type="number"
                       id="product-quantity"
                       v-model="product.stock"
+                      @input="validateNumber"
                       class="w-10 p-1 h-[25px] text-center border border-gray-300 rounded-md"
                     />
                     <button
@@ -208,7 +210,10 @@ const confirmSubmit = () => {
     !product.value.name ||
     !product.value.price ||
     !product.value.stock ||
-    !product.value.category_id
+    !product.value.category_id ||
+    !product.value.is_active ||
+    !product.value.description ||
+    !product.value.Image
   ) {
     Swal.fire({
       title: "ข้อผิดพลาด",
@@ -469,13 +474,24 @@ const onStatusChange = () => {
 const inputAmount = ref<number>(0); // ค่าที่จะเพิ่ม/ลด
 
 const increaseAmount = () => {
-  product.value.stock += 1;  // Directly modify product.stock
+  product.value.stock += 1; // Directly modify product.stock
 };
 
 const decreaseAmount = () => {
-  if (product.value.stock > 0) {  // Ensure stock doesn't go below 0
+  if (product.value.stock > 0) {
+    // Ensure stock doesn't go below 0
     product.value.stock -= 1;
   }
+};
+
+const validateNumber = () => {
+  // กรองให้เหลือแค่ตัวเลขแล้วแปลงกลับเป็น float
+  product.value.stock = parseFloat(
+    product.value.stock.toString().replace(/[^0-9.]/g, "")
+  );
+  product.value.price = parseFloat(
+    product.value.price.toString().replace(/[^0-9.]/g, "")
+  );
 };
 
 onMounted(async () => {
