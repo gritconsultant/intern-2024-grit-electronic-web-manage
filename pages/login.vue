@@ -109,7 +109,6 @@ const login = async () => {
     .login(logins.value)
     .then(async (resp: any) => {
       // เซ็ต Cookie
-      console.log(resp.data);
       const reftoken = useStatefulCookie("token");
       reftoken.value = resp.data.token;
       store.$state.token = resp.data.token;

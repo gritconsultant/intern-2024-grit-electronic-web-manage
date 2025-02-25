@@ -46,6 +46,7 @@ export interface OrderRes {
   Shipment: Shipment;
   total_amount: number;
   total_price: number;
+  total_price_ship:number;
   tracking_number: string;
   status: string;
   created_at: number;

@@ -7,10 +7,10 @@
     </div>
     <div
       v-if="!loading"
-      class="bg-white w-full h-[90%] rounded-lg dropshadowbox px-[10px] flex flex-col gap-2 items-center justify-center"
+      class="bg-white w-full h-[90%] rounded-lg dropshadowbox pt-[100px] flex flex-col gap-2 items-center"
     >
       <div
-        class="h-[11%] bg-orange-400 border-orange-200 border-2 flex items-center justify-center w-[80px] rounded-full"
+        class="h-[12%] bg-orange-400 border-orange-200 border-2 flex items-center justify-center w-[80px] rounded-full"
       >
         <i class="fa-solid fa-user-tie text-[50px]"></i>
       </div>
@@ -36,32 +36,20 @@
           />
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label for="password" class="text-gray-600">รหัสผ่านใหม่</label>
-          <input
-            v-model="admin.password"
-            type="password"
-            id="password"
-            class="p-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label for="confirmPassword" class="text-gray-600">ยืนยันรหัส</label>
-          <input
-            v-model="confirmPassword"
-            type="password"
-            id="confirmPassword"
-            class="p-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
-        <div v-if="passwordMismatch" class="text-red-500 text-sm mb-4">
-          รหัสผ่านไม่ตรงกัน
-        </div>
         <div class="flex items-center justify-center">
           <button
+            @click="popeditpassword = true"
+            class="bg-orange-500 text-white p-2 rounded-md w-[200px]"
+          >
+            แก้ไขรหัสผ่าน
+          </button>
+        </div>
+
+        <div class="flex items-center justify-center h-10 mt-[180px]">
+          <button
             @click="updateAdmin"
-            class="bg-orange-300 text-white p-2 rounded-md w-[200px] hover:bg-orange-500 trallansition-"
+            :disabled="isSaveDisabled"
+            class="bg-orange-300 text-white p-2 rounded-md w-[200px] hover:bg-orange-500 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             บันทึกข้อมูล
           </button>
@@ -86,6 +74,63 @@
         />
       </svg>
     </div>
+
+    <div
+      v-if="popeditpassword === true"
+      class="bg-black/80 fixed inset-0 w-full h-full flex flex-col items-center justify-center pl-10 text-[20px]"
+    >
+      <div class="bg-white p-10 w-[40%] h-[40%] rounded-lg">
+        <div class="flex flex-col gap-2 mb-4">
+          <label for="password" class="text-gray-600">รหัสผ่านใหม่</label>
+          <input
+            v-model="newPassword"
+            type="password"
+            id="password"
+            minlength="8"
+            class="p-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <!-- ✅ แสดงเฉพาะเมื่อรหัสผ่านไม่ถูกต้อง -->
+          <div
+            v-if="!isPasswordValid || passwordTooShort"
+            class="text-red-500 text-sm"
+          >
+            รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว มีตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก
+            และตัวเลข
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 mt-5">
+          <label for="confirmPassword" class="text-gray-600"
+            >ยืนยันรหัสผ่าน</label
+          >
+          <input
+            v-model="confirmPassword"
+            type="password"
+            id="confirmPassword"
+            class="p-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div v-if="passwordMismatch" class="text-red-500 text-sm mb-4">
+          รหัสผ่านไม่ตรงกัน
+        </div>
+
+        <button class="mt-[60px] flex justify-center gap-4 items-center w-full">
+          <button
+            @click="popeditpassword = false"
+            class="bg-gray-500 text-white p-2 rounded-md w-[200px] disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            ปิด
+          </button>
+          <button
+            @click="updatePassword"
+            :disabled="isPasswordSaveDisabled"
+            class="bg-blue-500 text-white p-2 rounded-md w-[200px] transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            ยืนยันแก้ไขรหัสผ่าน
+          </button>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -93,7 +138,7 @@
 import Swal from "sweetalert2";
 import type { AdminUpdate, AdminInfo } from "~/models/user.model";
 import service from "~/service";
-import { useIndexStore } from "~/store/main"
+import { useIndexStore } from "~/store/main";
 
 definePageMeta({
   middleware: "auth",
@@ -101,10 +146,9 @@ definePageMeta({
 
 const store = useIndexStore();
 
-
 const loading = ref(false);
 
-const getinfo = ref<AdminInfo>({
+const getinfo = ref<AdminInfo & { password?: string }>({
   id: 0,
   name: "",
   email: "",
@@ -116,6 +160,7 @@ const getinfo = ref<AdminInfo>({
   is_active: true,
   created_at: 0,
   updated_at: 0,
+  password: "",
 });
 
 const getAdmininfo = async () => {
@@ -160,15 +205,32 @@ const admin = ref<AdminUpdate>({
   is_active: true,
 });
 
+const newPassword = ref("");
+
 const updateAdmin = async () => {
-  const updatedAdmin = {
+  const updatedAdmin: any = {
     id: getinfo.value.id,
     name: getinfo.value.name,
     email: getinfo.value.email,
     role_id: getinfo.value.role.id,
     is_active: getinfo.value.is_active,
-    ...(admin.value.password ? { password: admin.value.password } : {}),
   };
+
+  // ตรวจสอบการเปลี่ยนแปลง
+  const isUpdated =
+    updatedAdmin.name !== initialValues.value.name ||
+    updatedAdmin.email !== initialValues.value.email;
+
+  // ถ้าไม่มีการเปลี่ยนแปลง
+  if (!isUpdated) {
+    Swal.fire("ไม่มีการเปลี่ยนแปลง", "ข้อมูลไม่ถูกปรับปรุง", "info");
+    return;
+  }
+
+  // ลบค่ารหัสผ่านจากการอัปเดต (หากไม่มีการเปลี่ยนแปลงรหัสผ่าน)
+  if (newPassword.value === "") {
+    delete updatedAdmin.password;
+  }
 
   if (isNaN(updatedAdmin.id) || updatedAdmin.id <= 0) {
     Swal.fire("ข้อผิดพลาด", "ID ของผู้ดูแลไม่ถูกต้อง", "error");
@@ -185,7 +247,47 @@ const updateAdmin = async () => {
       window.location.reload(); // รีโหลดหน้าหลังจากกด OK
     });
   } catch (error: any) {
-    console.error("❌ Error Response:", error.response);
+    console.error("Error Response:", error.response);
+    const errorMessage =
+      error.response?.data?.message || "ไม่สามารถอัปเดตข้อมูลได้";
+    Swal.fire("ข้อผิดพลาด", errorMessage, "error");
+  }
+};
+
+const updatePassword = async () => {
+  if (!newPassword.value || newPassword.value === "") {
+    Swal.fire("ข้อผิดพลาด", "กรุณากรอกรหัสผ่านใหม่", "error");
+    return;
+  }
+
+  const updatedAdmin: any = {
+    id: getinfo.value.id,
+    password: newPassword.value, // ส่งรหัสผ่านใหม่
+    name: getinfo.value.name, // ส่งชื่อ
+    email: getinfo.value.email, // ส่งอีเมล
+  };
+
+  if (isNaN(updatedAdmin.id) || updatedAdmin.id <= 0) {
+    Swal.fire("ข้อผิดพลาด", "ID ของผู้ดูแลไม่ถูกต้อง", "error");
+    return;
+  }
+
+  try {
+    await service.user.updateAdmin(updatedAdmin.id, updatedAdmin);
+    Swal.fire(
+      "ข้อมูลผู้ดูแลถูกอัปเดตแล้ว",
+      "รหัสผ่านได้รับการแก้ไขสำเร็จ",
+      "success"
+    ).then(() => {
+      // อัปเดตข้อมูลใน state ของคุณแทนการรีเฟรชหน้า
+      getinfo.value.password = newPassword.value; // อัปเดตรหัสผ่าน
+      // ปิดหน้าต่างแก้ไขรหัสผ่าน
+      popeditpassword.value = false;
+      // รีโหลดหน้า
+      window.location.reload();
+    });
+  } catch (error: any) {
+    console.error("Error Response:", error.response);
     const errorMessage =
       error.response?.data?.message || "ไม่สามารถอัปเดตข้อมูลได้";
     Swal.fire("ข้อผิดพลาด", errorMessage, "error");
@@ -211,31 +313,84 @@ const submitForm = () => {
     }
   }
 
-  // เปลี่ยนสถานะเป็นการยืนยัน
+  // หากข้อมูลถูกต้องแล้ว ก็สามารถทำการส่งข้อมูล
   isConfirming.value = true;
 };
 
 const confirmPassword = ref("");
+
 const passwordMismatch = computed(() => {
   return (
-    admin.value.password &&
+    newPassword.value &&
     confirmPassword.value &&
-    admin.value.password !== confirmPassword.value
+    newPassword.value !== confirmPassword.value
   );
+});
+
+const isPasswordValid = computed(() => {
+  return (
+    /[A-Z]/.test(newPassword.value) &&
+    /[a-z]/.test(newPassword.value) &&
+    /\d/.test(newPassword.value)
+  );
+});
+
+const initialValues = ref({
+  name: "",
+  email: "",
+});
+
+const saveInitialValues = () => {
+  initialValues.value.name = getinfo.value.name;
+  initialValues.value.email = getinfo.value.email;
+};
+
+const isSaveDisabled = computed(() => {
+  // ✅ ตรวจสอบการเปลี่ยนแปลงของชื่อและอีเมล
+  const isNameChanged = getinfo.value.name !== initialValues.value.name;
+  const isEmailChanged = getinfo.value.email !== initialValues.value.email;
+
+  // ✅ ถ้ามีการเปลี่ยนแปลงของชื่อหรืออีเมล ให้สามารถบันทึกได้
+  if (isNameChanged || isEmailChanged) {
+    return false; // กดปุ่มบันทึกได้
+  }
+
+  return true; // ถ้าไม่มีการเปลี่ยนแปลงอะไร กดไม่ได้
+});
+
+const isPasswordSaveDisabled = computed(() => {
+  // ✅ ถ้ารหัสผ่านใหม่ต้องกรอกยืนยันรหัสผ่านด้วย
+  if (newPassword.value && !confirmPassword.value) {
+    return true;
+  }
+
+  // ✅ ถ้ารหัสผ่านใหม่ไม่ตรงกัน ห้ามกดบันทึก
+  if (passwordMismatch.value) {
+    return true;
+  }
+
+  // ✅ ตรวจสอบรหัสผ่านตามเงื่อนไข
+  if (passwordTooShort.value || !isPasswordValid.value) {
+    return true; // หากรหัสผ่านไม่ถูกต้องหรือสั้นเกินไป
+  }
+
+  return false; // ถ้ารหัสผ่านถูกต้องสามารถบันทึกได้
 });
 
 const isConfirming = ref(false);
 
 const passwordTooShort = computed(() => {
-  return (
-    admin.value.password &&
-    admin.value.password.length > 0 &&
-    admin.value.password.length < 8
-  );
+  return newPassword.value && newPassword.value.length < 8;
 });
+
+const popeditpassword = ref(false);
 
 onMounted(() => {
   getAdmininfo();
+  // เรียก saveInitialValues หลังจากข้อมูลถูกโหลดเสร็จ
+  getAdmininfo().then(() => {
+    saveInitialValues(); // เก็บค่าเริ่มต้นของชื่อและอีเมล
+  });
 });
 </script>
 

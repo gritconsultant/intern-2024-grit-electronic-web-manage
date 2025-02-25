@@ -245,7 +245,6 @@ const closeForm = () => {
   showCustomer.value = false;
 };
 
-const showEditCustomer = ref(false);
 
 // watch เพื่ออัปเดตเมื่อค่า currentPage, size หรือ search เปลี่ยน
 watch(

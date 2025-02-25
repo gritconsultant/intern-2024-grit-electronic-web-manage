@@ -28,14 +28,24 @@
           />
         </div>
 
-        <div class="mb-4">
+        <div class="mb-1">
           <label for="password" class="block text-[15px]">รหัสผ่าน</label>
           <input
             v-model="admin.password"
             type="password"
             id="password"
+            minlength="8"
             class="w-full px-4 py-2 border border-gray-300 rounded-md"
           />
+        </div>
+
+        <!-- ✅ แสดงเฉพาะเมื่อรหัสผ่านไม่ถูกต้อง -->
+        <div
+          v-if="admin.password && (!isPasswordValid || passwordTooShort)"
+          class="text-red-500 text-[11px] mb-4"
+        >
+          รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว มีตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก
+          และตัวเลข
         </div>
 
         <div class="mb-4">
@@ -221,15 +231,31 @@ const askForConfirmation = () => {
   }
 };
 
+const isPasswordValid = computed(() => {
+  const password = admin.value.password || "";
+  return (
+    /[A-Z]/.test(password) && // มีตัวพิมพ์ใหญ่
+    /[a-z]/.test(password) && // มีตัวพิมพ์เล็ก
+    /\d/.test(password)
+  ); // มีตัวเลข
+});
+
 const submitForm = () => {
   if (admin.value.password) {
-    // ตรวจสอบรหัสผ่านที่ยืนยัน
+    if (!isPasswordValid.value) {
+      Swal.fire(
+        "รหัสผ่านไม่ปลอดภัย",
+        "รหัสผ่านต้องมีตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก และตัวเลข",
+        "error"
+      );
+      return;
+    }
+
     if (passwordMismatch.value) {
       Swal.fire("รหัสผ่านไม่ตรงกัน", "โปรดยืนยันรหัสผ่านให้ถูกต้อง", "error");
       return;
     }
 
-    // ตรวจสอบรหัสผ่านสั้นเกินไป
     if (passwordTooShort.value) {
       Swal.fire(
         "รหัสผ่านสั้นเกินไป",
@@ -240,7 +266,6 @@ const submitForm = () => {
     }
   }
 
-  // เปลี่ยนสถานะเป็นการยืนยัน
   isConfirming.value = true;
 };
 
@@ -254,12 +279,9 @@ const passwordMismatch = computed(() => {
 });
 
 const passwordTooShort = computed(() => {
-  return (
-    admin.value.password &&
-    admin.value.password.length > 0 &&
-    admin.value.password.length < 8
-  );
+  return admin.value.password && admin.value.password.length < 8;
 });
+
 
 const isConfirming = ref(false);
 
