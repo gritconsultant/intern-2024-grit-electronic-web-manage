@@ -29,13 +29,17 @@ export interface AdminRes {
   role_id: number;  // ใช้ role_id แทน role ใน AdminRes
   is_active: boolean;
 }
+
+
 export interface AdminUpdate {
   id: number;
   name: string ; // ใช้ string | null
   email: string   ; // ใช้ string | null
-  password?: string ; // ใช้ string | null
-  role_id: number ;
-  is_active: boolean ;
+}
+
+export interface AdminUpdatePassword {
+  id: number;
+  password: string ; // ใช้ string | null
 }
 
 

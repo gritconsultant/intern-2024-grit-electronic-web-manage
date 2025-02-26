@@ -36,7 +36,7 @@
           />
         </div>
 
-        <div class="flex items-center justify-center">
+        <div class="flex  justify-end">
           <button
             @click="popeditpassword = true"
             class="bg-orange-500 text-white p-2 rounded-md w-[200px]"
@@ -45,7 +45,7 @@
           </button>
         </div>
 
-        <div class="flex items-center justify-center h-10 mt-[180px]">
+        <div class="flex items-center justify-center h-10 mt-[100px]">
           <button
             @click="updateAdmin"
             :disabled="isSaveDisabled"
@@ -83,7 +83,7 @@
         <div class="flex flex-col gap-2 mb-4">
           <label for="password" class="text-gray-600">รหัสผ่านใหม่</label>
           <input
-            v-model="newPassword"
+            v-model="adminupdatepassword.password"
             type="password"
             id="password"
             minlength="8"
@@ -136,7 +136,11 @@
 
 <script lang="ts" setup>
 import Swal from "sweetalert2";
-import type { AdminUpdate, AdminInfo } from "~/models/user.model";
+import type {
+  AdminUpdate,
+  AdminInfo,
+  AdminUpdatePassword,
+} from "~/models/user.model";
 import service from "~/service";
 import { useIndexStore } from "~/store/main";
 
@@ -200,23 +204,21 @@ const admin = ref<AdminUpdate>({
   id: 0,
   name: "",
   email: "",
-  password: "",
-  role_id: 0,
-  is_active: true,
 });
 
-const newPassword = ref("");
+const adminupdatepassword = ref<AdminUpdatePassword>({
+  id: 0,
+  password: "",
+});
 
 const updateAdmin = async () => {
   const updatedAdmin: any = {
     id: getinfo.value.id,
     name: getinfo.value.name,
     email: getinfo.value.email,
-    role_id: getinfo.value.role.id,
-    is_active: getinfo.value.is_active,
   };
 
-  // ตรวจสอบการเปลี่ยนแปลง
+  // ตรวจสอบการเปลี่ยนแปลงของชื่อและอีเมล
   const isUpdated =
     updatedAdmin.name !== initialValues.value.name ||
     updatedAdmin.email !== initialValues.value.email;
@@ -227,11 +229,7 @@ const updateAdmin = async () => {
     return;
   }
 
-  // ลบค่ารหัสผ่านจากการอัปเดต (หากไม่มีการเปลี่ยนแปลงรหัสผ่าน)
-  if (newPassword.value === "") {
-    delete updatedAdmin.password;
-  }
-
+  // ตรวจสอบ ID ผู้ดูแล
   if (isNaN(updatedAdmin.id) || updatedAdmin.id <= 0) {
     Swal.fire("ข้อผิดพลาด", "ID ของผู้ดูแลไม่ถูกต้อง", "error");
     return;
@@ -255,32 +253,36 @@ const updateAdmin = async () => {
 };
 
 const updatePassword = async () => {
-  if (!newPassword.value || newPassword.value === "") {
+  // ตรวจสอบว่ารหัสผ่านใหม่ถูกกรอกหรือไม่
+  if (
+    !adminupdatepassword.value.password ||
+    adminupdatepassword.value.password === ""
+  ) {
     Swal.fire("ข้อผิดพลาด", "กรุณากรอกรหัสผ่านใหม่", "error");
     return;
   }
 
+  // สร้างข้อมูลที่ต้องการอัปเดต โดยส่งแค่รหัสผ่าน
   const updatedAdmin: any = {
     id: getinfo.value.id,
-    password: newPassword.value, // ส่งรหัสผ่านใหม่
-    name: getinfo.value.name, // ส่งชื่อ
-    email: getinfo.value.email, // ส่งอีเมล
+    password: adminupdatepassword.value.password, // ส่งแค่รหัสผ่าน
   };
 
+  // ตรวจสอบ ID ว่าถูกต้องหรือไม่
   if (isNaN(updatedAdmin.id) || updatedAdmin.id <= 0) {
     Swal.fire("ข้อผิดพลาด", "ID ของผู้ดูแลไม่ถูกต้อง", "error");
     return;
   }
 
   try {
-    await service.user.updateAdmin(updatedAdmin.id, updatedAdmin);
+    await service.user.updateAdminpassword(updatedAdmin.id, updatedAdmin);
     Swal.fire(
       "ข้อมูลผู้ดูแลถูกอัปเดตแล้ว",
       "รหัสผ่านได้รับการแก้ไขสำเร็จ",
       "success"
     ).then(() => {
-      // อัปเดตข้อมูลใน state ของคุณแทนการรีเฟรชหน้า
-      getinfo.value.password = newPassword.value; // อัปเดตรหัสผ่าน
+      // อัปเดตข้อมูลใน state โดยใช้รหัสผ่านใหม่
+      getinfo.value.password = adminupdatepassword.value.password;
       // ปิดหน้าต่างแก้ไขรหัสผ่าน
       popeditpassword.value = false;
       // รีโหลดหน้า
@@ -295,7 +297,7 @@ const updatePassword = async () => {
 };
 
 const submitForm = () => {
-  if (admin.value.password) {
+  if (adminupdatepassword.value.password) {
     // ตรวจสอบรหัสผ่านที่ยืนยัน
     if (passwordMismatch.value) {
       Swal.fire("รหัสผ่านไม่ตรงกัน", "โปรดยืนยันรหัสผ่านให้ถูกต้อง", "error");
@@ -321,17 +323,17 @@ const confirmPassword = ref("");
 
 const passwordMismatch = computed(() => {
   return (
-    newPassword.value &&
+    adminupdatepassword.value.password &&
     confirmPassword.value &&
-    newPassword.value !== confirmPassword.value
+    adminupdatepassword.value.password !== confirmPassword.value
   );
 });
 
 const isPasswordValid = computed(() => {
   return (
-    /[A-Z]/.test(newPassword.value) &&
-    /[a-z]/.test(newPassword.value) &&
-    /\d/.test(newPassword.value)
+    /[A-Z]/.test(adminupdatepassword.value.password) &&
+    /[a-z]/.test(adminupdatepassword.value.password) &&
+    /\d/.test(adminupdatepassword.value.password)
   );
 });
 
@@ -360,7 +362,7 @@ const isSaveDisabled = computed(() => {
 
 const isPasswordSaveDisabled = computed(() => {
   // ✅ ถ้ารหัสผ่านใหม่ต้องกรอกยืนยันรหัสผ่านด้วย
-  if (newPassword.value && !confirmPassword.value) {
+  if (adminupdatepassword.value.password && !confirmPassword.value) {
     return true;
   }
 
@@ -380,7 +382,10 @@ const isPasswordSaveDisabled = computed(() => {
 const isConfirming = ref(false);
 
 const passwordTooShort = computed(() => {
-  return newPassword.value && newPassword.value.length < 8;
+  return (
+    adminupdatepassword.value.password &&
+    adminupdatepassword.value.password.length < 8
+  );
 });
 
 const popeditpassword = ref(false);

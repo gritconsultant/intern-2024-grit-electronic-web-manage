@@ -31,7 +31,7 @@
         <div class="mb-1">
           <label for="password" class="block text-[15px]">รหัสผ่าน</label>
           <input
-            v-model="admin.password"
+            v-model="adminupdatepassword.password"
             type="password"
             id="password"
             minlength="8"
@@ -41,7 +41,10 @@
 
         <!-- ✅ แสดงเฉพาะเมื่อรหัสผ่านไม่ถูกต้อง -->
         <div
-          v-if="admin.password && (!isPasswordValid || passwordTooShort)"
+          v-if="
+            adminupdatepassword.password &&
+            (!isPasswordValid || passwordTooShort)
+          "
           class="text-red-500 text-[11px] mb-4"
         >
           รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว มีตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก
@@ -60,8 +63,17 @@
           />
         </div>
 
+        <!-- ✅ แสดงเฉพาะเมื่อรหัสผ่านไม่ตรงกัน -->
         <div v-if="passwordMismatch" class="text-red-500 text-sm mb-4">
           รหัสผ่านไม่ตรงกัน
+        </div>
+
+        <!-- ✅ แสดงเตือนกรอกยืนยันรหัสผ่านเมื่อกรอกรหัสผ่านใหม่แล้วไม่กรอกช่องยืนยันรหัสผ่าน -->
+        <div
+          v-if="adminupdatepassword.password && !confirmPassword"
+          class="text-red-500 text-sm mb-4"
+        >
+          กรุณากรอกยืนยันรหัสผ่าน
         </div>
 
         <div v-if="isConfirming" class="mb-4">
@@ -71,7 +83,12 @@
           <p v-if="admin.email !== adminRes.email">
             <strong>อีเมล:</strong> {{ admin.email }}
           </p>
-          <p v-if="admin.password && admin.password.trim() !== ''">
+          <p
+            v-if="
+              adminupdatepassword.password &&
+              adminupdatepassword.password.trim() !== ''
+            "
+          >
             <strong>รหัสผ่าน:</strong> **********
           </p>
         </div>
@@ -91,8 +108,8 @@
             v-if="!isConfirming"
             type="submit"
             :class="{
-              'bg-blue-500': isFormChanged, // สีฟ้าหากมีการเปลี่ยนแปลง
-              'bg-gray-300 cursor-not-allowed': !isFormChanged, // สีเทาและไม่สามารถกดได้ถ้าไม่มีการเปลี่ยนแปลง
+              'bg-blue-500': isFormChanged, // ปุ่มสีฟ้าหากมีการเปลี่ยนแปลง
+              'bg-gray-300 cursor-not-allowed': !isFormChanged, // ปุ่มสีเทาและไม่สามารถกดได้ถ้าไม่มีการเปลี่ยนแปลง
             }"
             class="px-4 py-2 text-white rounded-md"
             :disabled="!isFormChanged"
@@ -118,7 +135,11 @@
 <script setup lang="ts">
 import Swal from "sweetalert2";
 import { ref, computed, onMounted } from "vue";
-import type { AdminRes, AdminUpdate } from "~/models/user.model";
+import type {
+  AdminRes,
+  AdminUpdate,
+  AdminUpdatePassword,
+} from "~/models/user.model";
 import service from "~/service";
 
 const route = useRoute();
@@ -127,9 +148,11 @@ const admin = ref<AdminUpdate>({
   id: 0,
   name: "",
   email: "",
+});
+
+const adminupdatepassword = ref<AdminUpdatePassword>({
+  id: 0,
   password: "",
-  role_id: 0,
-  is_active: true,
 });
 
 const adminRes = ref<AdminRes>({
@@ -166,49 +189,48 @@ const getadminById = async () => {
     })
     .catch((err: any) => {
       console.log(err.response);
+      Swal.fire("ข้อผิดพลาด", "ไม่พบข้อมูลผู้ดูแล", "error");
     });
 };
 
 const updateAdmin = async () => {
-  if (!isFormChanged.value) {
-    Swal.fire("ไม่มีการเปลี่ยนแปลง", "ไม่พบข้อมูลที่ต้องการอัปเดต", "info");
-    return;
-  }
   const updatedAdmin = {
     id: admin.value.id,
     name: admin.value.name || adminRes.value.name,
     email: admin.value.email || adminRes.value.email,
-    role_id: admin.value.role_id ?? adminRes.value.role_id,
-    is_active: admin.value.is_active ?? adminRes.value.is_active,
-    password:
-      admin.value.password && admin.value.password.trim() !== ""
-        ? admin.value.password
-        : undefined, // ถ้าไม่ได้กรอกรหัสใหม่ก็ไม่ส่งค่า password
   };
 
-  console.log("🔍 updatedAdmin:", updatedAdmin); // ตรวจสอบค่าก่อนส่ง API
-
-  if (isNaN(updatedAdmin.id) || updatedAdmin.id <= 0) {
-    Swal.fire("ข้อผิดพลาด", "ID ของผู้ดูแลไม่ถูกต้อง", "error");
-    return;
-  }
+  console.log("Updated Admin:", updatedAdmin); // เพิ่มการตรวจสอบค่าที่ส่งไป
 
   try {
     await service.user.updateAdmin(updatedAdmin.id, updatedAdmin);
-    Swal.fire(
-      "ข้อมูลผู้ดูแลถูกอัปเดตแล้ว",
-      "ข้อมูลผู้ดูแลได้รับการแก้ไขสำเร็จ",
-      "success"
-    ).then(() => {
-      window.location.reload();
-    });
   } catch (error: any) {
-    console.error(" Error Response:", error.response);
-    const errorMessage =
-      error.response?.data?.message || "ไม่สามารถอัปเดตข้อมูลผู้ดูแลได้";
-    Swal.fire("ข้อผิดพลาด", errorMessage, "error");
+    console.error("❌ Error Response:", error.response);
+    throw error;
   }
-  emit("close");
+};
+
+const updateAdminPassword = async () => {
+  if (!adminupdatepassword.value.password) {
+    return; // ถ้ารหัสผ่านไม่มีการเปลี่ยนแปลงหรือไม่กรอก ก็ไม่ต้องส่ง
+  }
+
+  const updatedPasswordData = {
+    id: adminupdatepassword.value.id,
+    password: adminupdatepassword.value.password,
+  };
+
+  console.log("Updated Password Data:", updatedPasswordData); // เพิ่มการตรวจสอบค่าที่ส่งไป
+
+  try {
+    await service.user.updateAdminpassword(
+      updatedPasswordData.id,
+      updatedPasswordData
+    );
+  } catch (error: any) {
+    console.error("❌ Error Response:", error.response);
+    throw error;
+  }
 };
 
 const askForConfirmation = () => {
@@ -232,78 +254,135 @@ const askForConfirmation = () => {
 };
 
 const isPasswordValid = computed(() => {
-  const password = admin.value.password || "";
+  const password = adminupdatepassword.value.password || "";
   return (
     /[A-Z]/.test(password) && // มีตัวพิมพ์ใหญ่
     /[a-z]/.test(password) && // มีตัวพิมพ์เล็ก
-    /\d/.test(password)
-  ); // มีตัวเลข
+    /\d/.test(password) // มีตัวเลข
+  );
 });
 
-const submitForm = () => {
-  if (admin.value.password) {
-    if (!isPasswordValid.value) {
-      Swal.fire(
-        "รหัสผ่านไม่ปลอดภัย",
-        "รหัสผ่านต้องมีตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก และตัวเลข",
-        "error"
-      );
-      return;
-    }
-
-    if (passwordMismatch.value) {
-      Swal.fire("รหัสผ่านไม่ตรงกัน", "โปรดยืนยันรหัสผ่านให้ถูกต้อง", "error");
-      return;
-    }
-
-    if (passwordTooShort.value) {
-      Swal.fire(
-        "รหัสผ่านสั้นเกินไป",
-        "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว",
-        "error"
-      );
-      return;
-    }
+const submitPasswordForm = () => {
+  // ตรวจสอบเงื่อนไขที่คุณตั้งไว้สำหรับรหัสผ่าน
+  if (passwordMismatch.value) {
+    Swal.fire("รหัสผ่านไม่ตรงกัน", "โปรดยืนยันรหัสผ่านให้ถูกต้อง", "error");
+    return false; // ถ้ามีความไม่ตรงกันของรหัสผ่าน
   }
 
-  isConfirming.value = true;
+  if (passwordTooShort.value) {
+    Swal.fire(
+      "รหัสผ่านสั้นเกินไป",
+      "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว",
+      "error"
+    );
+    return false; // ถ้ารหัสผ่านสั้นเกินไป
+  }
+
+  // หากเงื่อนไขทั้งหมดผ่าน ก็ให้ return true
+  return true;
+};
+
+const submitForm = async () => {
+  // ตรวจสอบหากไม่มีการเปลี่ยนแปลงอะไรเลย
+  if (!isFormChanged.value) {
+    Swal.fire("ไม่มีการเปลี่ยนแปลง", "กรุณาทำการเปลี่ยนแปลงข้อมูลก่อน", "info");
+    return;
+  }
+
+  // ตรวจสอบว่าหากมีการกรอกรหัสผ่านใหม่ แต่ไม่ได้กรอกยืนยันรหัสผ่าน
+  if (adminupdatepassword.value.password && !confirmPassword.value) {
+    Swal.fire(
+      "กรุณากรอกยืนยันรหัสผ่าน",
+      "กรุณากรอกยืนยันรหัสผ่านก่อนบันทึก",
+      "warning"
+    );
+    return;
+  }
+
+  // ตรวจสอบความถูกต้องของรหัสผ่าน
+  if (isPasswordChanged.value && !submitPasswordForm()) {
+    return; // หาก submitPasswordForm() ส่ง false กลับมา จะหยุดการทำงานที่นี่
+  }
+
+  try {
+    // ถ้ามีการเปลี่ยนแปลงข้อมูลส่วนตัว (ชื่อและอีเมล)
+    if (isProfileChanged.value) {
+      await updateAdmin(); // อัปเดตชื่อและอีเมล
+    }
+
+    // ถ้ามีการเปลี่ยนแปลงรหัสผ่าน
+    if (isPasswordChanged.value) {
+      // ตรวจสอบให้แน่ใจว่าได้ตั้งค่ารหัสผ่านใน adminupdatepassword
+      adminupdatepassword.value.id = admin.value.id; // ตั้งค่า ID ให้ถูกต้อง
+      await updateAdminPassword(); // อัปเดตรหัสผ่าน
+    }
+
+    Swal.fire(
+      "ข้อมูลถูกอัปเดตแล้ว",
+      "ข้อมูลทั้งหมดได้รับการแก้ไขสำเร็จ",
+      "success"
+    ).then(() => {
+      window.location.reload();
+    });
+  } catch (error: any) {
+    console.error("❌ Error Response:", error);
+
+    const errorMessage =
+      error?.response?.data?.message ||
+      error?.message ||
+      "ไม่สามารถอัปเดตข้อมูลได้";
+
+    Swal.fire("ข้อผิดพลาด", errorMessage, "error");
+  }
 };
 
 const confirmPassword = ref("");
+
 const passwordMismatch = computed(() => {
+  // ตรวจสอบการไม่ตรงกันของรหัสผ่าน
   return (
-    admin.value.password &&
+    adminupdatepassword.value.password &&
     confirmPassword.value &&
-    admin.value.password !== confirmPassword.value
+    adminupdatepassword.value.password !== confirmPassword.value
   );
 });
 
 const passwordTooShort = computed(() => {
-  return admin.value.password && admin.value.password.length < 8;
+  return (
+    adminupdatepassword.value.password &&
+    adminupdatepassword.value.password.length < 8
+  );
 });
-
 
 const isConfirming = ref(false);
 
-const isFormChanged = computed(() => {
-  console.log("isFormChanged", {
-    nameChanged: admin.value.name !== adminRes.value.name,
-    emailChanged: admin.value.email !== adminRes.value.email,
-    passwordChanged: admin.value.password !== adminRes.value.password,
-    confirmPasswordChanged:
-      confirmPassword.value && confirmPassword.value !== admin.value.password,
-    roleChanged: admin.value.role_id !== adminRes.value.role_id,
-    isActiveChanged: admin.value.is_active !== adminRes.value.is_active,
-  });
-
+const isProfileChanged = computed(() => {
   return (
     admin.value.name !== adminRes.value.name ||
-    admin.value.email !== adminRes.value.email ||
-    admin.value.password !== adminRes.value.password ||
-    (confirmPassword.value && confirmPassword.value !== admin.value.password) ||
-    admin.value.role_id !== adminRes.value.role_id ||
-    admin.value.is_active !== adminRes.value.is_active
+    admin.value.email !== adminRes.value.email
   );
+});
+
+const isPasswordChanged = computed(() => {
+  return (
+    adminupdatepassword.value.password !== adminRes.value.password ||
+    confirmPassword.value !== adminupdatepassword.value.password
+  );
+});
+
+const isFormChanged = computed(() => {
+  const profileChanged =
+    String(admin.value.name).trim() !== String(adminRes.value.name).trim() ||
+    String(admin.value.email).trim() !== String(adminRes.value.email).trim();
+
+  const passwordChanged =
+    String(adminupdatepassword.value.password).trim() !== "" &&
+    (String(adminupdatepassword.value.password) !==
+      String(adminRes.value.password) ||
+      String(confirmPassword.value).trim() !==
+        String(adminupdatepassword.value.password));
+
+  return profileChanged || passwordChanged;
 });
 
 onMounted(() => {
