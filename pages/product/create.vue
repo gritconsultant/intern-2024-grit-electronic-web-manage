@@ -52,7 +52,7 @@
                   <select
                     v-model="product.category_id"
                     id="product-category"
-                    class="w-full h-[66%] border-gray-300 dropshadowboxabsolut"
+                    class="w-full h-[66%] border-gray-500  border  dropshadowboxabsolut  select-left "
                   >
                     <option
                       v-for="(category, index) in categories"
@@ -503,7 +503,6 @@ onMounted(async () => {
 <style scoped>
 button,
 input,
-select,
 textarea {
   transition: all 0.3s ease-in-out;
 }
@@ -511,5 +510,16 @@ textarea {
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* เพิ่ม CSS นี้ในไฟล์ .css ของคุณ */
+.select-left {
+  text-align: left !important;        /* ทำให้ข้อความใน select อยู่ซ้ายสุด */
+  direction: ltr !important;          /* ตั้งค่าทิศทางข้อความ */
+  padding-left: 10px !important;      /* เพิ่มช่องว่างซ้าย */     /* สำหรับเบราว์เซอร์อื่นๆ */
+}
+
+.select-left option {
+  text-align: left !important;        /* ทำให้ข้อความใน option อยู่ซ้ายสุด */
 }
 </style>

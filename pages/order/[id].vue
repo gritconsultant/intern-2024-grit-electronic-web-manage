@@ -568,7 +568,9 @@ const changeStatus = async (orderId: number, status: string) => {
   if (result.isConfirmed) {
     currentOrder.status = status;
     await updatestatus(orderId, currentOrder);
-    Swal.fire("สำเร็จ!", "เปลี่ยนสถานะเรียบร้อย", "success");
+    Swal.fire("สำเร็จ!", "เปลี่ยนสถานะเรียบร้อย", "success").then(() => {
+      window.location.reload(); // รีเฟรชหน้าหลังจากกด OK
+    });
   }
 };
 
@@ -596,7 +598,9 @@ const confirmTracking = async () => {
 
       try {
         await updatestatus(selectedOrderId.value, currentOrder);
-        Swal.fire("สำเร็จ!", "บันทึกเลขพัสดุเรียบร้อย", "success");
+        Swal.fire("สำเร็จ!", "บันทึกเลขพัสดุเรียบร้อย", "success").then(() => {
+          window.location.reload(); // รีเฟรชหน้าหลังจากกด OK
+        });
       } catch (error) {
         Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถบันทึกเลขพัสดุได้", "error");
       }
@@ -664,8 +668,6 @@ const openPopup = (orderId: number) => {
 
   popupVisible.value = true;
 };
-
-
 
 onMounted(() => {
   getOrderById();

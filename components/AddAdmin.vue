@@ -44,8 +44,7 @@
           <!-- Password length validation -->
           <div v-if="passwordTooShort" class="text-red-500 text-sm mt-2">
             รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว
-            <span v-if="missingChars > 0"></span
-            >
+            <span v-if="missingChars > 0"></span>
           </div>
         </div>
 
@@ -207,17 +206,24 @@ const isConfirming = ref(false);
 
 // Method to close the modal with confirmation
 const askForConfirmation = () => {
-  if (
-    confirm("คุณแน่ใจหรือไม่ว่าต้องการปิด? ข้อมูลที่ยังไม่ได้บันทึกจะหายไป")
-  ) {
-    closeModal();
-  }
+  Swal.fire({
+    title: "คุณแน่ใจหรือไม่?",
+    text: "ข้อมูลที่ยังไม่ได้บันทึกจะหายไป",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "ใช่, ปิดฟอร์ม",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      closeModal();
+    }
+    window.location.reload();
+  });
 };
 
 // Method to close the modal
 const closeModal = () => {
   emit("close");
-  // resetForm();
 };
 
 // Method to handle form submission

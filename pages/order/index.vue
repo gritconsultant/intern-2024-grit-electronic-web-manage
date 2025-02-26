@@ -450,7 +450,10 @@ const handleStatusClick = (order: Order, status: string) => {
 
 const changeStatus = async (orderId: number, status: string) => {
   const order = orders.value.find((order) => order.id === orderId);
-  if (!order) return;
+  if (!order) {
+    Swal.fire("ไม่พบคำสั่งซื้อ", "ไม่พบคำสั่งซื้อนี้ในระบบ", "error");
+    return;
+  }
 
   if (order.status === status) {
     Swal.fire("ไม่สามารถเปลี่ยนสถานะ", "สถานะนี้ได้ถูกตั้งไว้แล้ว", "info");
@@ -481,6 +484,7 @@ const changeStatus = async (orderId: number, status: string) => {
 
     // โหลดข้อมูลคำสั่งซื้อใหม่
     getOrderList();
+    toggleMenu(orderId); // ปิด popup เมื่ออัปเดตสถานะเรียบร้อย
   }
 };
 
