@@ -77,7 +77,7 @@
                       type="text"
                       v-model="otherBank"
                       placeholder="กรอกชื่อธนาคาร"
-                      class="p-2 border-l-[1px]  w-[250px]"
+                      class="p-2 border-l-[1px] w-[250px]"
                     />
                     <button
                       @click="confirmBank"
@@ -314,7 +314,8 @@ const saveData = () => {
     !bank.value.bank_name ||
     !bank.value.account_number ||
     !bank.value.account_name ||
-    !bank.value.description
+    !bank.value.description ||
+    !bank.value.image
   ) {
     Swal.fire("กรุณากรอกข้อมูลให้ครบ", "กรุณากรอกข้อมูลให้ครบ", "warning");
     return; // หยุดการทำงานหากไม่ครบถ้วน

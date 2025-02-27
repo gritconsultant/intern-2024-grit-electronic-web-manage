@@ -221,7 +221,7 @@
           <h3 class="text-2xl font-semibold text-center text-gray-800 mb-10">
             ข้อมูลการจัดส่ง
           </h3>
-          <div class="flex flex-col gap-4 px-5">
+          <div class="flex flex-col gap-[25px] px-5">
             <p class="text-[20px] font-medium">
               <span class="mr-[10px]">ชื่อ:</span>
               {{ order.Shipment.firstname }} {{ order.Shipment.lastname }}

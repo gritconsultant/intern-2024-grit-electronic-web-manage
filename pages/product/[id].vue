@@ -479,9 +479,18 @@ const getCategorylist = async () => {
 
 const validateNumber = () => {
   // กรองให้เหลือแค่ตัวเลขแล้วแปลงกลับเป็น float
-  product.value.stock = parseFloat(
-    product.value.stock.toString().replace(/[^0-9.]/g, "")
-  );
+  // กรองให้เหลือแค่ตัวเลขและจุดทศนิยม
+  const validAmount = inputAmount.value.toString().replace(/[^0-9.]/g, "");
+
+  // ตรวจสอบว่าไม่มีจุดทศนิยมเกิน 1 จุด
+  const filteredAmount = validAmount.replace(/(\..*)\./g, '$1'); // กรองจุดทศนิยมซ้ำ
+
+  // แปลงกลับเป็น number
+  inputAmount.value = parseFloat(filteredAmount) || 0;
+
+  // กรองและเก็บค่าให้เป็นตัวเลขใน product.value.stock
+
+
   product.value.price = parseFloat(
     product.value.price.toString().replace(/[^0-9.]/g, "")
   );

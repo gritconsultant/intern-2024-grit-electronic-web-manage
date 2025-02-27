@@ -20,6 +20,7 @@
         </div>
 
         <!-- Email field -->
+        <!-- Email field -->
         <div class="mb-4">
           <label for="email" class="block text-[15px]">อีเมล</label>
           <input
@@ -28,7 +29,12 @@
             id="email"
             class="w-full px-4 py-2 border border-gray-300 rounded-md"
             required
+            @input="validateEmail"
           />
+          <!-- Error message -->
+          <div v-if="emailError" class="text-red-500 text-sm mt-2">
+            {{ emailErrorMessage }}
+          </div>
         </div>
 
         <!-- Password field -->
@@ -87,7 +93,7 @@
             v-if="!isConfirming"
             type="submit"
             class="px-4 py-2 bg-blue-500 text-white rounded-md"
-            :disabled="passwordMismatch || passwordTooShort"
+            :disabled="passwordMismatch || passwordTooShort || emailError"
           >
             ยืนยัน
           </button>
@@ -235,6 +241,22 @@ const submitForm = () => {
 
 // Computed property for controlling modal visibility
 const isVisible = computed(() => props.show);
+
+const emailError = ref(false);
+const emailErrorMessage = ref("");
+
+const validateEmail = () => {
+  const email = admin.value.email.trim();
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail)$/;
+
+  if (!emailPattern.test(email)) {
+    emailError.value = true;
+    emailErrorMessage.value = "กรุณาใช้ @gmail.com เท่านั้น";
+  } else {
+    emailError.value = false;
+    emailErrorMessage.value = "";
+  }
+};
 </script>
 
 <style scoped>
