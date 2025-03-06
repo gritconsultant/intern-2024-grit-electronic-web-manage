@@ -247,7 +247,7 @@ const emailErrorMessage = ref("");
 
 const validateEmail = () => {
   const email = admin.value.email.trim();
-  const emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail)$/;
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
   if (!emailPattern.test(email)) {
     emailError.value = true;
@@ -257,6 +257,7 @@ const validateEmail = () => {
     emailErrorMessage.value = "";
   }
 };
+
 </script>
 
 <style scoped>
